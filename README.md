@@ -1,0 +1,1 @@
+# stardict-dictionary-updater
