@@ -2,10 +2,10 @@
 <resources>
 
     <string name="app_name">Sanskrit Dictionary Updater</string>
-    <string name="permission_request">ॐ तत् सत्। Shall we update your Sanskrit Dictionary files?\n\n
-        This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. This will take some time.
-        We use the index maintained by the stardict-sanskrit project (See: https://github.com/sanskrit-coders/stardict-sanskrit https://sites.google.com/site/sanskritcode/ ).
-        \n!!!Don\'t navigate away or we\'ll need to restart!!!</string>
+    <string name="permission_request">ॐ तत् सत्। Shall we update your Sanskrit / Kannada Dictionary files?\n
+        This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
+        Please select the dictionary lists you want to use, then click the button. (Details: https://sites.google.com/site/sanskritcode/ ).\n
+    </string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="action_settings">Settings</string>
     <string name="proceed_button">Proceed?</string>
@@ -21,6 +21,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="pick_dictionaries">Which dictionaries shall we install?</string>
     <string name="title_activity_get_dictionaries">Dict updater: Downloading!</string>
-    <string name="installing_dictionaries">Installing dictionaries. Please wait. Don\'t navigate away (or we\'ll have to restart.)</string>
+    <string name="installing_dictionaries">Installing dictionaries. Please wait. \n !!Don\'t navigate away or we\'ll have to restart.!!\n</string>
 
 </resources>

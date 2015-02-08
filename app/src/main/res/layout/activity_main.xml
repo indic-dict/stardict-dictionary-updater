@@ -24,6 +24,8 @@
         android:textColor="@color/primary_dark_material_dark"
         style="@style/Base.TextAppearance.AppCompat.Medium"
         android:scrollbars = "vertical"
+        android:linksClickable="true"
+        android:autoLink="web"
         android:longClickable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

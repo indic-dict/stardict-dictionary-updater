@@ -1,5 +1,6 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -65,16 +66,20 @@ public class GetDictionariesActivity extends ActionBarActivity {
             dictDir.mkdirs();
         }
         asyncHttpClient.getHttpClient().getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
-        if (dictionariesSelectedLst.size() > 0) {
-            getDictionaries(0);
-        } else {
-            topText.setText("No dictionaries selected!");
-        }
+        getDictionaries(0);
     }
 
+    public void buttonPressed1(View v) {
+        Button button = (Button) findViewById(R.id.button);
+        button.setText(getString(R.string.buttonWorking));
+        button.setEnabled(false);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
     protected void getDictionaries(int index) {
         if(dictionariesSelectedLst.size() == 0) {
+            topText.setText("No dictionaries selected!");
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
             button.setEnabled(true);
