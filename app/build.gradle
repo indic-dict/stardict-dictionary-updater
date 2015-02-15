@@ -8,8 +8,8 @@ android {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 13
         targetSdkVersion 21
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
         multiDexEnabled = true
     }
     buildTypes {
