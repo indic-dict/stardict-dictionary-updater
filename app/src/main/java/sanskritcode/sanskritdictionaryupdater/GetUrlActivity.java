@@ -1,10 +1,10 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-public class GetUrlActivity extends ActionBarActivity {
+public class GetUrlActivity extends Activity {
     HashSet<String> indexesSelected = MainActivity.indexesSelected;
     public static List<String> dictUrls = new ArrayList<String>();
     private static final String DICTIONARY_LOCATION = "dict";

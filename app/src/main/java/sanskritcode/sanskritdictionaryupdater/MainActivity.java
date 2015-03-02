@@ -1,9 +1,9 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +17,7 @@ import java.util.HashSet;
 /**
  * Flow: OnCreate -> buttonPressed1 -> DictUrlGetter -> (getDictionaries <-> downloadDict) -> (extractDict <-> DictExtracter)
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
     private static final String[] available_indexes = {
             "https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/tars/tars.MD",

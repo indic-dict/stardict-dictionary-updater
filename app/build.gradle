@@ -8,8 +8,8 @@ android {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 13
         targetSdkVersion 21
-        versionCode 6
-        versionName "1.5"
+        versionCode 8
+        versionName "1.6"
         multiDexEnabled = true
     }
     buildTypes {
@@ -38,6 +38,7 @@ android {
 
 dependencies {
     compile 'com.android.tools.build:gradle:1.0.0'
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.android.support:appcompat-v7:21.0.0'
     compile 'com.loopj.android:android-async-http:1.4.5'

@@ -1,10 +1,10 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class GetDictionariesActivity extends ActionBarActivity {
+public class GetDictionariesActivity extends Activity {
     private Set<String> dictionariesSelected = GetUrlActivity.dictionariesSelected;
     private ArrayList<String> dictionariesSelectedLst = new ArrayList<String>();
     protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
