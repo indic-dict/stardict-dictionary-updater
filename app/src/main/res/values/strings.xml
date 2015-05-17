@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Sanskrit Dictionary Updater</string>
-    <string name="permission_request">ॐ तत् सत्। Shall we update your Sanskrit / Kannada Dictionary files?\n
+    <string name="app_name">Stardict Dictionary Updater</string>
+    <string name="permission_request">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
         Please select the dictionary lists you want to use, then click the button. (Details: https://sites.google.com/site/sanskritcode/ ).\n
     </string>
