@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
             "https://raw.githubusercontent.com/sanskrit-coders/stardict-kannada/master/en-head/tars/tars.MD",
             "https://raw.githubusercontent.com/sanskrit-coders/stardict-kannada/master/kn-head/tars/tars.MD",
             "https://raw.githubusercontent.com/sanskrit-coders/stardict-pali/master/en-head/tars/tars.MD",
+            "https://raw.githubusercontent.com/sanskrit-coders/stardict-hindi/master/dev-head/tars/tars.MD",
     };
 
 
