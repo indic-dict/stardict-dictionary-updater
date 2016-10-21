@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-
+// See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends Activity {
     private Set<String> dictionariesSelected = GetUrlActivity.dictionariesSelected;
     private ArrayList<String> dictionariesSelectedLst = new ArrayList<String>();
@@ -174,7 +174,9 @@ public class GetDictionariesActivity extends Activity {
             int index = params[0];
             String fileName = dictFiles.get(index);
             String sourceFile = FilenameUtils.concat(downloadsDir.toString(), fileName);
-            final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName));
+
+            // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
+            final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[0];
             final String destDir = FilenameUtils.concat(dictDir.toString(), baseName);
             new File(destDir).mkdirs();
             String message2 = "Destination directory " + destDir;

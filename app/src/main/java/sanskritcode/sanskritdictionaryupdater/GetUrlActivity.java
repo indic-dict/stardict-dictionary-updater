@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-
+// See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends Activity {
     HashSet<String> indexesSelected = MainActivity.indexesSelected;
     public static List<String> dictUrls = new ArrayList<String>();
