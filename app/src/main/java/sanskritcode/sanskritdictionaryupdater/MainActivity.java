@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
-    private static final String[] index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
+    private static final String[] index_indexorum = {"https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md"};
     public static List<String> indexUrls = new ArrayList<String>();
     public static HashSet<String> indexesSelected = new HashSet<String>();
 
