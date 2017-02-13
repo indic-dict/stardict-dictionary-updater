@@ -18,6 +18,7 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
 import org.apache.http.client.params.ClientPNames;
@@ -25,6 +26,7 @@ import org.apache.http.client.params.ClientPNames;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -178,7 +180,14 @@ public class GetDictionariesActivity extends Activity {
             // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
             final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[0];
             final String destDir = FilenameUtils.concat(dictDir.toString(), baseName);
-            new File(destDir).mkdirs();
+            File destDirFile = new File(destDir);
+            destDirFile.mkdirs();
+            try {
+                FileUtils.cleanDirectory(destDirFile);
+            } catch (IOException e) {
+                Log.e("DictExtracter", "Error while cleaning " + destDir);
+                Log.e("DictExtracter", e.toString());
+            }
             String message2 = "Destination directory " + destDir;
             Log.d("DictExtracter", message2);
             try {
