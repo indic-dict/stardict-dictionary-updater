@@ -129,7 +129,7 @@ public class GetDictionariesActivity extends Activity {
             Log.d("DictExtracter", message1);
             topText.setText(message1);
             topText.append("\n" + getString(R.string.dont_navigate_away));
-            new DictExtracter().execute(index);
+            new DictExtractor().execute(index);
         }
     }
 
@@ -155,19 +155,19 @@ public class GetDictionariesActivity extends Activity {
         });
     }
 
-    protected class DictExtracter extends AsyncTask<Integer, Integer, Integer> {
+    protected class DictExtractor extends AsyncTask<Integer, Integer, Integer> {
 
         protected void deleteTarFile(String sourceFile) {
             String message4 = "Deleting " + sourceFile + " " + new File(sourceFile).delete();
             // topText.append(message4);
-            Log.d("DictExtracter", message4);
+            Log.d("DictExtractor", message4);
 
         }
         @Override
         protected void onPostExecute(Integer result) {
             String fileName = dictFiles.get(result);
             String message1 = "Extracted " + fileName;
-            Log.d("DictExtracter", message1);
+            Log.d("DictExtractor", message1);
             topText.setText(message1);
             extractDicts(result + 1);
         }
@@ -184,12 +184,13 @@ public class GetDictionariesActivity extends Activity {
             destDirFile.mkdirs();
             try {
                 FileUtils.cleanDirectory(destDirFile);
+                Log.i("DictExtractor", "Cleaning " + destDir);
             } catch (IOException e) {
-                Log.e("DictExtracter", "Error while cleaning " + destDir);
-                Log.e("DictExtracter", e.toString());
+                Log.e("DictExtractor", "Error while cleaning " + destDir);
+                Log.e("DictExtractor", e.toString());
             }
             String message2 = "Destination directory " + destDir;
-            Log.d("DictExtracter", message2);
+            Log.d("DictExtractor", message2);
             try {
                 TarArchiveInputStream tarInput =
                         new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(sourceFile)));
@@ -200,7 +201,7 @@ public class GetDictionariesActivity extends Activity {
                     String destFile = FilenameUtils.concat(destDir, currentEntry.getName());
                     FileOutputStream fos = new FileOutputStream(destFile);
                     String message3 = "Destination: " + destFile;
-                    Log.d("DictExtracter", message3);
+                    Log.d("DictExtractor", message3);
                     int n = 0;
                     while (-1 != (n = tarInput.read(buffer))) {
                         fos.write(buffer, 0, n);
@@ -210,7 +211,7 @@ public class GetDictionariesActivity extends Activity {
                 tarInput.close();
                 dictFailure.set(index,false);
             } catch (Exception e) {
-                Log.w("DictExtracter", "IOEx:" + e.getStackTrace());
+                Log.w("DictExtractor", "IOEx:" + e.getStackTrace());
                 dictFailure.set(index,true);
             }
             deleteTarFile(sourceFile);
