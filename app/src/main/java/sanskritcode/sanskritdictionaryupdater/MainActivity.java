@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices) -> buttonPressed1 ->
+ * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
  * GetUrlActivity::DictUrlGetter -> (user chooses dictionaries)
  * GetDictionariesActivity -> (getDictionaries <-> downloadDict) -> (extractDict <-> DictExtracter)
  */

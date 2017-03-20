@@ -30,7 +30,7 @@ android:fadeScrollbars="false"
         android:layout_height="wrap_content"
         android:text="@string/proceed_button"
         android:id="@+id/button"
-        android:onClick="buttonPressed1"
+        android:onClick="buttonPressed1 (GetUrlActivity)"
         />
 
 
