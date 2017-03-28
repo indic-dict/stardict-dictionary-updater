@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -25,12 +26,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends Activity {
-    HashSet<String> indexesSelected = MainActivity.indexesSelected;
-    public static List<String> dictUrls = new ArrayList<String>();
+    public static Map<String, String> indexesSelected = MainActivity.indexesSelected;
+    public static Map<String, List<String>> indexedDicts = new LinkedHashMap<String, List<String>>();
     private static final String DICTIONARY_LOCATION = "dict";
     private static final String DOWNLOAD_LOCATION = "dict";
 
@@ -59,7 +62,7 @@ public class GetUrlActivity extends Activity {
 
         setContentView(R.layout.activity_get_url);
         DictUrlGetter dictUrlGetter = new DictUrlGetter();
-        dictUrlGetter.execute(indexesSelected.toArray(new String[0]));
+        dictUrlGetter.execute(indexesSelected.keySet().toArray(new String[0]));
     }
 
 
@@ -73,12 +76,15 @@ public class GetUrlActivity extends Activity {
 
     protected class DictUrlGetter extends AsyncTask<String, Integer, Integer> {
         private final String DICT_URL_GETTER = DictUrlGetter.class.getName();
+        private int dictsRetreieved = 0;
 
         @Override
-        public Integer doInBackground(String... dictionaryListUrls) {
-            Log.i(DICT_URL_GETTER, getString(R.string.use_n_dictionary_indexes) + dictionaryListUrls.length);
-            dictUrls = new ArrayList<String>();
-            for (String url : dictionaryListUrls) {
+        public Integer doInBackground(String... dictionaryListNames) {
+            Log.i(DICT_URL_GETTER, getString(R.string.use_n_dictionary_indexes) + dictionaryListNames.length);
+            indexedDicts = new LinkedHashMap<String, List<String>>();
+            dictsRetreieved = 0;
+            for (String name : dictionaryListNames) {
+                String url = indexesSelected.get(name);
                 Log.i(DICT_URL_GETTER, url);
                 try {
                     DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -92,44 +98,50 @@ public class GetUrlActivity extends Activity {
                     BufferedReader r = new BufferedReader(new InputStreamReader(is));
 
                     String line;
+                    List<String> urls = new ArrayList<String>();
                     while ((line = r.readLine()) != null) {
                         String dictUrl = line.replace("<", "").replace(">", "");
-                        dictUrls.add(dictUrl);
+                        urls.add(dictUrl);
                         Log.d(DICT_URL_GETTER, getString(R.string.added_dictionary_url) + dictUrl);
-                        publishProgress(dictUrls.size());
+                        dictsRetreieved++;
+                        publishProgress(dictsRetreieved);
                     }
+                    indexedDicts.put(name, urls);
                 } catch (IOException e) {
                     Log.e(DICT_URL_GETTER, "Failed " + e.getStackTrace());
                 }
             }
-            Log.i(DICT_URL_GETTER, getString(R.string.added_n_dictionary_urls) + dictUrls.size());
-            return dictUrls.size();
-        }
-
-        // A method used for debugging
-        protected void retainOnlyOneDictForDebugging() {
-            Log.i(DICT_URL_GETTER, "DEBUGGING!");
-            String firstDict = dictUrls.get(0);
-            dictUrls.clear();
-            dictUrls.add(firstDict);
+            Log.i(DICT_URL_GETTER, getString(R.string.added_n_dictionary_urls) + dictsRetreieved);
+            return dictsRetreieved;
         }
 
         @Override
         protected void onPostExecute(Integer result) {
             // retainOnlyOneDictForDebugging();
-            String message = R.string.added_n_dictionary_urls + dictUrls.size() + " " +
+            String message = R.string.added_n_dictionary_urls + dictsRetreieved + " " +
                     getString(R.string.download_dictionaries);
             topText.setText(message);
             LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-            for (String url : dictUrls) {
-                CheckBox cb = new CheckBox(getApplicationContext());
-                cb.setText(url.replaceAll(".*/", ""));
-                cb.setHint(url);
-                cb.setTextColor(Color.BLACK);
-                cb.setChecked(true);
-                dictionariesSelected.add(url);
-                layout.addView(cb, layout.getChildCount());
-                cb.setOnCheckedChangeListener(checkboxListener);
+            for (String indexName : indexedDicts.keySet()) {
+                View ruler = new View(getApplicationContext());
+                ruler.setBackgroundColor(0xFF00FF00);
+                layout.addView(ruler,
+                        new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 2));
+                TextView text = new TextView(getApplicationContext());
+                text.setText("From " + indexName);
+                layout.addView(text,
+                        new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 2));
+
+                for(String url: indexedDicts.get(indexName)) {
+                    CheckBox cb = new CheckBox(getApplicationContext());
+                    cb.setText(url.replaceAll(".*/", ""));
+                    cb.setHint(url);
+                    cb.setTextColor(Color.BLACK);
+                    cb.setChecked(true);
+                    dictionariesSelected.add(url);
+                    layout.addView(cb, layout.getChildCount());
+                    cb.setOnCheckedChangeListener(checkboxListener);
+                }
             }
             button.setText(getString(R.string.proceed_button));
             button.setEnabled(true);

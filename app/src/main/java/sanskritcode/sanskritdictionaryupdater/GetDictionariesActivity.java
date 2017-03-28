@@ -174,6 +174,8 @@ public class GetDictionariesActivity extends Activity {
 
         protected void cleanDirectory(File directory) {
             Log.i("DictExtractor", "Cleaning " + directory);
+
+            Log.d("DictExtractor", "Exists " + directory.exists() + "isDir " + directory.isDirectory());
             File[] files = directory.listFiles();
             Log.d("DictExtractor", "Deleting " + files.length);
             IOException exception = null;
@@ -198,12 +200,15 @@ public class GetDictionariesActivity extends Activity {
             final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[0];
             final String destDir = FilenameUtils.concat(dictDir.toString(), baseName);
             File destDirFile = new File(destDir);
-            destDirFile.mkdirs();
 
-            // The below is not working on my phone as of 201703.
-            // FileUtils.cleanDirectory(destDirFile);
-            Log.i("DictExtractor", "Cleaning " + destDir);
-            cleanDirectory(destDirFile);
+            if (destDirFile.exists()) {
+                // The below is not working on my phone as of 201703.
+                // FileUtils.cleanDirectory(destDirFile);
+                Log.i("DictExtractor", "Cleaning " + destDir);
+                cleanDirectory(destDirFile);
+                destDirFile.delete();
+            }
+            destDirFile.mkdirs();
 
             String message2 = "Destination directory " + destDir;
             Log.d("DictExtractor", message2);

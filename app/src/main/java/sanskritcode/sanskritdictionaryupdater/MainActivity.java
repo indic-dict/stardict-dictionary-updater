@@ -24,9 +24,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
@@ -36,8 +35,8 @@ import java.util.List;
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
     private static final String[] index_indexorum = {"https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md"};
-    public static List<String> indexUrls = new ArrayList<String>();
-    public static HashSet<String> indexesSelected = new HashSet<String>();
+    public static Map<String, String> indexUrls = new LinkedHashMap<String, String>();
+    public static Map<String, String> indexesSelected = new LinkedHashMap<String, String>();
 
     private TextView topText;
     private Button button;
@@ -46,7 +45,7 @@ public class MainActivity extends Activity {
     CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                indexesSelected.add(buttonView.getText().toString());
+                indexesSelected.put(buttonView.getText().toString(), buttonView.getHint().toString());
             } else {
                 indexesSelected.remove(buttonView.getText().toString());
             }
@@ -80,12 +79,13 @@ public class MainActivity extends Activity {
 
         @Override
         public Integer doInBackground(String ... params) {
+        public Integer doInBackground(String ... params) {
             String indexList = params[0];
             Log.i(INDEX_GETTER, indexList);
             try {
                 DefaultHttpClient httpclient = new DefaultHttpClient();
                 HttpGet httppost = new HttpGet(indexList);
-                HttpResponse response = httpclient.execute(httppost);
+                HttpResponse response = htt
                 HttpEntity ht = response.getEntity();
 
                 BufferedHttpEntity buf = new BufferedHttpEntity(ht);
@@ -96,7 +96,8 @@ public class MainActivity extends Activity {
                 String line;
                 while ((line = r.readLine()) != null) {
                     String url = line.replace("<", "").replace(">", "");
-                    indexUrls.add(url);
+                    String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD", "");
+                    indexUrls.put(name, url);
                     Log.d(INDEX_GETTER, getString(R.string.added_index_url) + url);
                     publishProgress(indexUrls.size());
                 }
@@ -110,13 +111,14 @@ public class MainActivity extends Activity {
         protected void onPostExecute(Integer result) {
             // retainOnlyOneDictForDebugging();
             LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-            for (String index: indexUrls) {
+            for (String name: indexUrls.keySet()) {
                 CheckBox cb = new CheckBox(getApplicationContext());
-                cb.setText(index);
+                cb.setText(name);
+                cb.setHint(indexUrls.get(name));
                 cb.setTextColor(Color.BLACK);
                 cb.setChecked(true);
                 cb.setOnCheckedChangeListener(checkboxListener);
-                indexesSelected.add(index);
+                indexesSelected.put(name, indexUrls.get(name));
                 layout.addView(cb, layout.getChildCount());
             }
             button.setText(getString(R.string.proceed_button));
