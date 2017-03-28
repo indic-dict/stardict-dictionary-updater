@@ -41,9 +41,9 @@ public class GetUrlActivity extends Activity {
     CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                dictionariesSelected.add(buttonView.getText().toString());
+                dictionariesSelected.add(buttonView.getHint().toString());
             } else {
-                dictionariesSelected.remove(buttonView.getText().toString());
+                dictionariesSelected.remove(buttonView.getHint().toString());
             }
         }
     };
@@ -60,7 +60,6 @@ public class GetUrlActivity extends Activity {
         setContentView(R.layout.activity_get_url);
         DictUrlGetter dictUrlGetter = new DictUrlGetter();
         dictUrlGetter.execute(indexesSelected.toArray(new String[0]));
-
     }
 
 
@@ -124,7 +123,8 @@ public class GetUrlActivity extends Activity {
             LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
             for (String url : dictUrls) {
                 CheckBox cb = new CheckBox(getApplicationContext());
-                cb.setText(url);
+                cb.setText(url.replaceAll(".*/", ""));
+                cb.setHint(url);
                 cb.setTextColor(Color.BLACK);
                 cb.setChecked(true);
                 dictionariesSelected.add(url);

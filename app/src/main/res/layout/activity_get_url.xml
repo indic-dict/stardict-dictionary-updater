@@ -26,11 +26,11 @@ android:fadeScrollbars="false"
               android:layout_height="wrap_content"/>
 
     <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="buttonPressed1"
         android:text="@string/proceed_button"
-        android:id="@+id/button"
-        android:onClick="buttonPressed1 (GetUrlActivity)"
         />
 
 

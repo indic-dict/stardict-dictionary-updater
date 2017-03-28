@@ -18,7 +18,6 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
 import org.apache.http.client.params.ClientPNames;
@@ -91,7 +90,7 @@ public class GetDictionariesActivity extends Activity {
             } else {
                 topText.setText("Getting " + dictionariesSelectedLst.get(index));
                 topText.append("\n" + getString(R.string.dont_navigate_away));
-                Log.d("downloadDict", topText.getText().toString());
+                Log.d("downloadDict ", topText.getText().toString());
                 downloadDict(index);
             }
         }
@@ -140,6 +139,7 @@ public class GetDictionariesActivity extends Activity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, File response) {
                 dictFiles.add(fileName);
+                Log.i("Got dictionary: ", fileName);
                 dictFailure.set(index,false);
                 getDictionaries(index + 1);
             }
@@ -171,6 +171,23 @@ public class GetDictionariesActivity extends Activity {
             topText.setText(message1);
             extractDicts(result + 1);
         }
+
+        protected void cleanDirectory(File directory) {
+            Log.i("DictExtractor", "Cleaning " + directory);
+            File[] files = directory.listFiles();
+            Log.d("DictExtractor", "Deleting " + files.length);
+            IOException exception = null;
+            if (files == null) {  // null if security restricted
+                Log.e("DictExtractor", "Could not list files - got null");
+            }
+
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                Log.d("DictExtractor", "Deleting " + file.getName());
+                file.delete();
+            }
+        }
+
         @Override
         protected Integer doInBackground(Integer... params) {
             int index = params[0];
@@ -182,13 +199,12 @@ public class GetDictionariesActivity extends Activity {
             final String destDir = FilenameUtils.concat(dictDir.toString(), baseName);
             File destDirFile = new File(destDir);
             destDirFile.mkdirs();
-            try {
-                FileUtils.cleanDirectory(destDirFile);
-                Log.i("DictExtractor", "Cleaning " + destDir);
-            } catch (IOException e) {
-                Log.e("DictExtractor", "Error while cleaning " + destDir);
-                Log.e("DictExtractor", e.toString());
-            }
+
+            // The below is not working on my phone as of 201703.
+            // FileUtils.cleanDirectory(destDirFile);
+            Log.i("DictExtractor", "Cleaning " + destDir);
+            cleanDirectory(destDirFile);
+
             String message2 = "Destination directory " + destDir;
             Log.d("DictExtractor", message2);
             try {
@@ -210,8 +226,9 @@ public class GetDictionariesActivity extends Activity {
                 }
                 tarInput.close();
                 dictFailure.set(index,false);
+                Log.d("DictExtractor", "success!");
             } catch (Exception e) {
-                Log.w("DictExtractor", "IOEx:" + e.getStackTrace());
+                Log.e("DictExtractor", "IOEx:", e);
                 dictFailure.set(index,true);
             }
             deleteTarFile(sourceFile);
