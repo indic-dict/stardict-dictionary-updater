@@ -243,6 +243,8 @@ public class GetDictionariesActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(this, GetUrlActivity.class);
+        startActivity(intent);
     }
 
 }

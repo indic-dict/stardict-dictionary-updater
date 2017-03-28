@@ -79,13 +79,12 @@ public class MainActivity extends Activity {
 
         @Override
         public Integer doInBackground(String ... params) {
-        public Integer doInBackground(String ... params) {
             String indexList = params[0];
             Log.i(INDEX_GETTER, indexList);
             try {
                 DefaultHttpClient httpclient = new DefaultHttpClient();
                 HttpGet httppost = new HttpGet(indexList);
-                HttpResponse response = htt
+                HttpResponse response = httpclient.execute(httppost);
                 HttpEntity ht = response.getEntity();
 
                 BufferedHttpEntity buf = new BufferedHttpEntity(ht);

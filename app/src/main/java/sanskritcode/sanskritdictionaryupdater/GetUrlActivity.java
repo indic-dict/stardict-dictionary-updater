@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -123,14 +122,15 @@ public class GetUrlActivity extends Activity {
             topText.setText(message);
             LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
             for (String indexName : indexedDicts.keySet()) {
-                View ruler = new View(getApplicationContext());
-                ruler.setBackgroundColor(0xFF00FF00);
-                layout.addView(ruler,
-                        new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 2));
                 TextView text = new TextView(getApplicationContext());
+                text.setBackgroundColor(Color.YELLOW);
+                text.setTextColor(Color.BLACK);
+                text.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                text.setVisibility(View.VISIBLE);
                 text.setText("From " + indexName);
-                layout.addView(text,
-                        new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT, 2));
+                layout.addView(text);
 
                 for(String url: indexedDicts.get(indexName)) {
                     CheckBox cb = new CheckBox(getApplicationContext());
@@ -151,5 +151,7 @@ public class GetUrlActivity extends Activity {
     }
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
