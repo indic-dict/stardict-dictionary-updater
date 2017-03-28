@@ -24,13 +24,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
  * GetUrlActivity::DictUrlGetter -> (user chooses dictionaries)
  * GetDictionariesActivity -> (getDictionaries <-> downloadDict) -> (extractDict <-> DictExtracter)
+ *
+ * IntraActivity lifecycle looks like this: http://stackoverflow.com/questions/6509791/onrestart-vs-onresume-android-lifecycle-question
  */
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
@@ -40,7 +44,7 @@ public class MainActivity extends Activity {
 
     private TextView topText;
     private Button button;
-
+    private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
 
     CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -52,23 +56,71 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void addCheckboxes() {
+        // retainOnlyOneDictForDebugging();
+        checkBoxes = new ArrayList<CheckBox>();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+        for (String name: indexUrls.keySet()) {
+            CheckBox cb = new CheckBox(getApplicationContext());
+            cb.setText(name);
+            cb.setHint(indexUrls.get(name));
+            cb.setTextColor(Color.BLACK);
+            cb.setOnCheckedChangeListener(checkboxListener);
+            layout.addView(cb, layout.getChildCount());
+            checkBoxes.add(cb);
+        }
+        for(CheckBox checkBox : checkBoxes) {
+            if (indexesSelected.keySet().contains(checkBox.getText())) {
+                checkBox.setChecked(true);
+            } else {
+                checkBox.setChecked(false);
+            }
+        }
+
+        button.setText(getString(R.string.proceed_button));
+        button.setEnabled(true);
+        // getDictionaries(0);
+
+    }
+
+    // Called everytime at activity load time, even when back button is pressed - as startActivity(intent) is called.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + indexesSelected.toString());
         setContentView(R.layout.activity_main);
+
         topText = (TextView) findViewById(R.id.textView);
         topText.setMovementMethod(new ScrollingMovementMethod());
+
         button = (Button) findViewById(R.id.button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
-        MainActivity.IndexGetter indexGetter = new MainActivity.IndexGetter();
-        indexGetter.execute(index_indexorum);
+
+        if(indexUrls.size() == 0) {
+            MainActivity.IndexGetter indexGetter = new MainActivity.IndexGetter();
+            indexGetter.execute(index_indexorum);
+        } else {
+            addCheckboxes();
+        }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(MAIN_ACTIVITY, "OnStart Indices selected " + indexesSelected.toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        button.setText(R.string.proceed_button);
+        button.setEnabled(true);
+        Log.d(MAIN_ACTIVITY, "onResume Indices selected " + indexesSelected.toString());
+    }
 
     public void buttonPressed1(View v) {
-        button.setText(getString(R.string.buttonWorking));
-        button.setEnabled(false);
+        Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         // intent.putStringArrayListExtra();
         startActivity(intent);
@@ -97,6 +149,7 @@ public class MainActivity extends Activity {
                     String url = line.replace("<", "").replace(">", "");
                     String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD", "");
                     indexUrls.put(name, url);
+                    indexesSelected.put(name, url);
                     Log.d(INDEX_GETTER, getString(R.string.added_index_url) + url);
                     publishProgress(indexUrls.size());
                 }
@@ -108,22 +161,12 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(Integer result) {
-            // retainOnlyOneDictForDebugging();
-            LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-            for (String name: indexUrls.keySet()) {
-                CheckBox cb = new CheckBox(getApplicationContext());
-                cb.setText(name);
-                cb.setHint(indexUrls.get(name));
-                cb.setTextColor(Color.BLACK);
-                cb.setChecked(true);
-                cb.setOnCheckedChangeListener(checkboxListener);
-                indexesSelected.put(name, indexUrls.get(name));
-                layout.addView(cb, layout.getChildCount());
-            }
-            button.setText(getString(R.string.proceed_button));
-            button.setEnabled(true);
-            // getDictionaries(0);
+            addCheckboxes();
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        Log.d(MAIN_ACTIVITY, "onBack Indices selected " + indexesSelected.toString());
     }
 }

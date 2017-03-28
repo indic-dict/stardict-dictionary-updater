@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.common.base.Function;
@@ -41,19 +42,23 @@ public class GetDictionariesActivity extends Activity {
 
     private TextView topText;
     private Button button;
+    private ProgressBar progressBar;
 
     private File sdcard;
     private File downloadsDir;
     private File dictDir;
+    private boolean allDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        allDone = false;
         setContentView(R.layout.activity_get_dictionaries);
         topText = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
@@ -66,6 +71,7 @@ public class GetDictionariesActivity extends Activity {
         if(dictDir.exists()==false) {
             dictDir.mkdirs();
         }
+
         asyncHttpClient.getHttpClient().getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
         getDictionaries(0);
     }
@@ -121,7 +127,15 @@ public class GetDictionariesActivity extends Activity {
             }
             if(successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
 
-            button.setVisibility(View.GONE);
+            button.setEnabled(true);
+            button.setText(R.string.buttonValQuit);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishAffinity();
+                    System.exit(0);
+                }
+            });
             return;
         } else {
             String message1 = "Extracting " + dictionariesSelectedLst.get(index);
@@ -142,6 +156,15 @@ public class GetDictionariesActivity extends Activity {
                 Log.i("Got dictionary: ", fileName);
                 dictFailure.set(index,false);
                 getDictionaries(index + 1);
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onProgress(int bytesWritten, int totalSize) {
+                super.onProgress(bytesWritten, totalSize);
+                progressBar.setMax(totalSize);
+                progressBar.setProgress(bytesWritten);
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -151,6 +174,7 @@ public class GetDictionariesActivity extends Activity {
                 Log.w("downloadDict", message + ":" + throwable.getStackTrace().toString());
                 dictFailure.set(index,true);
                 getDictionaries(index + 1);
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -163,6 +187,7 @@ public class GetDictionariesActivity extends Activity {
             Log.d("DictExtractor", message4);
 
         }
+
         @Override
         protected void onPostExecute(Integer result) {
             String fileName = dictFiles.get(result);
@@ -188,6 +213,11 @@ public class GetDictionariesActivity extends Activity {
                 Log.d("DictExtractor", "Deleting " + file.getName());
                 file.delete();
             }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
         }
 
         @Override
@@ -243,8 +273,9 @@ public class GetDictionariesActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, GetUrlActivity.class);
-        startActivity(intent);
+        if(button.getText().toString() ==  getResources().getString(R.string.buttonValQuit)) {
+            finish();
+        }
     }
 
 }

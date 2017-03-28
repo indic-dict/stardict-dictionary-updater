@@ -31,6 +31,7 @@ import java.util.Map;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends Activity {
+    private static final String ACTIVITY_NAME = "GetUrlActivity";
     public static Map<String, String> indexesSelected = MainActivity.indexesSelected;
     public static Map<String, List<String>> indexedDicts = new LinkedHashMap<String, List<String>>();
     private static final String DICTIONARY_LOCATION = "dict";
@@ -53,6 +54,10 @@ public class GetUrlActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(getLocalClassName(), "whenActivityLoaded indexedDicts " + indexedDicts);
+        indexesSelected = MainActivity.indexesSelected;
+        indexedDicts = new LinkedHashMap<String, List<String>>();
+        dictionariesSelected = new HashSet<String>();
         setContentView(R.layout.activity_get_url);
         topText = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
@@ -64,11 +69,15 @@ public class GetUrlActivity extends Activity {
         dictUrlGetter.execute(indexesSelected.keySet().toArray(new String[0]));
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        button.setText(getString(R.string.proceed_button));
+        button.setEnabled(true);
+    }
 
     public void buttonPressed1(View v) {
         Button button = (Button) findViewById(R.id.button);
-        button.setText(getString(R.string.buttonWorking));
-        button.setEnabled(false);
         Intent intent = new Intent(this, GetDictionariesActivity.class);
         startActivity(intent);
     }
@@ -151,7 +160,7 @@ public class GetUrlActivity extends Activity {
     }
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        indexedDicts = new LinkedHashMap<String, List<String>>();
+        finish();
     }
 }
