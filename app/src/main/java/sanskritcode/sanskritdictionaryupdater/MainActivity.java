@@ -1,10 +1,13 @@
 package sanskritcode.sanskritdictionaryupdater;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +40,6 @@ public class MainActivity extends Activity {
     public static Map<String, String> indexesSelected = new LinkedHashMap<String, String>();
     protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
-    static private TextView topText;
     static private Button button;
     static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
 
@@ -73,9 +75,33 @@ public class MainActivity extends Activity {
                 checkBox.setChecked(false);
             }
         }
-
         button.setText(getString(R.string.proceed_button));
         // getDictionaries(0);
+    }
+
+    private void showNetworkInfo() {
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+
+        TextView warningText = (TextView) findViewById(R.id.main_textView2);
+        warningText.setBackgroundColor(Color.LTGRAY);
+        warningText.setTextColor(Color.RED);
+        if (isConnected) {
+            if (isWiFi) {
+                warningText.setVisibility(View.INVISIBLE);
+            } else {
+                warningText.setText("Alert: Connected, but not on Wifi.");
+                warningText.setVisibility(View.VISIBLE);
+            }
+        } else {
+            warningText.setText("No data connection. Please retry later.");
+            warningText.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -86,8 +112,8 @@ public class MainActivity extends Activity {
         Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
-        topText = (TextView) findViewById(R.id.main_textView);
-        topText.setMovementMethod(new ScrollingMovementMethod());
+        TextView topText = (TextView) findViewById(R.id.main_textView);
+        topText.setMovementMethod(LinkMovementMethod.getInstance());
 
         button = (Button) findViewById(R.id.main_button);
         button.setText(getString(R.string.buttonWorking));
@@ -104,6 +130,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        showNetworkInfo();
         button.setText(R.string.proceed_button);
         button.setClickable(true);
         Log.d(MAIN_ACTIVITY, "onResume Indices selected " + indexesSelected.toString());

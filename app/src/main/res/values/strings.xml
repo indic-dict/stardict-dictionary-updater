@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">Stardict Dictionary Updater</string>
-    <string name="permission_request">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
+    <string name="main_top_info">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
-        Please select the dictionary lists you want to use, then click the button. (Details: https://github.com/sanskrit-coders/stardict-dictionary-updater/blob/master/README.md ).\n
+        Please scroll + select the dictionary lists you want to use, then click the button. (Details: http://bit.ly/dict-update-app ).\n
     </string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="action_settings">Settings</string>

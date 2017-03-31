@@ -1,10 +1,10 @@
 <ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scroll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:fadeScrollbars="false"
-    >
+    android:scrollbarStyle="outsideInset">
 
     <LinearLayout android:id="@+id/main_layout"
                   xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +26,8 @@
             android:linksClickable="true"
             android:longClickable="false"
             android:scrollbars="vertical"
-            android:text="@string/permission_request"/>
+            android:text="@string/main_top_info"
+            android:textSize="18sp"/>
 
         <Button
             android:id="@+id/main_button"
@@ -35,6 +36,13 @@
             android:onClick="buttonPressed1"
             android:text="@string/proceed_button"
             />
+
+        <TextView
+            android:id="@+id/main_textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:visibility="invisible"/>
 
 
     </LinearLayout>

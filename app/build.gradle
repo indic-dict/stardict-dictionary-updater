@@ -8,8 +8,8 @@ android {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 30
-        versionName "3.0"
+        versionCode 301
+        versionName "3.0.1"
         multiDexEnabled = true
         jackOptions {
             enabled false
