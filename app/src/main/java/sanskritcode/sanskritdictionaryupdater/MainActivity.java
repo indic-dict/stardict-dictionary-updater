@@ -3,7 +3,6 @@ package sanskritcode.sanskritdictionaryupdater;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -14,16 +13,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.apache.http.Header;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,9 +32,10 @@ import java.util.Map;
  */
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
-    private static final String[] index_indexorum = {"https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md"};
+    private static final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     public static Map<String, String> indexUrls = new LinkedHashMap<String, String>();
     public static Map<String, String> indexesSelected = new LinkedHashMap<String, String>();
+    protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     static private TextView topText;
     static private Button button;
@@ -53,14 +48,15 @@ public class MainActivity extends Activity {
             } else {
                 indexesSelected.remove(buttonView.getText().toString());
             }
-            button.setClickable(!indexesSelected.isEmpty());
+            button.setEnabled(!indexesSelected.isEmpty());
         }
     };
 
+    // Add checkboxes from indexUrls
     private void addCheckboxes() {
         // retainOnlyOneDictForDebugging();
         checkBoxes = new ArrayList<CheckBox>();
-        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
         for (String name : indexUrls.keySet()) {
             CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(name);
@@ -90,19 +86,13 @@ public class MainActivity extends Activity {
         Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
-        topText = (TextView) findViewById(R.id.textView);
+        topText = (TextView) findViewById(R.id.main_textView);
         topText.setMovementMethod(new ScrollingMovementMethod());
 
-        button = (Button) findViewById(R.id.button);
+        button = (Button) findViewById(R.id.main_button);
         button.setText(getString(R.string.buttonWorking));
         button.setClickable(false);
-
-        if (indexUrls.size() == 0) {
-            MainActivity.IndexGetter indexGetter = new MainActivity.IndexGetter();
-            indexGetter.execute(index_indexorum);
-        } else {
-            addCheckboxes();
-        }
+        getIndices();
     }
 
     @Override
@@ -126,43 +116,31 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    protected class IndexGetter extends AsyncTask<String, Integer, Integer> {
-        private final String INDEX_GETTER = MainActivity.IndexGetter.class.getName();
+    void getIndices() {
+        asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
+            private String CLASS_NAME = this.getClass().getName();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(CLASS_NAME, throwable.toString());
+            }
 
-        @Override
-        public Integer doInBackground(String... params) {
-            String indexList = params[0];
-            Log.i(INDEX_GETTER, indexList);
-            try {
-                DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpGet httppost = new HttpGet(indexList);
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity ht = response.getEntity();
+            @Override
+            public void onProgress(int bytesWritten, int totalSize) {
+                super.onProgress(bytesWritten, totalSize);
+            }
 
-                BufferedHttpEntity buf = new BufferedHttpEntity(ht);
-
-                InputStream is = buf.getContent();
-                BufferedReader r = new BufferedReader(new InputStreamReader(is));
-
-                String line;
-                while ((line = r.readLine()) != null) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                for (String line: responseString.split("\n")) {
                     String url = line.replace("<", "").replace(">", "");
                     String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD", "");
                     indexUrls.put(name, url);
                     indexesSelected.put(name, url);
-                    Log.d(INDEX_GETTER, getString(R.string.added_index_url) + url);
-                    publishProgress(indexUrls.size());
+                    Log.d(CLASS_NAME, getString(R.string.added_index_url) + url);
                 }
-            } catch (IOException e) {
-                Log.e(INDEX_GETTER, "Failed " + e.getStackTrace());
+                addCheckboxes();
             }
-            return 1;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            addCheckboxes();
-        }
+        });
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,16 +14,11 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.apache.http.Header;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -38,7 +32,9 @@ public class GetUrlActivity extends Activity {
     public static Map<String, List<String>> indexedDicts = new LinkedHashMap<String, List<String>>();
     private static final String DICTIONARY_LOCATION = "dict";
     private static final String DOWNLOAD_LOCATION = "dict";
+    protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
+    static private LinearLayout layout;
     static private TextView topText;
     static private Button button;
     static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
@@ -53,8 +49,7 @@ public class GetUrlActivity extends Activity {
             } else {
                 dictionariesSelected.remove(buttonView.getHint().toString());
             }
-            button.setClickable(!dictionariesSelected.isEmpty());
-            Log.d(ACTIVITY_NAME, "button enablement " + button.isClickable());
+            enableButtonIfDictsSelected();
         }
     };
 
@@ -63,6 +58,7 @@ public class GetUrlActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(getLocalClassName(), "whenActivityLoaded indexedDicts " + indexedDicts);
 
+        layout = (LinearLayout) findViewById(R.id.get_url_layout);
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
 
@@ -70,18 +66,23 @@ public class GetUrlActivity extends Activity {
         indexedDicts = new LinkedHashMap<String, List<String>>();
         dictionariesSelected = new HashSet<String>();
         setContentView(R.layout.activity_get_url);
-        topText = (TextView) findViewById(R.id.textView);
-        button = (Button) findViewById(R.id.button);
+        topText = (TextView) findViewById(R.id.get_url_textView);
+
+        button = (Button) findViewById(R.id.get_url_button);
         button.setText(getString(R.string.buttonWorking));
-        button.setClickable(false);
+        button.setEnabled(false);
 
         setContentView(R.layout.activity_get_url);
-        DictUrlGetter dictUrlGetter = new DictUrlGetter();
-        dictUrlGetter.execute(indexesSelected.keySet().toArray(new String[0]));
+        getDictUrls();
+    }
+
+    void enableButtonIfDictsSelected() {
+        button = (Button) findViewById(R.id.get_url_button);
+        button.setEnabled(!dictionariesSelected.isEmpty());
+        Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
 
     public void buttonPressed1(View v) {
-        Button button = (Button) findViewById(R.id.button);
         Intent intent = new Intent(this, GetDictionariesActivity.class);
         startActivity(intent);
     }
@@ -109,86 +110,85 @@ public class GetUrlActivity extends Activity {
                 autoUnselectedDicts++;
             }
         }
+        // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
+        enableButtonIfDictsSelected();
 
         String message = String.format(getString(R.string.autoUnselectedDicts), sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
         topText.append(message);
-        Log.d(ACTIVITY_NAME, topText.getText().toString());
         Log.d(ACTIVITY_NAME, message);
     }
 
-    protected class DictUrlGetter extends AsyncTask<String, Integer, Integer> {
-        private final String DICT_URL_GETTER = DictUrlGetter.class.getName();
-        private int dictsRetreieved = 0;
+    static String getIndexNameFromUrl(String url) {
+        for(String key: indexesSelected.keySet()) {
+            if(indexesSelected.get(key) == url) {
+                return key;
+            }
+        }
+        return null;
+    }
 
-        @Override
-        public Integer doInBackground(String... dictionaryListNames) {
-            Log.i(DICT_URL_GETTER, getString(R.string.use_n_dictionary_indexes) + dictionaryListNames.length);
-            indexedDicts = new LinkedHashMap<String, List<String>>();
-            dictsRetreieved = 0;
-            for (String name : dictionaryListNames) {
-                String url = indexesSelected.get(name);
-                Log.i(DICT_URL_GETTER, url);
-                try {
-                    DefaultHttpClient httpclient = new DefaultHttpClient();
-                    HttpGet httppost = new HttpGet(url);
-                    HttpResponse response = httpclient.execute(httppost);
-                    HttpEntity ht = response.getEntity();
+    // Populates indexedDicts
+    void getDictUrls() {
+        indexedDicts = new LinkedHashMap<String, List<String>>();
+        Log.i(ACTIVITY_NAME, getString(R.string.use_n_dictionary_indexes) + indexesSelected.size());
+        for (String name : indexesSelected.keySet()) {
+            final String url = indexesSelected.get(name);
+            asyncHttpClient.get(url, new TextHttpResponseHandler() {
+                final String LOGGER_NAME = "getDictUrls";
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.e(LOGGER_NAME, "Failed " + throwable.toString());
+                }
 
-                    BufferedHttpEntity buf = new BufferedHttpEntity(ht);
-
-                    InputStream is = buf.getContent();
-                    BufferedReader r = new BufferedReader(new InputStreamReader(is));
-
-                    String line;
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     List<String> urls = new ArrayList<String>();
-                    while ((line = r.readLine()) != null) {
+                    for (String line: responseString.split("\n")) {
                         String dictUrl = line.replace("<", "").replace(">", "");
                         urls.add(dictUrl);
-                        Log.d(DICT_URL_GETTER, getString(R.string.added_dictionary_url) + dictUrl);
-                        dictsRetreieved++;
-                        publishProgress(dictsRetreieved);
+                        Log.d(LOGGER_NAME, getString(R.string.added_dictionary_url) + dictUrl);
                     }
-                    indexedDicts.put(name, urls);
-                } catch (IOException e) {
-                    Log.e(DICT_URL_GETTER, "Failed " + e.getStackTrace());
+                    Log.d(LOGGER_NAME, "Index handled: " + url);
+                    indexedDicts.put(getIndexNameFromUrl(url), urls);
+
+                    if(indexesSelected.size() == indexedDicts.size()) {
+                        addCheckboxes();
+                    }
                 }
+            });
+        }
+    }
+
+    private void addCheckboxes() {
+        layout = (LinearLayout) findViewById(R.id.get_url_layout);
+        for (String indexName : indexedDicts.keySet()) {
+            TextView text = new TextView(getApplicationContext());
+            text.setBackgroundColor(Color.YELLOW);
+            text.setTextColor(Color.BLACK);
+            text.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            text.setVisibility(View.VISIBLE);
+            text.setText("From " + indexName);
+            layout.addView(text);
+
+            for (String url : indexedDicts.get(indexName)) {
+                CheckBox cb = new CheckBox(getApplicationContext());
+                cb.setText(url.replaceAll(".*/", ""));
+                cb.setHint(url);
+                cb.setTextColor(Color.BLACK);
+                layout.addView(cb, layout.getChildCount());
+                cb.setOnCheckedChangeListener(checkboxListener);
+                checkBoxes.add(cb);
             }
-            Log.i(DICT_URL_GETTER, getString(R.string.added_n_dictionary_urls) + dictsRetreieved);
-            return dictsRetreieved;
         }
 
-        @Override
-        protected void onPostExecute(Integer result) {
-            // retainOnlyOneDictForDebugging();
-            String message = String.format(getString(R.string.added_n_dictionary_urls), dictsRetreieved);
-            topText.setText(message);
-            LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-            for (String indexName : indexedDicts.keySet()) {
-                TextView text = new TextView(getApplicationContext());
-                text.setBackgroundColor(Color.YELLOW);
-                text.setTextColor(Color.BLACK);
-                text.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                text.setVisibility(View.VISIBLE);
-                text.setText("From " + indexName);
-                layout.addView(text);
-
-                for (String url : indexedDicts.get(indexName)) {
-                    CheckBox cb = new CheckBox(getApplicationContext());
-                    cb.setText(url.replaceAll(".*/", ""));
-                    cb.setHint(url);
-                    cb.setTextColor(Color.BLACK);
-                    layout.addView(cb, layout.getChildCount());
-                    cb.setOnCheckedChangeListener(checkboxListener);
-                    checkBoxes.add(cb);
-                }
-            }
-            selectCheckboxes();
-            button.setText(getString(R.string.proceed_button));
-            // getDictionaries(0);
-        }
-
+        String message = String.format(getString(R.string.added_n_dictionary_urls), checkBoxes.size());
+        Log.i(ACTIVITY_NAME, message);
+        topText = (TextView) findViewById(R.id.get_url_textView);
+        topText.setText(message);
+        selectCheckboxes();
+        button.setText(getString(R.string.proceed_button));
     }
 
     @Override

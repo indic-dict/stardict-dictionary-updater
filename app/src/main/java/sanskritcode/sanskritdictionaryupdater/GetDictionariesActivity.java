@@ -23,7 +23,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
-import org.apache.http.client.params.ClientPNames;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,11 +68,11 @@ public class GetDictionariesActivity extends Activity {
         dictVersionEditor = sharedDictVersionStore.edit();
         allDone = false;
         setContentView(R.layout.activity_get_dictionaries);
-        topText = (TextView) findViewById(R.id.textView);
-        button = (Button) findViewById(R.id.button);
+        topText = (TextView) findViewById(R.id.get_dict_textView);
+        button = (Button) findViewById(R.id.get_dict_button);
         button.setText(getString(R.string.buttonWorking));
-        button.setClickable(false);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        button.setEnabled(false);
+        progressBar = (ProgressBar) findViewById(R.id.get_dict_progressBar);
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
@@ -87,7 +86,6 @@ public class GetDictionariesActivity extends Activity {
             dictDir.mkdirs();
         }
 
-        asyncHttpClient.getHttpClient().getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
         getDictionaries(0);
     }
 
@@ -100,7 +98,7 @@ public class GetDictionariesActivity extends Activity {
             topText.setText("No dictionaries selected!");
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
-            button.setClickable(true);
+            button.setEnabled(true);
         } else {
             if (index >= dictionariesSelectedLst.size()) {
                 extractDicts(0);
@@ -137,7 +135,7 @@ public class GetDictionariesActivity extends Activity {
         }
         if (successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
 
-        button.setClickable(true);
+        button.setEnabled(true);
         button.setText(R.string.buttonValQuit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

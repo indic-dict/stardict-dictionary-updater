@@ -6,35 +6,36 @@
     android:fadeScrollbars="false"
     >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:id="@+id/layout">
+    <LinearLayout android:id="@+id/main_layout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent"
+                  android:orientation="vertical"
+                  android:paddingBottom="@dimen/activity_vertical_margin"
+                  android:paddingLeft="@dimen/activity_horizontal_margin"
+                  android:paddingRight="@dimen/activity_horizontal_margin"
+                  android:paddingTop="@dimen/activity_vertical_margin"
+                  tools:context=".MainActivity">
 
-    <TextView android:text="@string/permission_request"
-        android:id="@+id/textView"
-        android:scrollbars = "vertical"
-        android:linksClickable="true"
-        android:autoLink="web"
-        android:longClickable="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/main_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:longClickable="false"
+            android:scrollbars="vertical"
+            android:text="@string/permission_request"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/proceed_button"
-        android:id="@+id/button"
-        android:onClick="buttonPressed1"
-        />
+        <Button
+            android:id="@+id/main_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="buttonPressed1"
+            android:text="@string/proceed_button"
+            />
 
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>
