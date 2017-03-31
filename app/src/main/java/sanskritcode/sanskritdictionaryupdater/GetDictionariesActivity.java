@@ -2,7 +2,6 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,17 +42,18 @@ public class GetDictionariesActivity extends Activity {
     private List<String> dictFiles = new ArrayList<String>();
     private List<Boolean> dictFailure = new ArrayList<Boolean>();
 
-    private TextView topText;
-    private Button button;
-    private ProgressBar progressBar;
+    static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    static private TextView topText;
+    static private Button button;
+    static private ProgressBar progressBar;
 
     private File sdcard;
     private File downloadsDir;
     private File dictDir;
     private boolean allDone = false;
 
-    SharedPreferences sharedDictVersionStore;
-    SharedPreferences.Editor dictVersionEditor;
+    static SharedPreferences sharedDictVersionStore;
+    static SharedPreferences.Editor dictVersionEditor;
 
     public static String[] getDictNameAndVersion(String fileName) {
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
@@ -63,7 +64,7 @@ public class GetDictionariesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedDictVersionStore =  getSharedPreferences(
+        sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         dictVersionEditor = sharedDictVersionStore.edit();
         allDone = false;
@@ -71,7 +72,7 @@ public class GetDictionariesActivity extends Activity {
         topText = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
         button.setText(getString(R.string.buttonWorking));
-        button.setEnabled(false);
+        button.setClickable(false);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
@@ -91,11 +92,7 @@ public class GetDictionariesActivity extends Activity {
     }
 
     public void buttonPressed1(View v) {
-        Button button = (Button) findViewById(R.id.button);
-        button.setText(getString(R.string.buttonWorking));
-        button.setEnabled(false);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     protected void getDictionaries(int index) {
@@ -103,7 +100,7 @@ public class GetDictionariesActivity extends Activity {
             topText.setText("No dictionaries selected!");
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
-            button.setEnabled(true);
+            button.setClickable(true);
         } else {
             if (index >= dictionariesSelectedLst.size()) {
                 extractDicts(0);
@@ -140,13 +137,12 @@ public class GetDictionariesActivity extends Activity {
         }
         if (successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
 
-        button.setEnabled(true);
+        button.setClickable(true);
         button.setText(R.string.buttonValQuit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishAffinity();
-                System.exit(0);
             }
         });
         return;

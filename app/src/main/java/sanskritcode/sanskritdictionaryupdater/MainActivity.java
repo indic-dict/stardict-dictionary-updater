@@ -33,7 +33,7 @@ import java.util.Map;
  * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
  * GetUrlActivity::DictUrlGetter -> (user chooses dictionaries)
  * GetDictionariesActivity -> (getDictionaries <-> downloadDict) -> (extractDict <-> DictExtracter)
- *
+ * <p>
  * IntraActivity lifecycle looks like this: http://stackoverflow.com/questions/6509791/onrestart-vs-onresume-android-lifecycle-question
  */
 public class MainActivity extends Activity {
@@ -42,9 +42,9 @@ public class MainActivity extends Activity {
     public static Map<String, String> indexUrls = new LinkedHashMap<String, String>();
     public static Map<String, String> indexesSelected = new LinkedHashMap<String, String>();
 
-    private TextView topText;
-    private Button button;
-    private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    static private TextView topText;
+    static private Button button;
+    static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
 
     CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
             } else {
                 indexesSelected.remove(buttonView.getText().toString());
             }
+            button.setClickable(!indexesSelected.isEmpty());
         }
     };
 
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
         // retainOnlyOneDictForDebugging();
         checkBoxes = new ArrayList<CheckBox>();
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-        for (String name: indexUrls.keySet()) {
+        for (String name : indexUrls.keySet()) {
             CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(name);
             cb.setHint(indexUrls.get(name));
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
             layout.addView(cb, layout.getChildCount());
             checkBoxes.add(cb);
         }
-        for(CheckBox checkBox : checkBoxes) {
+        for (CheckBox checkBox : checkBoxes) {
             if (indexesSelected.keySet().contains(checkBox.getText())) {
                 checkBox.setChecked(true);
             } else {
@@ -78,7 +79,6 @@ public class MainActivity extends Activity {
         }
 
         button.setText(getString(R.string.proceed_button));
-        button.setEnabled(true);
         // getDictionaries(0);
 
     }
@@ -95,9 +95,9 @@ public class MainActivity extends Activity {
 
         button = (Button) findViewById(R.id.button);
         button.setText(getString(R.string.buttonWorking));
-        button.setEnabled(false);
+        button.setClickable(false);
 
-        if(indexUrls.size() == 0) {
+        if (indexUrls.size() == 0) {
             MainActivity.IndexGetter indexGetter = new MainActivity.IndexGetter();
             indexGetter.execute(index_indexorum);
         } else {
@@ -115,7 +115,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         button.setText(R.string.proceed_button);
-        button.setEnabled(true);
+        button.setClickable(true);
         Log.d(MAIN_ACTIVITY, "onResume Indices selected " + indexesSelected.toString());
     }
 
@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
         private final String INDEX_GETTER = MainActivity.IndexGetter.class.getName();
 
         @Override
-        public Integer doInBackground(String ... params) {
+        public Integer doInBackground(String... params) {
             String indexList = params[0];
             Log.i(INDEX_GETTER, indexList);
             try {
