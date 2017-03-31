@@ -1,7 +1,9 @@
 package sanskritcode.sanskritdictionaryupdater;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,14 +42,18 @@ public class GetUrlActivity extends Activity {
     private TextView topText;
     private Button button;
 
+    SharedPreferences sharedDictVersionStore;
+    private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+
     public static HashSet<String> dictionariesSelected = new HashSet<String>();
     CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                dictionariesSelected.add(buttonView.getHint().toString());
-            } else {
-                dictionariesSelected.remove(buttonView.getHint().toString());
-            }
+        if (isChecked) {
+            dictionariesSelected.add(buttonView.getHint().toString());
+        } else {
+            dictionariesSelected.remove(buttonView.getHint().toString());
+        }
+        button.setEnabled(dictionariesSelected.size() > 0);
         }
     };
 
@@ -55,6 +61,10 @@ public class GetUrlActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(getLocalClassName(), "whenActivityLoaded indexedDicts " + indexedDicts);
+
+        sharedDictVersionStore =  getSharedPreferences(
+                getString(R.string.dict_version_store), Context.MODE_PRIVATE);
+
         indexesSelected = MainActivity.indexesSelected;
         indexedDicts = new LinkedHashMap<String, List<String>>();
         dictionariesSelected = new HashSet<String>();
@@ -80,6 +90,35 @@ public class GetUrlActivity extends Activity {
         Button button = (Button) findViewById(R.id.button);
         Intent intent = new Intent(this, GetDictionariesActivity.class);
         startActivity(intent);
+    }
+
+    protected void selectCheckboxes() {
+        boolean currentVersionsKnown = (sharedDictVersionStore.getAll().size() > 0);
+        int autoUnselectedDicts = 0;
+        for(CheckBox cb : checkBoxes) {
+            // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
+            String filename = cb.getHint().toString();
+            boolean proposedVersionNewer = true;
+
+            String[] dictnameParts = GetDictionariesActivity.getDictNameAndVersion(filename);
+            String dictname = dictnameParts[0];
+            if(dictnameParts.length  > 1) {
+                String currentVersion = sharedDictVersionStore.getString(dictname, "0000");
+                String proposedVersion = dictnameParts[1];
+                proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
+            }
+
+            if (proposedVersionNewer) {
+                cb.setChecked(true);
+            } else {
+                autoUnselectedDicts++;
+            }
+        }
+
+        String message = String.format(getString(R.string.autoUnselectedDicts), sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
+        topText.append(message);
+        Log.d(ACTIVITY_NAME, topText.getText().toString());
+        Log.d(ACTIVITY_NAME, message);
     }
 
     protected class DictUrlGetter extends AsyncTask<String, Integer, Integer> {
@@ -126,8 +165,7 @@ public class GetUrlActivity extends Activity {
         @Override
         protected void onPostExecute(Integer result) {
             // retainOnlyOneDictForDebugging();
-            String message = R.string.added_n_dictionary_urls + dictsRetreieved + " " +
-                    getString(R.string.download_dictionaries);
+            String message = String.format(getString(R.string.added_n_dictionary_urls), dictsRetreieved);
             topText.setText(message);
             LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
             for (String indexName : indexedDicts.keySet()) {
@@ -146,14 +184,13 @@ public class GetUrlActivity extends Activity {
                     cb.setText(url.replaceAll(".*/", ""));
                     cb.setHint(url);
                     cb.setTextColor(Color.BLACK);
-                    cb.setChecked(true);
-                    dictionariesSelected.add(url);
                     layout.addView(cb, layout.getChildCount());
                     cb.setOnCheckedChangeListener(checkboxListener);
+                    checkBoxes.add(cb);
                 }
             }
+            selectCheckboxes();
             button.setText(getString(R.string.proceed_button));
-            button.setEnabled(true);
             // getDictionaries(0);
         }
 

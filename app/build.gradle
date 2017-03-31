@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "sanskritcode.sanskritdictionaryupdater"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 21
         versionCode 20
-        versionName "2.8"
+        versionName "2.9"
         multiDexEnabled = true
     }
     buildTypes {

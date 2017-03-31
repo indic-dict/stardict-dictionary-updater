@@ -4,13 +4,13 @@
     <string name="app_name">Stardict Dictionary Updater</string>
     <string name="permission_request">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
-        Please select the dictionary lists you want to use, then click the button. (Details: https://sites.google.com/site/sanskritcode/ ).\n
+        Please select the dictionary lists you want to use, then click the button. (Details: https://github.com/sanskrit-coders/stardict-dictionary-updater/blob/master/README.md ).\n
     </string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="action_settings">Settings</string>
     <string name="proceed_button">Proceed?</string>
     <string name="added_dictionary_url">"Added dictionary: "</string>
-    <string name="added_n_dictionary_urls">"Added so many dictionary urls: "</string>
+    <string name="added_n_dictionary_urls">"Added %d dictionary urls. Pick the dictionaries to install."</string>
     <string name="download_dictionaries">Now we download the dictionaries.</string>
     <string name="use_n_dictionary_indexes">"Will get dictionaries from "</string>
     <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
@@ -24,5 +24,7 @@
     <string name="installing_dictionaries">Installing dictionaries. Please wait. \n !!Don\'t navigate away or we\'ll have to restart.!!\n</string>
     <string name="added_index_url">Added Index: </string>
     <string name="buttonValQuit">Quit?</string>
+    <string name="dict_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
+    <string name="autoUnselectedDicts" formatted="false">Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\'t seem to be new or updated. You can reselect.</string>
 
 </resources>

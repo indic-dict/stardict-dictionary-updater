@@ -1,7 +1,9 @@
 package sanskritcode.sanskritdictionaryupdater;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -49,9 +51,21 @@ public class GetDictionariesActivity extends Activity {
     private File dictDir;
     private boolean allDone = false;
 
+    SharedPreferences sharedDictVersionStore;
+    SharedPreferences.Editor dictVersionEditor;
+
+    public static String[] getDictNameAndVersion(String fileName) {
+        // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
+        // Hence calling getBaseName twice.
+        return FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedDictVersionStore =  getSharedPreferences(
+                getString(R.string.dict_version_store), Context.MODE_PRIVATE);
+        dictVersionEditor = sharedDictVersionStore.edit();
         allDone = false;
         setContentView(R.layout.activity_get_dictionaries);
         topText = (TextView) findViewById(R.id.textView);
@@ -63,12 +77,12 @@ public class GetDictionariesActivity extends Activity {
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
         sdcard = Environment.getExternalStorageDirectory();
-        downloadsDir = new File (sdcard.getAbsolutePath() + "/Download/dicttars");
-        if(downloadsDir.exists()==false) {
+        downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
+        if (downloadsDir.exists() == false) {
             downloadsDir.mkdirs();
         }
-        dictDir = new File (sdcard.getAbsolutePath() + "/dictdata");
-        if(dictDir.exists()==false) {
+        dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
+        if (dictDir.exists() == false) {
             dictDir.mkdirs();
         }
 
@@ -85,13 +99,13 @@ public class GetDictionariesActivity extends Activity {
     }
 
     protected void getDictionaries(int index) {
-        if(dictionariesSelectedLst.size() == 0) {
+        if (dictionariesSelectedLst.size() == 0) {
             topText.setText("No dictionaries selected!");
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
             button.setEnabled(true);
         } else {
-            if(index >= dictionariesSelectedLst.size()) {
+            if (index >= dictionariesSelectedLst.size()) {
                 extractDicts(0);
             } else {
                 topText.setText("Getting " + dictionariesSelectedLst.get(index));
@@ -102,41 +116,45 @@ public class GetDictionariesActivity extends Activity {
         }
     }
 
-    protected void extractDicts(int index) {
-        if(index >= dictFiles.size()) {
-            topText.setText(getString(R.string.finalMessage));
-            List<String> dictNames = Lists.transform(dictionariesSelectedLst, new Function<String, String>() {
-                public String apply(String in) {
-                    return FilenameUtils.getBaseName(in);
-                }
-            });
-            StringBuffer failures = new StringBuffer("");
-            for(int i = 0; i < dictNames.size(); i++) {
-                if(dictFailure.get(i)) {
-                    failures.append("\n" + dictNames.get(i));
-                } else {
-                }
+    protected void whenAllDictsExtracted() {
+        topText.setText(getString(R.string.finalMessage));
+        List<String> dictNames = Lists.transform(dictionariesSelectedLst, new Function<String, String>() {
+            public String apply(String in) {
+                return FilenameUtils.getBaseName(in);
             }
-            if(failures.length() > 0) topText.append("\n" + "Failed on:" + failures);
-            StringBuffer successes = new StringBuffer("");
-            for(int i = 0; i < dictNames.size(); i++) {
-                if(dictFailure.get(i)) {
-                } else {
-                    successes.append("\n" + dictNames.get(i));
-                }
+        });
+        StringBuffer failures = new StringBuffer("");
+        for (int i = 0; i < dictNames.size(); i++) {
+            if (dictFailure.get(i)) {
+                failures.append("\n" + dictNames.get(i));
+            } else {
             }
-            if(successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
+        }
+        if (failures.length() > 0) topText.append("\n" + "Failed on:" + failures);
+        StringBuffer successes = new StringBuffer("");
+        for (int i = 0; i < dictNames.size(); i++) {
+            if (dictFailure.get(i)) {
+            } else {
+                successes.append("\n" + dictNames.get(i));
+            }
+        }
+        if (successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
 
-            button.setEnabled(true);
-            button.setText(R.string.buttonValQuit);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finishAffinity();
-                    System.exit(0);
-                }
-            });
-            return;
+        button.setEnabled(true);
+        button.setText(R.string.buttonValQuit);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishAffinity();
+                System.exit(0);
+            }
+        });
+        return;
+    }
+
+    protected void extractDicts(int index) {
+        if (index >= dictFiles.size()) {
+            whenAllDictsExtracted();
         } else {
             String message1 = "Extracting " + dictionariesSelectedLst.get(index);
             Log.d("DictExtracter", message1);
@@ -154,7 +172,7 @@ public class GetDictionariesActivity extends Activity {
             public void onSuccess(int statusCode, Header[] headers, File response) {
                 dictFiles.add(fileName);
                 Log.i("Got dictionary: ", fileName);
-                dictFailure.set(index,false);
+                dictFailure.set(index, false);
                 getDictionaries(index + 1);
                 progressBar.setVisibility(View.GONE);
             }
@@ -172,11 +190,23 @@ public class GetDictionariesActivity extends Activity {
                 String message = "Failed to get " + fileName;
                 topText.setText(message);
                 Log.w("downloadDict", message + ":" + throwable.getStackTrace().toString());
-                dictFailure.set(index,true);
+                dictFailure.set(index, true);
                 getDictionaries(index + 1);
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    void storeDictVersion(String fileName) {
+        String[] filenameParts = getDictNameAndVersion(fileName);
+        final String dictName = filenameParts[0];
+        if (filenameParts.length > 1) {
+            String dictVersion = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[1];
+            dictVersionEditor.putString(dictName, dictVersion);
+            dictVersionEditor.commit();
+        } else {
+            Log.w("DictExtractor", "Not storing dictionary version for " + fileName);
+        }
     }
 
     protected class DictExtractor extends AsyncTask<Integer, Integer, Integer> {
@@ -185,7 +215,6 @@ public class GetDictionariesActivity extends Activity {
             String message4 = "Deleting " + sourceFile + " " + new File(sourceFile).delete();
             // topText.append(message4);
             Log.d("DictExtractor", message4);
-
         }
 
         @Override
@@ -248,7 +277,7 @@ public class GetDictionariesActivity extends Activity {
 
                 final byte[] buffer = new byte[50000];
                 TarArchiveEntry currentEntry = null;
-                while((currentEntry = (TarArchiveEntry) tarInput.getNextEntry()) != null) {
+                while ((currentEntry = (TarArchiveEntry) tarInput.getNextEntry()) != null) {
                     String destFile = FilenameUtils.concat(destDir, currentEntry.getName());
                     FileOutputStream fos = new FileOutputStream(destFile);
                     String message3 = "Destination: " + destFile;
@@ -260,11 +289,12 @@ public class GetDictionariesActivity extends Activity {
                     fos.close();
                 }
                 tarInput.close();
-                dictFailure.set(index,false);
+                dictFailure.set(index, false);
                 Log.d("DictExtractor", "success!");
+                storeDictVersion(fileName);
             } catch (Exception e) {
                 Log.e("DictExtractor", "IOEx:", e);
-                dictFailure.set(index,true);
+                dictFailure.set(index, true);
             }
             deleteTarFile(sourceFile);
             return index;
@@ -273,7 +303,7 @@ public class GetDictionariesActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(button.getText().toString() ==  getResources().getString(R.string.buttonValQuit)) {
+        if (button.getText().toString() == getResources().getString(R.string.buttonValQuit)) {
             finish();
         }
     }
