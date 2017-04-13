@@ -1,12 +1,16 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -118,6 +122,24 @@ public class MainActivity extends Activity {
         button = (Button) findViewById(R.id.main_button);
         button.setText(getString(R.string.buttonWorking));
         button.setClickable(false);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(getLocalClassName(), "Got INTERNET permissions");
+        } else {
+            Log.e(getLocalClassName(), "Don't have INTERNET permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 102);
+            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET));
+        }
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(getLocalClassName(), "Got ACCESS_NETWORK_STATE permissions");
+        } else {
+            Log.e(getLocalClassName(), "Don't have ACCESS_NETWORK_STATE permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 103);
+            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE));
+        }
+
         getIndices();
     }
 

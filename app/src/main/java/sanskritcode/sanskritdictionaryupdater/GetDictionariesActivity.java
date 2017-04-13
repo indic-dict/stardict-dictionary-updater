@@ -87,12 +87,7 @@ public class GetDictionariesActivity extends Activity {
         } else {
             Log.e(getLocalClassName(), "Don't have write permissions");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(getLocalClassName(), "Got write permissions");
-        } else {
-            Log.e(getLocalClassName(), "Don't have INTERNET permissions");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 102);
+            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE));
         }
 
         sdcard = Environment.getExternalStorageDirectory();
@@ -174,6 +169,15 @@ public class GetDictionariesActivity extends Activity {
 
     public void SendLoagcatMail(){
 
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(getLocalClassName(), "Got READ_LOGS permissions");
+        } else {
+            Log.e(getLocalClassName(), "Don't have READ_LOGS permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_LOGS}, 103);
+            Log.i(getLocalClassName(), "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS));
+        }
+
         // save logcat in file
         File outputFile = new File(downloadsDir,
                 "logcat.txt");
@@ -191,7 +195,7 @@ public class GetDictionariesActivity extends Activity {
         // Set type to "email"
         emailIntent.setType("vnd.android.cursor.dir/email");
         String to[] = {"vishvas.vasuki+STARDICTAPP@gmail.com"};
-        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
         // the attachment
         emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outputFile));
         // the mail subject
@@ -317,8 +321,6 @@ public class GetDictionariesActivity extends Activity {
             File destDirFile = new File(destDir);
 
             if (destDirFile.exists()) {
-                // The below is not working on my phone as of 201703.
-                // FileUtils.cleanDirectory(destDirFile);
                 Log.i("DictExtractor", "Cleaning " + destDir);
                 cleanDirectory(destDirFile);
                 destDirFile.delete();
