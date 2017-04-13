@@ -1,13 +1,17 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -78,15 +82,31 @@ public class GetDictionariesActivity extends Activity {
         dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(getLocalClassName(), "Got write permissions");
+        } else {
+            Log.e(getLocalClassName(), "Don't have write permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(getLocalClassName(), "Got write permissions");
+        } else {
+            Log.e(getLocalClassName(), "Don't have INTERNET permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 102);
+        }
 
         sdcard = Environment.getExternalStorageDirectory();
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (downloadsDir.exists() == false) {
-            downloadsDir.mkdirs();
+            if(!downloadsDir.mkdirs()) {
+                Log.w(getLocalClassName(), "Returned false while mkdirs " + downloadsDir);
+            }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (dictDir.exists() == false) {
-            dictDir.mkdirs();
+            if(!dictDir.mkdirs()) {
+                Log.w(getLocalClassName(), "Returned false while mkdirs " + dictDir);
+            }
         }
 
         getDictionaries(0);
@@ -224,8 +244,8 @@ public class GetDictionariesActivity extends Activity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 String message = "Failed to get " + fileName;
                 topText.setText(message);
-                Log.w("downloadDict", message + ":" + throwable.getStackTrace().toString());
-                Log.w("downloadDict", "status "+  statusCode);
+                Log.e("downloadDict", message + ":" + throwable.getStackTrace().toString());
+                Log.e("downloadDict", "status "+  statusCode);
                 dictFailure.set(index, true);
                 getDictionaries(index + 1);
                 progressBar.setVisibility(View.GONE);
