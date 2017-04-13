@@ -73,6 +73,7 @@ public class GetDictionariesActivity extends Activity {
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
         progressBar = (ProgressBar) findViewById(R.id.get_dict_progressBar);
+        dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
@@ -161,6 +162,7 @@ public class GetDictionariesActivity extends Activity {
     protected void downloadDict(final int index) {
         final String url = dictionariesSelectedLst.get(index);
         final String fileName = FilenameUtils.getName(url);
+        asyncHttpClient.setEnableRedirects(true, true, true);
         asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, File response) {

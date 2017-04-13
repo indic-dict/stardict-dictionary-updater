@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
     private static final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     public static Map<String, String> indexUrls = new LinkedHashMap<String, String>();
-    public static Map<String, String> indexesSelected = new LinkedHashMap<String, String>();
+    public static LinkedHashMap<String, String> indexesSelected = new LinkedHashMap<String, String>();
     protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     static private Button button;
@@ -139,11 +139,13 @@ public class MainActivity extends Activity {
     public void buttonPressed1(View v) {
         Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
+        intent.putExtra("indexesSelected", indexesSelected);
         // intent.putStringArrayListExtra();
         startActivity(intent);
     }
 
     void getIndices() {
+        asyncHttpClient.setEnableRedirects(true, true, true);
         asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
             private String CLASS_NAME = this.getClass().getName();
             @Override

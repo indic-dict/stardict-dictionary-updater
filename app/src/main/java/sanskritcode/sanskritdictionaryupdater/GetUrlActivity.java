@@ -62,7 +62,8 @@ public class GetUrlActivity extends Activity {
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
 
-        indexesSelected = MainActivity.indexesSelected;
+        indexesSelected = (Map<String, String>) getIntent().getSerializableExtra("indexesSelected");
+        Log.d(getLocalClassName(), "indexesSelected " + indexesSelected.toString());
         indexedDicts = new LinkedHashMap<String, List<String>>();
         dictionariesSelected = new HashSet<String>();
         setContentView(R.layout.activity_get_url);
@@ -84,6 +85,7 @@ public class GetUrlActivity extends Activity {
 
     public void buttonPressed1(View v) {
         Intent intent = new Intent(this, GetDictionariesActivity.class);
+        intent.putExtra("dictionariesSelected", dictionariesSelected);
         startActivity(intent);
     }
 
@@ -131,6 +133,7 @@ public class GetUrlActivity extends Activity {
     void getDictUrls() {
         indexedDicts = new LinkedHashMap<String, List<String>>();
         Log.i(ACTIVITY_NAME, getString(R.string.use_n_dictionary_indexes) + indexesSelected.size());
+        asyncHttpClient.setEnableRedirects(true, true, true);
         for (String name : indexesSelected.keySet()) {
             final String url = indexesSelected.get(name);
             asyncHttpClient.get(url, new TextHttpResponseHandler() {
