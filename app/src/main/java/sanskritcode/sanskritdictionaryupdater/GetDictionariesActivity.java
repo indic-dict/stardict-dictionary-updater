@@ -2,7 +2,9 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -78,7 +80,7 @@ public class GetDictionariesActivity extends Activity {
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
         sdcard = Environment.getExternalStorageDirectory();
-        downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
+        downloadsDir = Environment.getDownloadCacheDirectory();
         if (downloadsDir.exists() == false) {
             downloadsDir.mkdirs();
         }
@@ -119,7 +121,7 @@ public class GetDictionariesActivity extends Activity {
                 return FilenameUtils.getBaseName(in);
             }
         });
-        StringBuffer failures = new StringBuffer("");
+        final StringBuffer failures = new StringBuffer("");
         for (int i = 0; i < dictNames.size(); i++) {
             if (dictFailure.get(i)) {
                 failures.append("\n" + dictNames.get(i));
@@ -141,10 +143,40 @@ public class GetDictionariesActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (failures.length() > 0) {
+                    SendLoagcatMail();
+                }
                 finishAffinity();
             }
         });
         return;
+    }
+
+    public void SendLoagcatMail(){
+
+        // save logcat in file
+        File outputFile = new File(Environment.getDataDirectory(),
+                "logcat.txt");
+        Log.i("SendLoagcatMail: ", "logcat file is " + outputFile.getAbsolutePath());
+        try {
+            Runtime.getRuntime().exec(
+                    "logcat -f " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        //send file using email
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        // Set type to "email"
+        emailIntent.setType("vnd.android.cursor.dir/email");
+        String to[] = {"vishvas.vasuki+STARDICTAPP@gmail.com"};
+        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+        // the attachment
+        emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outputFile));
+        // the mail subject
+        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Stardict Updater App Failure report.");
+        startActivity(Intent.createChooser(emailIntent , "Email failure report to maker?..."));
     }
 
     protected void extractDicts(int index) {
