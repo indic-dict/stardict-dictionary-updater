@@ -80,7 +80,7 @@ public class GetDictionariesActivity extends Activity {
         dictFailure = new ArrayList<Boolean>(Collections.nCopies(dictionariesSelectedLst.size(), false));
 
         sdcard = Environment.getExternalStorageDirectory();
-        downloadsDir = Environment.getDownloadCacheDirectory();
+        downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (downloadsDir.exists() == false) {
             downloadsDir.mkdirs();
         }
@@ -155,7 +155,7 @@ public class GetDictionariesActivity extends Activity {
     public void SendLoagcatMail(){
 
         // save logcat in file
-        File outputFile = new File(Environment.getDataDirectory(),
+        File outputFile = new File(downloadsDir,
                 "logcat.txt");
         Log.i("SendLoagcatMail: ", "logcat file is " + outputFile.getAbsolutePath());
         try {
@@ -193,7 +193,9 @@ public class GetDictionariesActivity extends Activity {
 
     protected void downloadDict(final int index) {
         final String url = dictionariesSelectedLst.get(index);
+        Log.d("downloadDict", "Getting " + url);
         final String fileName = FilenameUtils.getName(url);
+        asyncHttpClient.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0");
         asyncHttpClient.setEnableRedirects(true, true, true);
         asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
             @Override
@@ -203,6 +205,11 @@ public class GetDictionariesActivity extends Activity {
                 dictFailure.set(index, false);
                 getDictionaries(index + 1);
                 progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                super.onRetry(retryNo);
             }
 
             @Override
@@ -218,6 +225,7 @@ public class GetDictionariesActivity extends Activity {
                 String message = "Failed to get " + fileName;
                 topText.setText(message);
                 Log.w("downloadDict", message + ":" + throwable.getStackTrace().toString());
+                Log.w("downloadDict", "status "+  statusCode);
                 dictFailure.set(index, true);
                 getDictionaries(index + 1);
                 progressBar.setVisibility(View.GONE);
