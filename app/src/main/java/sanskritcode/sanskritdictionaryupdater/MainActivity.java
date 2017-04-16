@@ -184,7 +184,7 @@ public class MainActivity extends Activity {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 for (String line: responseString.split("\n")) {
                     String url = line.replace("<", "").replace(">", "");
-                    String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD", "");
+                    String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD|master/", "");
                     indexUrls.put(name, url);
                     indexesSelected.put(name, url);
                     Log.d(CLASS_NAME, getString(R.string.added_index_url) + url);
