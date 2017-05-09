@@ -140,7 +140,7 @@ public class GetUrlActivity extends Activity {
                 final String LOGGER_NAME = "getDictUrls";
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Log.e(LOGGER_NAME, "Failed " + throwable.toString());
+                    Log.e(LOGGER_NAME, "Failed ", throwable);
                 }
 
                 @Override

@@ -188,6 +188,7 @@ public class GetDictionariesActivity extends Activity {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            Log.e(getLocalClassName(), "Alas error! ", e);
         }
 
         //send file using email
@@ -248,7 +249,7 @@ public class GetDictionariesActivity extends Activity {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
                 String message = "Failed to get " + fileName;
                 topText.setText(message);
-                Log.e("downloadDict", message + ":" + throwable.getStackTrace().toString());
+                Log.e("downloadDict", message + ":", throwable);
                 Log.e("downloadDict", "status "+  statusCode);
                 dictFailure.set(index, true);
                 getDictionaries(index + 1);

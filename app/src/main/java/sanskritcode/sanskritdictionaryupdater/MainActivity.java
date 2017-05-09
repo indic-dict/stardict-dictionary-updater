@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
             private String CLASS_NAME = this.getClass().getName();
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e(CLASS_NAME, throwable.toString());
+                Log.e(CLASS_NAME, "getIndices", throwable);
             }
 
             @Override
