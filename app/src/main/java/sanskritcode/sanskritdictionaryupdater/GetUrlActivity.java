@@ -136,29 +136,34 @@ public class GetUrlActivity extends Activity {
         asyncHttpClient.setEnableRedirects(true, true, true);
         for (String name : indexesSelected.keySet()) {
             final String url = indexesSelected.get(name);
-            asyncHttpClient.get(url, new TextHttpResponseHandler() {
-                final String LOGGER_NAME = "getDictUrls";
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    Log.e(LOGGER_NAME, "Failed ", throwable);
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    List<String> urls = new ArrayList<String>();
-                    for (String line: responseString.split("\n")) {
-                        String dictUrl = line.replace("<", "").replace(">", "");
-                        urls.add(dictUrl);
-                        Log.d(LOGGER_NAME, getString(R.string.added_dictionary_url) + dictUrl);
+            try {
+                asyncHttpClient.get(url, new TextHttpResponseHandler() {
+                    final String LOGGER_NAME = "getDictUrls";
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.e(LOGGER_NAME, "Failed ", throwable);
                     }
-                    Log.d(LOGGER_NAME, "Index handled: " + url);
-                    indexedDicts.put(getIndexNameFromUrl(url), urls);
 
-                    if(indexesSelected.size() == indexedDicts.size()) {
-                        addCheckboxes();
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        List<String> urls = new ArrayList<String>();
+                        for (String line: responseString.split("\n")) {
+                            String dictUrl = line.replace("<", "").replace(">", "");
+                            urls.add(dictUrl);
+                            Log.d(LOGGER_NAME, getString(R.string.added_dictionary_url) + dictUrl);
+                        }
+                        Log.d(LOGGER_NAME, "Index handled: " + url);
+                        indexedDicts.put(getIndexNameFromUrl(url), urls);
+
+                        if(indexesSelected.size() == indexedDicts.size()) {
+                            addCheckboxes();
+                        }
                     }
-                }
-            });
+                });
+            } catch (Throwable throwable) {
+                Log.e(ACTIVITY_NAME, "error with " + url, throwable);
+                ErrorHandler.sendLoagcatMail(this);
+            }
         }
     }
 
