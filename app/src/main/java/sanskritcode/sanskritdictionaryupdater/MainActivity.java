@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-        boolean isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+        boolean isWiFi = activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
 
         TextView warningText = (TextView) findViewById(R.id.main_textView2);
         warningText.setBackgroundColor(Color.LTGRAY);
