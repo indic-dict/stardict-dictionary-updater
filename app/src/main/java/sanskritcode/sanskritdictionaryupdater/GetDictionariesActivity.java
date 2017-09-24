@@ -175,12 +175,12 @@ public class GetDictionariesActivity extends Activity {
         return;
     }
 
-    protected void setTopTextWhileExtracting(String archiveName, String contentFileBeingExtracted) {
+    protected void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
         String message1 = "Extracting " + archiveName;
         Log.d("DictExtracter", message1);
         topText.setText(message1);
         topText.append("\n" + getString(R.string.dont_navigate_away));
-        topText.append("\n" + "Current file: " + contentFileBeingExtracted);
+        topText.append("\n" + "Current file: " + contentFileExtracted);
     }
 
     protected void extractDicts(int index) {
@@ -262,7 +262,7 @@ public class GetDictionariesActivity extends Activity {
         }
     }
 
-    protected class DictExtractor extends AsyncTask<Integer, Integer, Integer> {
+    protected class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progress, result */ {
         CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
         ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
 
@@ -314,11 +314,10 @@ public class GetDictionariesActivity extends Activity {
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            updateProgressBar(values[0], values[1]);
-            // TODO: Figure out how to pass String here and call:
-            //                     setTopTextWhileExtracting(archiveFileName, someFile);
+            updateProgressBar(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
+            setTopTextWhileExtracting(values[2], values[3]);
         }
 
         @Override
@@ -345,7 +344,7 @@ public class GetDictionariesActivity extends Activity {
             Log.d("DictExtractor", message2);
             try {
                 compressorStreamFactory.setDecompressConcatenated(true);
-                ArchiveInputStream archiveInputStream =inputStreamFromArchive(sourceFile);
+                ArchiveInputStream archiveInputStream = inputStreamFromArchive(sourceFile);
                 int totalFiles = 0;
                 while (archiveInputStream.getNextEntry() != null) {
                     totalFiles = totalFiles + 1;
@@ -355,7 +354,7 @@ public class GetDictionariesActivity extends Activity {
                 }
 
                 // Reopen stream
-                archiveInputStream =inputStreamFromArchive(sourceFile);
+                archiveInputStream = inputStreamFromArchive(sourceFile);
 
                 final byte[] buffer = new byte[50000];
                 String baseNameAccordingToArchiveEntries = null;
@@ -399,7 +398,7 @@ public class GetDictionariesActivity extends Activity {
                             fos.write(buffer, 0, n);
                         }
                         fos.close();
-                        publishProgress(filesRead, totalFiles);
+                        publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile);
                     } else {
                         Log.w("DictExtractor", "Not extracting " + currentEntry.getName());
                     }
