@@ -99,9 +99,12 @@ public class GetUrlActivity extends Activity {
 
             String[] dictnameParts = GetDictionariesActivity.getDictNameAndVersion(filename);
             String dictname = dictnameParts[0];
-            if (dictnameParts.length > 1) {
+            if (sharedDictVersionStore.contains(dictname)) {
                 String currentVersion = sharedDictVersionStore.getString(dictname, getString(R.string.defaultDictVersion));
-                String proposedVersion = dictnameParts[1];
+                String proposedVersion = getString(R.string.defaultDictVersion);
+                if (dictnameParts.length > 1) {
+                    proposedVersion = dictnameParts[1];
+                }
                 proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
             }
 
@@ -121,8 +124,8 @@ public class GetUrlActivity extends Activity {
     }
 
     static String getIndexNameFromUrl(String url) {
-        for(String key: indexesSelected.keySet()) {
-            if(indexesSelected.get(key) == url) {
+        for (String key : indexesSelected.keySet()) {
+            if (indexesSelected.get(key) == url) {
                 return key;
             }
         }
@@ -139,6 +142,7 @@ public class GetUrlActivity extends Activity {
             try {
                 asyncHttpClient.get(url, new TextHttpResponseHandler() {
                     final String LOGGER_NAME = "getDictUrls";
+
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.e(LOGGER_NAME, "Failed ", throwable);
@@ -147,7 +151,7 @@ public class GetUrlActivity extends Activity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
                         List<String> urls = new ArrayList<String>();
-                        for (String line: responseString.split("\n")) {
+                        for (String line : responseString.split("\n")) {
                             String dictUrl = line.replace("<", "").replace(">", "");
                             urls.add(dictUrl);
                             Log.d(LOGGER_NAME, getString(R.string.added_dictionary_url) + dictUrl);
@@ -155,7 +159,7 @@ public class GetUrlActivity extends Activity {
                         Log.d(LOGGER_NAME, "Index handled: " + url);
                         indexedDicts.put(getIndexNameFromUrl(url), urls);
 
-                        if(indexesSelected.size() == indexedDicts.size()) {
+                        if (indexesSelected.size() == indexedDicts.size()) {
                             addCheckboxes();
                         }
                     }
