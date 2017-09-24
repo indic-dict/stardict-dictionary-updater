@@ -16,3 +16,5 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-pali/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-pali/master/pali-en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-tamil/master/ta-head/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/en-head/en-entries/tars/tars.MD>
+

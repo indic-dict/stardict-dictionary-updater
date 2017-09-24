@@ -24,8 +24,10 @@ import com.google.common.collect.Lists;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
@@ -246,6 +248,8 @@ public class GetDictionariesActivity extends Activity {
     }
 
     protected class DictExtractor extends AsyncTask<Integer, Integer, Integer> {
+        CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
+        ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
 
         protected void deleteTarFile(String sourceFile) {
             String message4 = "Deleting " + sourceFile + " " + new File(sourceFile).delete();
@@ -306,12 +310,13 @@ public class GetDictionariesActivity extends Activity {
             String message2 = "Destination directory " + destDir;
             Log.d("DictExtractor", message2);
             try {
-                TarArchiveInputStream tarInput =
-                        new TarArchiveInputStream(new GzipCompressorInputStream(new FileInputStream(sourceFile)));
+                compressorStreamFactory.setDecompressConcatenated(true);
+                ArchiveInputStream tarInput =
+                        archiveStreamFactory.createArchiveInputStream(compressorStreamFactory.createCompressorInputStream(new FileInputStream(sourceFile)));
 
                 final byte[] buffer = new byte[50000];
-                TarArchiveEntry currentEntry = null;
-                while ((currentEntry = (TarArchiveEntry) tarInput.getNextEntry()) != null) {
+                ArchiveEntry currentEntry = null;
+                while ((currentEntry = (ArchiveEntry) tarInput.getNextEntry()) != null) {
                     String destFile = FilenameUtils.concat(destDir, currentEntry.getName());
                     FileOutputStream fos = new FileOutputStream(destFile);
                     String message3 = "Destination: " + destFile;
