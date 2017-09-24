@@ -100,7 +100,7 @@ public class GetUrlActivity extends Activity {
             String[] dictnameParts = GetDictionariesActivity.getDictNameAndVersion(filename);
             String dictname = dictnameParts[0];
             if (dictnameParts.length > 1) {
-                String currentVersion = sharedDictVersionStore.getString(dictname, "0000");
+                String currentVersion = sharedDictVersionStore.getString(dictname, getString(R.string.defaultDictVersion));
                 String proposedVersion = dictnameParts[1];
                 proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
             }

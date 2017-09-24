@@ -32,6 +32,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.Header;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -96,13 +97,13 @@ public class GetDictionariesActivity extends Activity {
         sdcard = Environment.getExternalStorageDirectory();
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (downloadsDir.exists() == false) {
-            if(!downloadsDir.mkdirs()) {
+            if (!downloadsDir.mkdirs()) {
                 Log.w(getLocalClassName(), "Returned false while mkdirs " + downloadsDir);
             }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (dictDir.exists() == false) {
-            if(!dictDir.mkdirs()) {
+            if (!dictDir.mkdirs()) {
                 Log.w(getLocalClassName(), "Returned false while mkdirs " + dictDir);
             }
         }
@@ -226,7 +227,7 @@ public class GetDictionariesActivity extends Activity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                    Log.e("downloadDict", "status " +  statusCode);
+                    Log.e("downloadDict", "status " + statusCode);
                     handleDownloadDictFailure(index, url, throwable);
                 }
             });
@@ -243,7 +244,9 @@ public class GetDictionariesActivity extends Activity {
             dictVersionEditor.putString(dictName, dictVersion);
             dictVersionEditor.commit();
         } else {
-            Log.w("DictExtractor", "Not storing dictionary version for " + fileName);
+            Log.w("DictExtractor", "Storing default dictionary version for " + fileName);
+            dictVersionEditor.putString(dictName, getString(R.string.defaultDictVersion));
+            dictVersionEditor.commit();
         }
     }
 
@@ -269,7 +272,6 @@ public class GetDictionariesActivity extends Activity {
         protected void cleanDirectory(File directory) {
             Log.i("DictExtractor", "Cleaning " + directory);
 
-            Log.d("DictExtractor", "Exists " + directory.exists() + "isDir " + directory.isDirectory());
             File[] files = directory.listFiles();
             Log.d("DictExtractor", "Deleting " + files.length);
             IOException exception = null;
@@ -292,45 +294,82 @@ public class GetDictionariesActivity extends Activity {
         @Override
         protected Integer doInBackground(Integer... params) {
             int index = params[0];
-            String fileName = dictFiles.get(index);
-            String sourceFile = FilenameUtils.concat(downloadsDir.toString(), fileName);
+            String archiveFileName = dictFiles.get(index);
+            String sourceFile = FilenameUtils.concat(downloadsDir.toString(), archiveFileName);
 
             // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
-            final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[0];
-            final String destDir = FilenameUtils.concat(dictDir.toString(), baseName);
-            File destDirFile = new File(destDir);
+            final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(archiveFileName)).split("__")[0];
+            final String initialDestDir = FilenameUtils.concat(dictDir.toString(), baseName);
+            File destDirFile = new File(initialDestDir);
 
+            Log.d("DictExtractor", "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
             if (destDirFile.exists()) {
-                Log.i("DictExtractor", "Cleaning " + destDir);
+                Log.i("DictExtractor", "Cleaning " + initialDestDir);
                 cleanDirectory(destDirFile);
-                destDirFile.delete();
+            } else {
+                Log.i("DictExtractor", "Creating afresh the directory " + destDirFile.mkdirs());
             }
-            destDirFile.mkdirs();
+            Log.d("DictExtractor", "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
 
-            String message2 = "Destination directory " + destDir;
+            String message2 = "Destination directory " + initialDestDir;
             Log.d("DictExtractor", message2);
             try {
                 compressorStreamFactory.setDecompressConcatenated(true);
-                ArchiveInputStream tarInput =
-                        archiveStreamFactory.createArchiveInputStream(compressorStreamFactory.createCompressorInputStream(new FileInputStream(sourceFile)));
+                // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
+                // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
+                ArchiveInputStream archiveInputStream =
+                        archiveStreamFactory.createArchiveInputStream(
+                                new BufferedInputStream(compressorStreamFactory.createCompressorInputStream(
+                                        new BufferedInputStream(new FileInputStream(sourceFile))
+                                )));
 
                 final byte[] buffer = new byte[50000];
                 ArchiveEntry currentEntry = null;
-                while ((currentEntry = (ArchiveEntry) tarInput.getNextEntry()) != null) {
-                    String destFile = FilenameUtils.concat(destDir, currentEntry.getName());
-                    FileOutputStream fos = new FileOutputStream(destFile);
-                    String message3 = "Destination: " + destFile;
-                    Log.d("DictExtractor", message3);
-                    int n = 0;
-                    while (-1 != (n = tarInput.read(buffer))) {
-                        fos.write(buffer, 0, n);
+                String baseNameAccordingToArchiveEntries = null;
+                File resourceDirFile = new File(FilenameUtils.concat(initialDestDir, "res"));
+                while ((currentEntry = (ArchiveEntry) archiveInputStream.getNextEntry()) != null) {
+                    String destFileName = FilenameUtils.getName(currentEntry.getName());
+                    String destFileExtension = FilenameUtils.getExtension(destFileName);
+                    boolean isResourceFile = currentEntry.getName().replace(destFileName, "").endsWith("/res/");
+                    Log.d("DictExtractor", "isResourceFile " + isResourceFile);
+                    if (isResourceFile && !resourceDirFile.exists()) {
+                        Log.i("DictExtractor", "Creating afresh the resource directory " + resourceDirFile.mkdirs());
                     }
-                    fos.close();
+                    if (isResourceFile || destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
+                        String destFile = FilenameUtils.concat(initialDestDir, destFileName);
+                        if (baseNameAccordingToArchiveEntries == null) {
+                            baseNameAccordingToArchiveEntries = FilenameUtils.getBaseName(destFileName);
+                        } else {
+                            if (!baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(destFileName)) &&
+                                    // Check xyz.dict.dz
+                                    !baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(FilenameUtils.getBaseName(destFileName)))) {
+                                throw new Exception("baseNameAccordingToArchiveEntries inconsistent: " + destFileName + " vs expected " + baseNameAccordingToArchiveEntries);
+                            }
+                        }
+                        FileOutputStream fos = new FileOutputStream(destFile);
+                        String message3 = "Destination: " + destFile;
+                        Log.d("DictExtractor", message3);
+                        int n = 0;
+                        while (-1 != (n = archiveInputStream.read(buffer))) {
+                            fos.write(buffer, 0, n);
+                        }
+                        fos.close();
+                    } else {
+                        Log.w("DictExtractor", "Not extracting " + currentEntry.getName());
+                    }
                 }
-                tarInput.close();
+                archiveInputStream.close();
+                if (baseNameAccordingToArchiveEntries != baseName) {
+                    Log.d("DictExtractor", "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
+                    final String finalDestDir = FilenameUtils.concat(dictDir.toString(), baseNameAccordingToArchiveEntries);
+                    final boolean result = destDirFile.renameTo(new File(finalDestDir));
+                    Log.w("DictExtractor", "Renaming the dict directory with result: " + result);
+                }
+
+
                 dictFailure.set(index, false);
                 Log.d("DictExtractor", "success!");
-                storeDictVersion(fileName);
+                storeDictVersion(archiveFileName);
             } catch (Exception e) {
                 Log.e("DictExtractor", "IOEx:", e);
                 dictFailure.set(index, true);
