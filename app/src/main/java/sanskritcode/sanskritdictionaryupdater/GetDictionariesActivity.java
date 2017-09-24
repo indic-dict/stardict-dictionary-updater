@@ -281,6 +281,9 @@ public class GetDictionariesActivity extends Activity {
 
             for (int i = 0; i < files.length; i++) {
                 File file = files[i];
+                if (file.isDirectory()) {
+                    cleanDirectory(file);
+                }
                 Log.d("DictExtractor", "Deleting " + file.getName());
                 file.delete();
             }
@@ -330,25 +333,32 @@ public class GetDictionariesActivity extends Activity {
                 while ((currentEntry = (ArchiveEntry) archiveInputStream.getNextEntry()) != null) {
                     String destFileName = FilenameUtils.getName(currentEntry.getName());
                     String destFileExtension = FilenameUtils.getExtension(destFileName);
-                    boolean isResourceFile = currentEntry.getName().replace(destFileName, "").endsWith("/res/");
+                    boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").endsWith("/res/");
                     Log.d("DictExtractor", "isResourceFile " + isResourceFile);
+                    String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
+                    Log.d("DictExtractor", message3);
                     if (isResourceFile && !resourceDirFile.exists()) {
                         Log.i("DictExtractor", "Creating afresh the resource directory " + resourceDirFile.mkdirs());
                     }
+                    String destFileDir = initialDestDir;
+                    if (isResourceFile) {
+                        destFileDir = resourceDirFile.getAbsolutePath();
+                    }
+
                     if (isResourceFile || destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
-                        String destFile = FilenameUtils.concat(initialDestDir, destFileName);
-                        if (baseNameAccordingToArchiveEntries == null) {
-                            baseNameAccordingToArchiveEntries = FilenameUtils.getBaseName(destFileName);
-                        } else {
-                            if (!baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(destFileName)) &&
-                                    // Check xyz.dict.dz
-                                    !baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(FilenameUtils.getBaseName(destFileName)))) {
-                                throw new Exception("baseNameAccordingToArchiveEntries inconsistent: " + destFileName + " vs expected " + baseNameAccordingToArchiveEntries);
+                        String destFile = FilenameUtils.concat(destFileDir, destFileName);
+                        if (!isResourceFile && destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
+                            if (baseNameAccordingToArchiveEntries == null) {
+                                baseNameAccordingToArchiveEntries = FilenameUtils.getBaseName(destFileName);
+                            } else {
+                                if (!baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(destFileName)) &&
+                                        // Check xyz.dict.dz
+                                        !baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(FilenameUtils.getBaseName(destFileName)))) {
+                                    throw new Exception("baseNameAccordingToArchiveEntries inconsistent: " + destFileName + " vs expected " + baseNameAccordingToArchiveEntries);
+                                }
                             }
                         }
                         FileOutputStream fos = new FileOutputStream(destFile);
-                        String message3 = "Destination: " + destFile;
-                        Log.d("DictExtractor", message3);
                         int n = 0;
                         while (-1 != (n = archiveInputStream.read(buffer))) {
                             fos.write(buffer, 0, n);
@@ -362,7 +372,12 @@ public class GetDictionariesActivity extends Activity {
                 if (baseNameAccordingToArchiveEntries != baseName) {
                     Log.d("DictExtractor", "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
                     final String finalDestDir = FilenameUtils.concat(dictDir.toString(), baseNameAccordingToArchiveEntries);
-                    final boolean result = destDirFile.renameTo(new File(finalDestDir));
+                    final File finalDestDirFile = new File(finalDestDir);
+                    if (finalDestDirFile.exists()) {
+                        cleanDirectory(finalDestDirFile);
+                        Log.w("DictExtractor", "Deleting preexisting dict directory with result: " + finalDestDirFile.delete());
+                    }
+                    final boolean result = destDirFile.renameTo(finalDestDirFile);
                     Log.w("DictExtractor", "Renaming the dict directory with result: " + result);
                 }
 
