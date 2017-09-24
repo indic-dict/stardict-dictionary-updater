@@ -8,6 +8,7 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-vyAkaraNa/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-hindi/master/hi-head/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-hindi/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-kannada/master/kn-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-kannada/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-telugu/master/te-head/tars/tars.MD>
@@ -17,4 +18,5 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-pali/master/pali-en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-tamil/master/ta-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/en-head/en-entries/tars/tars.MD>
-
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/en-head/other-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/other-head/tars/tars.MD>
