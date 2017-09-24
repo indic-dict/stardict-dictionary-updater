@@ -348,13 +348,15 @@ public class GetDictionariesActivity extends Activity {
                     if (isResourceFile || destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
                         String destFile = FilenameUtils.concat(destFileDir, destFileName);
                         if (!isResourceFile && destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
+                            String baseNameAccordingToArchiveEntry = FilenameUtils.getBaseName(destFileName);
+                            while (!FilenameUtils.getExtension(baseNameAccordingToArchiveEntry).isEmpty()) {
+                                baseNameAccordingToArchiveEntry = FilenameUtils.getBaseName(baseNameAccordingToArchiveEntry);
+                            }
                             if (baseNameAccordingToArchiveEntries == null) {
-                                baseNameAccordingToArchiveEntries = FilenameUtils.getBaseName(destFileName);
+                                baseNameAccordingToArchiveEntries = baseNameAccordingToArchiveEntry;
                             } else {
-                                if (!baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(destFileName)) &&
-                                        // Check xyz.dict.dz
-                                        !baseNameAccordingToArchiveEntries.equals(FilenameUtils.getBaseName(FilenameUtils.getBaseName(destFileName)))) {
-                                    throw new Exception("baseNameAccordingToArchiveEntries inconsistent: " + destFileName + " vs expected " + baseNameAccordingToArchiveEntries);
+                                if (!baseNameAccordingToArchiveEntries.equals(baseNameAccordingToArchiveEntry)) {
+                                    throw new Exception("baseNameAccordingToArchiveEntries inconsistent for: " + destFileName + "  Expected " + baseNameAccordingToArchiveEntries);
                                 }
                             }
                         }
