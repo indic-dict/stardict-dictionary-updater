@@ -24,9 +24,11 @@ import com.google.common.collect.Lists;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
+import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
@@ -35,6 +37,7 @@ import org.apache.http.Header;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -172,14 +175,19 @@ public class GetDictionariesActivity extends Activity {
         return;
     }
 
+    protected void setTopTextWhileExtracting(String archiveName, String contentFileBeingExtracted) {
+        String message1 = "Extracting " + archiveName;
+        Log.d("DictExtracter", message1);
+        topText.setText(message1);
+        topText.append("\n" + getString(R.string.dont_navigate_away));
+        topText.append("\n" + "Current file: " + contentFileBeingExtracted);
+    }
+
     protected void extractDicts(int index) {
         if (index >= dictFiles.size()) {
             whenAllDictsExtracted();
         } else {
-            String message1 = "Extracting " + dictionariesSelectedLst.get(index);
-            Log.d("DictExtracter", message1);
-            topText.setText(message1);
-            topText.append("\n" + getString(R.string.dont_navigate_away));
+            setTopTextWhileExtracting(dictionariesSelectedLst.get(index), "");
             new DictExtractor().execute(index);
         }
     }
@@ -192,6 +200,12 @@ public class GetDictionariesActivity extends Activity {
         dictFailure.set(index, true);
         getDictionaries(index + 1);
         progressBar.setVisibility(View.GONE);
+    }
+
+    protected void updateProgressBar(int progress, int total) {
+        progressBar.setMax(total);
+        progressBar.setProgress(progress);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     protected void downloadDict(final int index) {
@@ -220,9 +234,7 @@ public class GetDictionariesActivity extends Activity {
                 @Override
                 public void onProgress(int bytesWritten, int totalSize) {
                     super.onProgress(bytesWritten, totalSize);
-                    progressBar.setMax(totalSize);
-                    progressBar.setProgress(bytesWritten);
-                    progressBar.setVisibility(View.VISIBLE);
+                    updateProgressBar(bytesWritten, totalSize);
                 }
 
                 @Override
@@ -267,6 +279,7 @@ public class GetDictionariesActivity extends Activity {
             Log.d("DictExtractor", message1);
             topText.setText(message1);
             extractDicts(result + 1);
+            progressBar.setVisibility(View.GONE);
         }
 
         protected void cleanDirectory(File directory) {
@@ -289,9 +302,23 @@ public class GetDictionariesActivity extends Activity {
             }
         }
 
+        protected ArchiveInputStream inputStreamFromArchive(String sourceFile) throws FileNotFoundException, CompressorException, ArchiveException {
+            // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
+            // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
+            ArchiveInputStream archiveInputStream =
+                    archiveStreamFactory.createArchiveInputStream(
+                            new BufferedInputStream(compressorStreamFactory.createCompressorInputStream(
+                                    new BufferedInputStream(new FileInputStream(sourceFile))
+                            )));
+            return archiveInputStream;
+        }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
+            updateProgressBar(values[0], values[1]);
+            // TODO: Figure out how to pass String here and call:
+            //                     setTopTextWhileExtracting(archiveFileName, someFile);
         }
 
         @Override
@@ -318,19 +345,25 @@ public class GetDictionariesActivity extends Activity {
             Log.d("DictExtractor", message2);
             try {
                 compressorStreamFactory.setDecompressConcatenated(true);
-                // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
-                // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
-                ArchiveInputStream archiveInputStream =
-                        archiveStreamFactory.createArchiveInputStream(
-                                new BufferedInputStream(compressorStreamFactory.createCompressorInputStream(
-                                        new BufferedInputStream(new FileInputStream(sourceFile))
-                                )));
+                ArchiveInputStream archiveInputStream =inputStreamFromArchive(sourceFile);
+                int totalFiles = 0;
+                while (archiveInputStream.getNextEntry() != null) {
+                    totalFiles = totalFiles + 1;
+                }
+                if (totalFiles == 0) {
+                    throw new Exception("0 files in archive??!");
+                }
+
+                // Reopen stream
+                archiveInputStream =inputStreamFromArchive(sourceFile);
 
                 final byte[] buffer = new byte[50000];
-                ArchiveEntry currentEntry = null;
                 String baseNameAccordingToArchiveEntries = null;
+                ArchiveEntry currentEntry = null;
                 File resourceDirFile = new File(FilenameUtils.concat(initialDestDir, "res"));
+                int filesRead = 0;
                 while ((currentEntry = (ArchiveEntry) archiveInputStream.getNextEntry()) != null) {
+                    filesRead = filesRead + 1;
                     String destFileName = FilenameUtils.getName(currentEntry.getName());
                     String destFileExtension = FilenameUtils.getExtension(destFileName);
                     boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").endsWith("/res/");
@@ -366,6 +399,7 @@ public class GetDictionariesActivity extends Activity {
                             fos.write(buffer, 0, n);
                         }
                         fos.close();
+                        publishProgress(filesRead, totalFiles);
                     } else {
                         Log.w("DictExtractor", "Not extracting " + currentEntry.getName());
                     }
