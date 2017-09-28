@@ -57,6 +57,7 @@ public class GetDictionariesActivity extends Activity {
     static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
     static private TextView topText;
     static private Button button;
+    static private Button button_2;
     static private ProgressBar progressBar;
 
     private File sdcard;
@@ -85,6 +86,7 @@ public class GetDictionariesActivity extends Activity {
         button = (Button) findViewById(R.id.get_dict_button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
+        button_2 = (Button) findViewById(R.id.get_dict_button_2);
         progressBar = (ProgressBar) findViewById(R.id.get_dict_progressBar);
         dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
         dictionariesSelectedLst.addAll(dictionariesSelected);
@@ -160,18 +162,31 @@ public class GetDictionariesActivity extends Activity {
         }
         if (successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
 
-        button.setEnabled(true);
         button.setText(R.string.buttonValQuit);
+        if (failures.length() == 0) {
+            button.setEnabled(true);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishAffinity();
+                }
+            });
+        } else {
+            button.setEnabled(false);
+        }
+
         final Activity thisActivity = this;
-        button.setOnClickListener(new View.OnClickListener() {
+        button_2.setText(R.string.PROBLEM_SEND_LOG);
+        button_2.setVisibility(View.VISIBLE);
+        button_2.setEnabled(true);
+        button_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (failures.length() > 0) {
-                    ErrorHandler.sendLoagcatMail(thisActivity);
-                }
+                ErrorHandler.sendLoagcatMail(thisActivity);
                 finishAffinity();
             }
         });
+
         return;
     }
 

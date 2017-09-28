@@ -27,5 +27,6 @@
     <string name="dict_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
     <string name="autoUnselectedDicts" formatted="false">Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\'t seem to be new or updated. You can reselect.</string>
     <string name="defaultDictVersion">0000</string>
+    <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
 
 </resources>
