@@ -17,8 +17,6 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -39,7 +37,7 @@ public class GetUrlActivity extends Activity {
 
     private SharedPreferences sharedDictVersionStore;
 
-    public static HashSet<String> dictionariesSelected = new HashSet<>();
+    private static HashSet<String> dictionariesSelected = new HashSet<>();
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
@@ -56,7 +54,7 @@ public class GetUrlActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(getLocalClassName(), "whenActivityLoaded indexedDicts " + indexedDicts);
 
-        layout = (LinearLayout) findViewById(R.id.get_url_layout);
+        layout = findViewById(R.id.get_url_layout);
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
 
@@ -66,9 +64,9 @@ public class GetUrlActivity extends Activity {
         indexedDicts = new LinkedHashMap<>();
         dictionariesSelected = new HashSet<>();
         setContentView(R.layout.activity_get_url);
-        topText = (TextView) findViewById(R.id.get_url_textView);
+        topText = findViewById(R.id.get_url_textView);
 
-        button = (Button) findViewById(R.id.get_url_button);
+        button = findViewById(R.id.get_url_button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
 
@@ -77,7 +75,7 @@ public class GetUrlActivity extends Activity {
     }
 
     private void enableButtonIfDictsSelected() {
-        button = (Button) findViewById(R.id.get_url_button);
+        button = findViewById(R.id.get_url_button);
         button.setEnabled(!dictionariesSelected.isEmpty());
         Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
@@ -116,7 +114,7 @@ public class GetUrlActivity extends Activity {
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
         enableButtonIfDictsSelected();
 
-        String message = String.format(getString(R.string.autoUnselectedDicts), sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
+        String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
         topText.append(message);
         Log.d(ACTIVITY_NAME, message);
     }
@@ -170,7 +168,7 @@ public class GetUrlActivity extends Activity {
     }
 
     private void addCheckboxes() {
-        layout = (LinearLayout) findViewById(R.id.get_url_layout);
+        layout = findViewById(R.id.get_url_layout);
         for (String indexName : indexedDicts.keySet()) {
             TextView text = new TextView(getApplicationContext());
             text.setBackgroundColor(Color.YELLOW);
@@ -179,7 +177,7 @@ public class GetUrlActivity extends Activity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             text.setVisibility(View.VISIBLE);
-            text.setText("From " + indexName);
+            text.setText(String.format(getString(R.string.fromSomeIndex), indexName));
             layout.addView(text);
 
             for (String url : indexedDicts.get(indexName)) {
@@ -195,7 +193,7 @@ public class GetUrlActivity extends Activity {
 
         String message = String.format(getString(R.string.added_n_dictionary_urls), checkBoxes.size());
         Log.i(ACTIVITY_NAME, message);
-        topText = (TextView) findViewById(R.id.get_url_textView);
+        topText = findViewById(R.id.get_url_textView);
         topText.setText(message);
         selectCheckboxes();
         button.setText(getString(R.string.proceed_button));

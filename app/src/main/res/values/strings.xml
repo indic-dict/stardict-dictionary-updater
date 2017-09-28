@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Stardict Dictionary Updater</string>
     <string name="main_top_info">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
@@ -9,7 +9,7 @@
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="proceed_button">Proceed?</string>
     <string name="added_dictionary_url">"Added dictionary: "</string>
-    <string name="added_n_dictionary_urls">"Added %d dictionary urls. Pick the dictionaries to install."</string>
+    <string name="added_n_dictionary_urls" tools:ignore="PluralsCandidate">"Added %d dictionary-urls. Pick the dictionaries to install."</string>
     <string name="use_n_dictionary_indexes">"Will get dictionaries from "</string>
     <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
     <string name="buttonWorking">Working</string>
@@ -21,11 +21,12 @@
     <string name="added_index_url">Added Index: </string>
     <string name="buttonValQuit">Quit?</string>
     <string name="dict_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
-    <string name="autoUnselectedDicts" formatted="false">Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\'t seem to be new or updated. You can reselect.</string>
     <string name="defaultDictVersion">0000</string>
     <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
     <string name="connected_nowifi">Alert: Connected, but not on Wifi.</string>
     <string name="noConnection">No data connection. Please retry later.</string>
     <string name="no_dicts_selected">No dictionaries selected!</string>
+    <string name="gettingSomeDict">Getting %s</string>
+    <string name="fromSomeIndex">From %s</string>
 
 </resources>

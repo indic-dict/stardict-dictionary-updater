@@ -23,8 +23,6 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,7 +43,6 @@ public class MainActivity extends Activity {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     private Button button;
-    static private List<CheckBox> checkBoxes = new ArrayList<>();
 
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -61,8 +58,8 @@ public class MainActivity extends Activity {
     // Add checkboxes from indexUrls
     private void addCheckboxes() {
         // retainOnlyOneDictForDebugging();
-        checkBoxes = new ArrayList<>();
-        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
+        List<CheckBox> checkBoxes = new ArrayList<>();
+        LinearLayout layout = findViewById(R.id.main_layout);
         for (String name : indexUrls.keySet()) {
             CheckBox cb = new CheckBox(getApplicationContext());
             cb.setText(name);
@@ -92,7 +89,7 @@ public class MainActivity extends Activity {
                 activeNetwork.isConnectedOrConnecting();
         boolean isWiFi = activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
 
-        TextView warningText = (TextView) findViewById(R.id.main_textView2);
+        TextView warningText = findViewById(R.id.main_textView2);
         warningText.setBackgroundColor(Color.LTGRAY);
         warningText.setTextColor(Color.RED);
         if (isConnected) {
@@ -116,10 +113,10 @@ public class MainActivity extends Activity {
         Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
-        TextView topText = (TextView) findViewById(R.id.main_textView);
+        TextView topText = findViewById(R.id.main_textView);
         topText.setMovementMethod(LinkMovementMethod.getInstance());
 
-        button = (Button) findViewById(R.id.main_button);
+        button = findViewById(R.id.main_button);
         button.setText(getString(R.string.buttonWorking));
         button.setClickable(false);
 

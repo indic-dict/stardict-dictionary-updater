@@ -39,7 +39,7 @@
             android:id="@+id/main_textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text=""
             android:visibility="invisible"/>
 
 

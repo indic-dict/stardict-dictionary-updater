@@ -29,7 +29,6 @@ import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.http.Header;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -43,7 +42,6 @@ import java.util.Set;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends Activity {
-    private Set<String> dictionariesSelected = GetUrlActivity.dictionariesSelected;
     private final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     private final List<String> dictFiles = new ArrayList<>();
@@ -54,11 +52,9 @@ public class GetDictionariesActivity extends Activity {
     private Button button_2;
     private ProgressBar progressBar;
 
-    private File sdcard;
     private File downloadsDir;
     private File dictDir;
 
-    private static SharedPreferences sharedDictVersionStore;
     private static SharedPreferences.Editor dictVersionEditor;
 
     public static String[] getDictNameAndVersion(String fileName) {
@@ -71,21 +67,21 @@ public class GetDictionariesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedDictVersionStore = getSharedPreferences(
+        SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         // Suppressed intellij warning about missing commit. storeDictVersion() has it.
         dictVersionEditor = sharedDictVersionStore.edit();
         setContentView(R.layout.activity_get_dictionaries);
-        topText = (TextView) findViewById(R.id.get_dict_textView);
-        button = (Button) findViewById(R.id.get_dict_button);
+        topText = findViewById(R.id.get_dict_textView);
+        button = findViewById(R.id.get_dict_button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
-        button_2 = (Button) findViewById(R.id.get_dict_button_2);
+        button_2 = findViewById(R.id.get_dict_button_2);
         button_2.setVisibility(View.INVISIBLE);
         button_2.setEnabled(false);
-        progressBar = (ProgressBar) findViewById(R.id.get_dict_progressBar);
+        progressBar = findViewById(R.id.get_dict_progressBar);
         //noinspection unchecked
-        dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
+        Set<String> dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
         dictionariesSelectedLst.addAll(dictionariesSelected);
         dictFailure = new ArrayList<>(Collections.nCopies(dictionariesSelectedLst.size(), false));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -96,7 +92,7 @@ public class GetDictionariesActivity extends Activity {
             Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE));
         }
 
-        sdcard = Environment.getExternalStorageDirectory();
+        File sdcard = Environment.getExternalStorageDirectory();
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (!downloadsDir.exists()) {
             if (!downloadsDir.mkdirs()) {
@@ -127,7 +123,7 @@ public class GetDictionariesActivity extends Activity {
             if (index >= dictionariesSelectedLst.size()) {
                 extractDicts(0);
             } else {
-                topText.setText("Getting " + dictionariesSelectedLst.get(index));
+                topText.setText(String.format(getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
                 topText.append("\n" + getString(R.string.dont_navigate_away));
                 Log.d("downloadDict ", topText.getText().toString());
                 downloadDict(index);
@@ -186,7 +182,6 @@ public class GetDictionariesActivity extends Activity {
             }
         });
 
-        return;
     }
 
     private void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
@@ -296,12 +291,12 @@ public class GetDictionariesActivity extends Activity {
 
             File[] files = directory.listFiles();
             Log.d("DictExtractor", "Deleting " + files.length);
+            //noinspection ConstantConditions
             if (files == null) {  // null if security restricted
                 Log.e("DictExtractor", "Could not list files - got null");
             }
 
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
+            for (File file : files) {
                 if (file.isDirectory()) {
                     cleanDirectory(file);
                 }
