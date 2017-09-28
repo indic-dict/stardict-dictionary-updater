@@ -419,9 +419,10 @@ public class GetDictionariesActivity extends Activity {
                     }
                 }
                 archiveInputStream.close();
-                if (baseNameAccordingToArchiveEntries != baseName) {
+                if (!baseNameAccordingToArchiveEntries.equals(baseName)) {
                     Log.d("DictExtractor", "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
                     final String finalDestDir = FilenameUtils.concat(dictDir.toString(), baseNameAccordingToArchiveEntries);
+                    Log.d("DictExtractor", "destDirFile: " + destDirFile.toString() + ", finalDestDir: " + finalDestDir);
                     final File finalDestDirFile = new File(finalDestDir);
                     if (finalDestDirFile.exists()) {
                         cleanDirectory(finalDestDirFile);
