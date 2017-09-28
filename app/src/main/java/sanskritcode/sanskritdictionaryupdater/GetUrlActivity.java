@@ -28,21 +28,19 @@ import java.util.Map;
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends Activity {
     private static final String ACTIVITY_NAME = "GetUrlActivity";
-    public static Map<String, String> indexesSelected = MainActivity.indexesSelected;
-    public static Map<String, List<String>> indexedDicts = new LinkedHashMap<String, List<String>>();
-    private static final String DICTIONARY_LOCATION = "dict";
-    private static final String DOWNLOAD_LOCATION = "dict";
-    protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    private static Map<String, String> indexesSelected = MainActivity.indexesSelected;
+    private static Map<String, List<String>> indexedDicts = new LinkedHashMap<>();
+    private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
-    static private LinearLayout layout;
-    static private TextView topText;
-    static private Button button;
-    static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    private LinearLayout layout;
+    private TextView topText;
+    private Button button;
+    static private final List<CheckBox> checkBoxes = new ArrayList<>();
 
-    SharedPreferences sharedDictVersionStore;
+    private SharedPreferences sharedDictVersionStore;
 
-    public static HashSet<String> dictionariesSelected = new HashSet<String>();
-    CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
+    public static HashSet<String> dictionariesSelected = new HashSet<>();
+    private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
                 dictionariesSelected.add(buttonView.getHint().toString());
@@ -62,10 +60,11 @@ public class GetUrlActivity extends Activity {
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
 
+        //noinspection unchecked
         indexesSelected = (Map<String, String>) getIntent().getSerializableExtra("indexesSelected");
         Log.d(getLocalClassName(), "indexesSelected " + indexesSelected.toString());
-        indexedDicts = new LinkedHashMap<String, List<String>>();
-        dictionariesSelected = new HashSet<String>();
+        indexedDicts = new LinkedHashMap<>();
+        dictionariesSelected = new HashSet<>();
         setContentView(R.layout.activity_get_url);
         topText = (TextView) findViewById(R.id.get_url_textView);
 
@@ -77,20 +76,19 @@ public class GetUrlActivity extends Activity {
         getDictUrls();
     }
 
-    void enableButtonIfDictsSelected() {
+    private void enableButtonIfDictsSelected() {
         button = (Button) findViewById(R.id.get_url_button);
         button.setEnabled(!dictionariesSelected.isEmpty());
         Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
 
-    public void buttonPressed1(View v) {
+    public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
         Intent intent = new Intent(this, GetDictionariesActivity.class);
         intent.putExtra("dictionariesSelected", dictionariesSelected);
         startActivity(intent);
     }
 
-    protected void selectCheckboxes() {
-        boolean currentVersionsKnown = (sharedDictVersionStore.getAll().size() > 0);
+    private void selectCheckboxes() {
         int autoUnselectedDicts = 0;
         for (CheckBox cb : checkBoxes) {
             // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
@@ -123,9 +121,9 @@ public class GetUrlActivity extends Activity {
         Log.d(ACTIVITY_NAME, message);
     }
 
-    static String getIndexNameFromUrl(String url) {
+    private static String getIndexNameFromUrl(String url) {
         for (String key : indexesSelected.keySet()) {
-            if (indexesSelected.get(key) == url) {
+            if (indexesSelected.get(key).equals(url)) {
                 return key;
             }
         }
@@ -133,8 +131,8 @@ public class GetUrlActivity extends Activity {
     }
 
     // Populates indexedDicts
-    void getDictUrls() {
-        indexedDicts = new LinkedHashMap<String, List<String>>();
+    private void getDictUrls() {
+        indexedDicts = new LinkedHashMap<>();
         Log.i(ACTIVITY_NAME, getString(R.string.use_n_dictionary_indexes) + indexesSelected.size());
         asyncHttpClient.setEnableRedirects(true, true, true);
         for (String name : indexesSelected.keySet()) {
@@ -150,7 +148,7 @@ public class GetUrlActivity extends Activity {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        List<String> urls = new ArrayList<String>();
+                        List<String> urls = new ArrayList<>();
                         for (String line : responseString.split("\n")) {
                             String dictUrl = line.replace("<", "").replace(">", "");
                             urls.add(dictUrl);
@@ -205,7 +203,7 @@ public class GetUrlActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        indexedDicts = new LinkedHashMap<String, List<String>>();
+        indexedDicts = new LinkedHashMap<>();
         finish();
     }
 }

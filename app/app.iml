@@ -105,52 +105,79 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="jack-api-0.11.0" level="project" />
+    <orderEntry type="library" exported="" name="commons-io-2.4" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="runner-0.5" level="project" />
-    <orderEntry type="library" exported="" name="lint-api-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="httpcore-4.1" level="project" />
-    <orderEntry type="library" exported="" name="ddmlib-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="commons-io-1.3.2" level="project" />
-    <orderEntry type="library" exported="" name="builder-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="juniversalchardet-1.0.3" level="project" />
+    <orderEntry type="library" exported="" name="lint-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="jopt-simple-4.9" level="project" />
+    <orderEntry type="library" exported="" name="asm-5.0.4" level="project" />
+    <orderEntry type="library" exported="" name="gradle-api-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="builder-model-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="asm-commons-5.0.4" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.1" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="asm-analysis-4.0" level="project" />
-    <orderEntry type="library" exported="" name="support-core-ui-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="proguard-gradle-5.1" level="project" />
-    <orderEntry type="library" exported="" name="lint-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="lint-checks-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="sdklib-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="ecj-4.2.2" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-25.0.0" level="project" />
+    <orderEntry type="library" exported="" name="repository-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="shared-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="guava-20.0" level="project" />
+    <orderEntry type="library" exported="" name="sdk-common-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="asm-tree-5.0.4" level="project" />
+    <orderEntry type="library" exported="" name="transform-api-2.0.0-deprecated-use-gradle-api" level="project" />
+    <orderEntry type="library" exported="" name="lint-api-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="jill-api-0.10.0" level="project" />
+    <orderEntry type="library" exported="" name="proguard-gradle-5.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="multidex-instrumentation-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="lombok-ast-0.2.2" level="project" />
+    <orderEntry type="library" exported="" name="asm-debug-all-5.0.1" level="project" />
+    <orderEntry type="library" exported="" name="gradle-core-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="tracker-25.2.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
-    <orderEntry type="library" exported="" name="builder-test-api-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="proguard-base-5.1" level="project" />
-    <orderEntry type="library" exported="" name="sdk-common-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="gradle-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="common-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="bcprov-jdk15on-1.48" level="project" />
-    <orderEntry type="library" exported="" name="asm-4.0" level="project" />
-    <orderEntry type="library" exported="" name="guava-17.0" level="project" />
-    <orderEntry type="library" exported="" name="layoutlib-api-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="dvlib-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="commons-compress-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="manifest-merger-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="org.jacoco.core-0.7.5.201505241946" level="project" />
+    <orderEntry type="library" exported="" name="annotations-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="sdklib-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="annotations-12.0" level="project" />
     <orderEntry type="library" exported="" name="bcpkix-jdk15on-1.48" level="project" />
-    <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="antlr-3.5.2" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="support-media-compat-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="protobuf-java-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="protos-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="javawriter-2.5.0" level="project" />
-    <orderEntry type="library" exported="" name="manifest-merger-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-25.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-25.0.0" level="project" />
+    <orderEntry type="library" exported="" name="layoutlib-api-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="support-compat-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="ddmlib-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="org.jacoco.report-0.7.5.201505241946" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.1" level="project" />
+    <orderEntry type="library" exported="" name="support-core-ui-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="baseLibrary-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="antlr-runtime-3.5.2" level="project" />
+    <orderEntry type="library" exported="" name="builder-test-api-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="ecj-4.5.1" level="project" />
+    <orderEntry type="library" exported="" name="antlr4-4.5.3" level="project" />
+    <orderEntry type="library" exported="" name="builder-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-core-utils-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="support-fragment-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="uast-145.597.3" level="project" />
+    <orderEntry type="library" exported="" name="lombok-ast-0.2.3" level="project" />
+    <orderEntry type="library" exported="" name="gradle-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="bcprov-jdk15on-1.48" level="project" />
+    <orderEntry type="library" exported="" name="commons-compress-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="jimfs-1.1" level="project" />
+    <orderEntry type="library" exported="" name="lint-checks-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="asm-analysis-5.0.4" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.3" level="project" />
+    <orderEntry type="library" exported="" name="ST4-4.0.8" level="project" />
+    <orderEntry type="library" exported="" name="compilerCommon-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="proguard-base-5.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
+    <orderEntry type="library" exported="" name="dvlib-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.5" level="project" />
-    <orderEntry type="library" exported="" name="asm-tree-4.0" level="project" />
-    <orderEntry type="library" exported="" name="builder-model-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="common-25.2.0" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-25.3.1" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-25.3.1" level="project" />
   </component>
 </module>

@@ -40,14 +40,14 @@ import java.util.Map;
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
     private static final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
-    public static Map<String, String> indexUrls = new LinkedHashMap<String, String>();
-    public static LinkedHashMap<String, String> indexesSelected = new LinkedHashMap<String, String>();
-    protected static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    private static final Map<String, String> indexUrls = new LinkedHashMap<>();
+    public static final LinkedHashMap<String, String> indexesSelected = new LinkedHashMap<>();
+    private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
-    static private Button button;
-    static private List<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+    private Button button;
+    static private List<CheckBox> checkBoxes = new ArrayList<>();
 
-    CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
+    private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
                 indexesSelected.put(buttonView.getText().toString(), buttonView.getHint().toString());
@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
     // Add checkboxes from indexUrls
     private void addCheckboxes() {
         // retainOnlyOneDictForDebugging();
-        checkBoxes = new ArrayList<CheckBox>();
+        checkBoxes = new ArrayList<>();
         LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
         for (String name : indexUrls.keySet()) {
             CheckBox cb = new CheckBox(getApplicationContext());
@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
             checkBoxes.add(cb);
         }
         for (CheckBox checkBox : checkBoxes) {
-            if (indexesSelected.keySet().contains(checkBox.getText())) {
+            if (indexesSelected.keySet().contains(checkBox.getText().toString())) {
                 checkBox.setChecked(true);
             } else {
                 checkBox.setChecked(false);
@@ -99,11 +99,11 @@ public class MainActivity extends Activity {
             if (isWiFi) {
                 warningText.setVisibility(View.INVISIBLE);
             } else {
-                warningText.setText("Alert: Connected, but not on Wifi.");
+                warningText.setText(R.string.connected_nowifi);
                 warningText.setVisibility(View.VISIBLE);
             }
         } else {
-            warningText.setText("No data connection. Please retry later.");
+            warningText.setText(R.string.noConnection);
             warningText.setVisibility(View.VISIBLE);
         }
 
@@ -158,7 +158,7 @@ public class MainActivity extends Activity {
         Log.d(MAIN_ACTIVITY, "onResume Indices selected " + indexesSelected.toString());
     }
 
-    public void buttonPressed1(View v) {
+    public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
         Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("indexesSelected", indexesSelected);
@@ -166,18 +166,13 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    void getIndices() {
+    private void getIndices() {
         asyncHttpClient.setEnableRedirects(true, true, true);
         asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
-            private String CLASS_NAME = this.getClass().getName();
+            private final String CLASS_NAME = this.getClass().getName();
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.e(CLASS_NAME, "getIndices", throwable);
-            }
-
-            @Override
-            public void onProgress(int bytesWritten, int totalSize) {
-                super.onProgress(bytesWritten, totalSize);
             }
 
             @Override

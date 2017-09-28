@@ -13,7 +13,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 
-public class ErrorHandler {
+class ErrorHandler {
     public static void sendLoagcatMail(Activity baseActivity){
         if (ContextCompat.checkSelfPermission(baseActivity, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
             Log.d(baseActivity.getLocalClassName(), "Got READ_LOGS permissions");

@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 public class DictionaryGetterTest {
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     @Test
     public void test_url_encoding() {
