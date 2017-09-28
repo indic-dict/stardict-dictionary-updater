@@ -171,12 +171,12 @@ public class MainActivity extends Activity {
         asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
             private final String CLASS_NAME = this.getClass().getName();
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
                 Log.e(CLASS_NAME, "getIndices", throwable);
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString) {
                 for (String line: responseString.split("\n")) {
                     String url = line.replace("<", "").replace(">", "");
                     String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD|master/", "");

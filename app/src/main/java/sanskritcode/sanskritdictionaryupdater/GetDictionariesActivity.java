@@ -81,6 +81,8 @@ public class GetDictionariesActivity extends Activity {
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);
         button_2 = (Button) findViewById(R.id.get_dict_button_2);
+        button_2.setVisibility(View.INVISIBLE);
+        button_2.setEnabled(false);
         progressBar = (ProgressBar) findViewById(R.id.get_dict_progressBar);
         //noinspection unchecked
         dictionariesSelected = (Set<String>) getIntent().getSerializableExtra("dictionariesSelected");
@@ -230,7 +232,7 @@ public class GetDictionariesActivity extends Activity {
         try {
             asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, File response) {
+                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
                     dictFiles.add(fileName);
                     Log.i("Got dictionary: ", fileName);
                     dictFailure.set(index, false);
@@ -239,13 +241,13 @@ public class GetDictionariesActivity extends Activity {
                 }
 
                 @Override
-                public void onProgress(int bytesWritten, int totalSize) {
+                public void onProgress(long bytesWritten, long totalSize) {
                     super.onProgress(bytesWritten, totalSize);
-                    updateProgressBar(bytesWritten, totalSize);
+                    updateProgressBar((int)bytesWritten, (int)totalSize);
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, File file) {
                     Log.e("downloadDict", "status " + statusCode);
                     handleDownloadDictFailure(index, url, throwable);
                 }
@@ -435,7 +437,8 @@ public class GetDictionariesActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (button.getText().toString().equals(getResources().getString(R.string.buttonValQuit))) {
+        // Don't navigate away in the midst of downloading dictionaries!
+        if (button_2.getVisibility() == View.VISIBLE) {
             finish();
         }
     }

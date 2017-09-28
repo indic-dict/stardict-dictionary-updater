@@ -142,12 +142,12 @@ public class GetUrlActivity extends Activity {
                     final String LOGGER_NAME = "getDictUrls";
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
                         Log.e(LOGGER_NAME, "Failed ", throwable);
                     }
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString) {
                         List<String> urls = new ArrayList<>();
                         for (String line : responseString.split("\n")) {
                             String dictUrl = line.replace("<", "").replace(">", "");
