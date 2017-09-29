@@ -56,15 +56,15 @@ class DictDownloader {
     }
 
     void downloadDict(final int index) {
+        // Stop condition of the recursion.
         if (index >= dictionariesSelectedLst.size()) {
             getDictionariesActivity.whenAllDictsDownloaded();
-        } else {
-            topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
-            topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
-            Log.d("downloadDict ", topText.getText().toString());
-            downloadDict(index);
+            return;
         }
 
+        topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
+        topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
+        Log.d("downloadDict ", topText.getText().toString());
         final String url = dictionariesSelectedLst.get(index);
         Log.d("downloadDict", "Getting " + url);
         try {
