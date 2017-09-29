@@ -19,19 +19,19 @@ class DictDownloader {
     private final GetDictionariesActivity getDictionariesActivity;
     private final Button button;
     private final List<Boolean> dictFailure;
-    private final List<String> dictFiles;
+    private final List<String> downloadedDictFiles;
     private final ArrayList<String> dictionariesSelectedLst;
     private final File downloadsDir;
     private final ProgressBar progressBar;
     private final TextView topText;
 
     public DictDownloader(GetDictionariesActivity getDictionariesActivity, Button button, List<Boolean> dictFailure,
-                          List<String> dictFiles, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
+                          List<String> downloadedDictFiles, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
                           ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictFailure = dictFailure;
         this.button = button;
-        this.dictFiles = dictFiles;
+        this.downloadedDictFiles = downloadedDictFiles;
         this.dictionariesSelectedLst = dictionariesSelectedLst;
         this.downloadsDir = downloadsDir;
         this.topText = topText;
@@ -51,7 +51,7 @@ class DictDownloader {
                 topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
                 topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
                 Log.d("downloadDict ", topText.getText().toString());
-                downloadDict(getDictionariesActivity, dictFailure, dictFiles, dictionariesSelectedLst, downloadsDir, progressBar, index);
+                downloadDict(getDictionariesActivity, dictFailure, downloadedDictFiles, dictionariesSelectedLst, downloadsDir, progressBar, index);
             }
         }
     }

@@ -29,7 +29,7 @@ import java.util.List;
 public class GetDictionariesActivity extends Activity {
     private SharedPreferences.Editor dictVersionEditor;
     private final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
-    private final List<String> dictFiles = new ArrayList<>();
+    private final List<String> downloadedDictFiles = new ArrayList<>();
     private List<Boolean> dictFailure = new ArrayList<>();
 
     private TextView topText;
@@ -84,7 +84,8 @@ public class GetDictionariesActivity extends Activity {
             }
         }
 
-        DictDownloader dictDownloader = new DictDownloader(this, button, dictFailure, dictFiles, dictionariesSelectedLst, downloadsDir, progressBar, topText);
+        DictDownloader dictDownloader = new DictDownloader(this, button, dictFailure, downloadedDictFiles, dictionariesSelectedLst,
+                downloadsDir, progressBar, topText);
         dictDownloader.getDictionaries(0);
     }
 
@@ -146,11 +147,11 @@ public class GetDictionariesActivity extends Activity {
     }
 
     void extractDicts(int index) {
-        if (index >= dictFiles.size()) {
+        if (index >= downloadedDictFiles.size()) {
             whenAllDictsExtracted();
         } else {
             new DictExtractor(this, dictDir, dictFailure,
-                    dictFiles, downloadsDir,
+                    downloadedDictFiles, downloadsDir,
                     progressBar, topText)
                     .execute(index);
         }
