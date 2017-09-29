@@ -84,9 +84,16 @@ public class GetDictionariesActivity extends Activity {
             }
         }
 
+        if (dictionariesSelectedLst.size() == 0) {
+            topText.setText(R.string.no_dicts_selected);
+            topText.append(getString(R.string.txtTryAgain));
+            button.setText(R.string.proceed_button);
+            button.setEnabled(true);
+        }
+
         DictDownloader dictDownloader = new DictDownloader(this, button, dictFailure, downloadedDictFiles, dictionariesSelectedLst,
                 downloadsDir, progressBar, topText);
-        dictDownloader.getDictionaries(0);
+        dictDownloader.downloadDict(0);
     }
 
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {

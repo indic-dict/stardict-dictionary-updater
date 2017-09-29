@@ -13,6 +13,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Expected flow: -> downloadDict(index) ->  downloadDict(index + 1) -> ...
+ */
 class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
@@ -38,35 +41,27 @@ class DictDownloader {
         this.progressBar = progressBar;
     }
 
-    void getDictionaries(int index) {
-        if (dictionariesSelectedLst.size() == 0) {
-            topText.setText(R.string.no_dicts_selected);
-            topText.append(getDictionariesActivity.getString(R.string.txtTryAgain));
-            button.setText(R.string.proceed_button);
-            button.setEnabled(true);
-        } else {
-            if (index >= dictionariesSelectedLst.size()) {
-                getDictionariesActivity.whenAllDictsDownloaded();
-            } else {
-                topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
-                topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
-                Log.d("downloadDict ", topText.getText().toString());
-                downloadDict(getDictionariesActivity, dictFailure, downloadedDictFiles, dictionariesSelectedLst, downloadsDir, progressBar, index);
-            }
-        }
-    }
-
+    // Runs in the UI thread.
     // Log errors, record failure, get the next dictionary.
     private void handleDownloadDictFailure(final int index, String url, Throwable throwable) {
         String message = "Failed to get " + url;
         Log.e("downloadDict", message + ":", throwable);
         topText.setText(message);
         dictFailure.set(index, true);
-        getDictionaries(index + 1);
+        downloadDict(index + 1);
         progressBar.setVisibility(View.GONE);
     }
 
-    private void downloadDict(final GetDictionariesActivity getDictionariesActivity, final List<Boolean> dictFailure, final List<String> dictFiles, ArrayList<String> dictionariesSelectedLst, final File downloadsDir, final ProgressBar progressBar, final int index) {
+    void downloadDict(final int index) {
+        if (index >= dictionariesSelectedLst.size()) {
+            getDictionariesActivity.whenAllDictsDownloaded();
+        } else {
+            topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
+            topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
+            Log.d("downloadDict ", topText.getText().toString());
+            downloadDict(index);
+        }
+
         final String url = dictionariesSelectedLst.get(index);
         Log.d("downloadDict", "Getting " + url);
         try {
@@ -80,10 +75,10 @@ class DictDownloader {
             asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
                 @Override
                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
-                    dictFiles.add(fileName);
+                    downloadedDictFiles.add(fileName);
                     Log.i("Got dictionary: ", fileName);
                     dictFailure.set(index, false);
-                    getDictionaries(index + 1);
+                    downloadDict(index + 1);
                     progressBar.setVisibility(View.GONE);
                 }
 

@@ -22,7 +22,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
 
-
+/**
+ * Extracts all selected dictionaries sequentially in ONE Async task (doBackground() being run outside the UI thread).
+ */
 class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, result */ {
     private final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
     private final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
