@@ -20,7 +20,6 @@ class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     private final GetDictionariesActivity getDictionariesActivity;
-    private final Button button;
     private final List<Boolean> dictFailure;
     private final List<String> downloadedDictFiles;
     private final ArrayList<String> dictionariesSelectedLst;
@@ -28,12 +27,11 @@ class DictDownloader {
     private final ProgressBar progressBar;
     private final TextView topText;
 
-    public DictDownloader(GetDictionariesActivity getDictionariesActivity, Button button, List<Boolean> dictFailure,
+    DictDownloader(GetDictionariesActivity getDictionariesActivity, List<Boolean> dictFailure,
                           List<String> downloadedDictFiles, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
                           ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictFailure = dictFailure;
-        this.button = button;
         this.downloadedDictFiles = downloadedDictFiles;
         this.dictionariesSelectedLst = dictionariesSelectedLst;
         this.downloadsDir = downloadsDir;

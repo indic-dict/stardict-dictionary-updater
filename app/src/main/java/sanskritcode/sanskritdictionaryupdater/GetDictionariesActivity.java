@@ -91,7 +91,7 @@ public class GetDictionariesActivity extends Activity {
             button.setEnabled(true);
         }
 
-        DictDownloader dictDownloader = new DictDownloader(this, button, dictFailure, downloadedDictFiles, dictionariesSelectedLst,
+        DictDownloader dictDownloader = new DictDownloader(this, dictFailure, downloadedDictFiles, dictionariesSelectedLst,
                 downloadsDir, progressBar, topText);
         dictDownloader.downloadDict(0);
     }
