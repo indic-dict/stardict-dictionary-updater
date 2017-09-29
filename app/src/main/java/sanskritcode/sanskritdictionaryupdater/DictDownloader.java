@@ -13,7 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Expected flow: -> downloadDict(index) ->  downloadDict(index + 1) -> ...
+ * Expected flow: downloadDict(0) -> ... -> downloadDict(index) ->  downloadDict(index + 1) -> ...
+ *
+ * Why are we using recursion?
+ *   - FileAsyncHttpResponseHandler only download one file at a time.
+ *   - FileAsyncHttpResponseHandler interface to downloading a file is more convenient than verbose use of
+ *     DefaultHttpClient within an async task.
+ *   - Stack depth is expected to be quite small (in the 100-s).
  */
 class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
