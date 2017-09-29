@@ -20,8 +20,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.TextHttpResponseHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +33,7 @@ import java.util.Map;
  */
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
-    DictIndexStore dictIndexStore = new DictIndexStore();
+    private final DictIndexStore dictIndexStore = new DictIndexStore();
 
     private Button button;
 
@@ -43,6 +41,7 @@ public class MainActivity extends Activity {
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
+                //noinspection ResultOfMethodCallIgnored
                 dictIndexStore.indexesSelected.put(buttonView.getText().toString(), buttonView.getHint().toString());
             } else {
                 dictIndexStore.indexesSelected.remove(buttonView.getText().toString());

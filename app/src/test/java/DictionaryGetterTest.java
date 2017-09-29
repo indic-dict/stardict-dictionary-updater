@@ -2,8 +2,6 @@ import com.google.common.io.Files;
 
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 public class DictionaryGetterTest {

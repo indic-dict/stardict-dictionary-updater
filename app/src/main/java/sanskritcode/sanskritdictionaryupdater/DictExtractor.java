@@ -24,15 +24,15 @@ import java.util.List;
 
 
 class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progress, result */ {
-    final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
-    final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
-    private GetDictionariesActivity getDictionariesActivity;
-    private File dictDir;
-    private List<Boolean> dictFailure;
-    private List<String> dictFiles;
-    private File downloadsDir;
-    private ProgressBar progressBar;
-    private TextView topText;
+    private final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
+    private final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
+    private final GetDictionariesActivity getDictionariesActivity;
+    private final File dictDir;
+    private final List<Boolean> dictFailure;
+    private final List<String> dictFiles;
+    private final File downloadsDir;
+    private final ProgressBar progressBar;
+    private final TextView topText;
 
     public DictExtractor(GetDictionariesActivity getDictionariesActivity, File dictDir, List<Boolean> dictFailure,
                          List<String> dictFiles, File downloadsDir, ProgressBar progressBar, TextView topText) {
@@ -87,7 +87,7 @@ class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progr
         }
     }
 
-    ArchiveInputStream inputStreamFromArchive(String sourceFile) throws FileNotFoundException, CompressorException, ArchiveException {
+    private ArchiveInputStream inputStreamFromArchive(String sourceFile) throws FileNotFoundException, CompressorException, ArchiveException {
         // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
         // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
         return archiveStreamFactory.createArchiveInputStream(

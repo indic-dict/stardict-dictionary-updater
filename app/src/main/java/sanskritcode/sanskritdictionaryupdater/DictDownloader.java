@@ -13,17 +13,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DictDownloader {
+class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
-    GetDictionariesActivity getDictionariesActivity;
-    Button button;
-    List<Boolean> dictFailure;
-    List<String> dictFiles;
-    ArrayList<String> dictionariesSelectedLst;
-    File downloadsDir;
-    ProgressBar progressBar;
-    TextView topText;
+    private final GetDictionariesActivity getDictionariesActivity;
+    private final Button button;
+    private final List<Boolean> dictFailure;
+    private final List<String> dictFiles;
+    private final ArrayList<String> dictionariesSelectedLst;
+    private final File downloadsDir;
+    private final ProgressBar progressBar;
+    private final TextView topText;
 
     public DictDownloader(GetDictionariesActivity getDictionariesActivity, Button button, List<Boolean> dictFailure,
                           List<String> dictFiles, ArrayList<String> dictionariesSelectedLst, File downloadsDir,

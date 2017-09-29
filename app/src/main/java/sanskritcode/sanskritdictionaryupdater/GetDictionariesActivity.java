@@ -31,7 +31,6 @@ public class GetDictionariesActivity extends Activity {
     private final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
     private final List<String> dictFiles = new ArrayList<>();
     private List<Boolean> dictFailure = new ArrayList<>();
-    DictIndexStore dictIndexStore;
 
     private TextView topText;
     private Button button;

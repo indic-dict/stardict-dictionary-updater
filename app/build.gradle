@@ -47,9 +47,11 @@ android {
 dependencies {
 //    compile 'com.android.support:multidex:1.0.1'
 //    compile 'com.android.support:support-core-utils:26.1.0'
+    //noinspection GradleDynamicVersion
     compile 'com.android.support:appcompat-v7:26.+'
 
     // For some collection functions, file utilities.
+    //noinspection GradleDynamicVersion
     compile group: 'com.google.guava', name: 'guava', version: '20.+'
     // UNSOLVED PROBLEM.
     // Note from 20170927

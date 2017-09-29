@@ -1,19 +1,12 @@
 package sanskritcode.sanskritdictionaryupdater;
 
-import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,9 +17,9 @@ import java.util.Set;
 
 
 class DictIndexStore implements Serializable{
-    final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
+    private final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     // DictIndexStore must be serializable, hence we use specific class names below.
-    final Map<String, String> indexUrls = new LinkedHashMap<>();
+    private final Map<String, String> indexUrls = new LinkedHashMap<>();
     final BiMap<String, String> indexesSelected = HashBiMap.create(100);
     Map<String, List<String>> indexedDicts = new LinkedHashMap<>();
     Set<String> dictionariesSelectedSet = new HashSet<>();
@@ -47,6 +40,7 @@ class DictIndexStore implements Serializable{
                     String url = line.replace("<", "").replace(">", "");
                     String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD|master/", "");
                     indexUrls.put(name, url);
+                    //noinspection ResultOfMethodCallIgnored
                     indexesSelected.put(name, url);
                     Log.d(getClass().getName(), activity.getString(R.string.added_index_url) + url);
                 }

@@ -1,5 +1,6 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +23,7 @@ import java.util.Map;
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends Activity {
     private static final String ACTIVITY_NAME = "GetUrlActivity";
-    DictIndexStore dictIndexStore;
+    private DictIndexStore dictIndexStore;
 
     private LinearLayout layout;
     private TextView topText;
@@ -105,7 +106,7 @@ public class GetUrlActivity extends Activity {
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
         enableButtonIfDictsSelected();
 
-        String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
+        @SuppressLint("DefaultLocale") String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
         topText.append(message);
         Log.d(ACTIVITY_NAME, message);
     }

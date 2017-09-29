@@ -1,6 +1,5 @@
 package sanskritcode.sanskritdictionaryupdater;
 
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.google.common.io.Files;
