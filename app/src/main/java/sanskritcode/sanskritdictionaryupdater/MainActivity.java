@@ -20,11 +20,9 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,26 +35,24 @@ import java.util.Map;
  */
 public class MainActivity extends Activity {
     private static final String MAIN_ACTIVITY = "MainActivity";
-    private static final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
-    private static final Map<String, String> indexUrls = new LinkedHashMap<>();
-    public static final LinkedHashMap<String, String> indexesSelected = new LinkedHashMap<>();
-    private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    DictIndexStore dictIndexStore = new DictIndexStore();
 
     private Button button;
 
+    // Event handler for: When an index is (un) selected.
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                indexesSelected.put(buttonView.getText().toString(), buttonView.getHint().toString());
+                dictIndexStore.indexesSelected.put(buttonView.getText().toString(), buttonView.getHint().toString());
             } else {
-                indexesSelected.remove(buttonView.getText().toString());
+                dictIndexStore.indexesSelected.remove(buttonView.getText().toString());
             }
-            button.setEnabled(!indexesSelected.isEmpty());
+            button.setEnabled(!dictIndexStore.indexesSelected.isEmpty());
         }
     };
 
     // Add checkboxes from indexUrls
-    private void addCheckboxes() {
+    void addCheckboxes(Map<String, String> indexUrls, Map<String, String> indexesSelected) {
         // retainOnlyOneDictForDebugging();
         List<CheckBox> checkBoxes = new ArrayList<>();
         LinearLayout layout = findViewById(R.id.main_layout);
@@ -110,7 +106,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + indexesSelected.toString());
+        Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + dictIndexStore.indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -137,13 +133,7 @@ public class MainActivity extends Activity {
             Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE));
         }
 
-        getIndices();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(MAIN_ACTIVITY, "OnStart Indices selected " + indexesSelected.toString());
+        dictIndexStore.getIndicesAddCheckboxes(this);
     }
 
     @Override
@@ -152,42 +142,15 @@ public class MainActivity extends Activity {
         showNetworkInfo();
         button.setText(R.string.proceed_button);
         button.setClickable(true);
-        Log.d(MAIN_ACTIVITY, "onResume Indices selected " + indexesSelected.toString());
+        Log.d(MAIN_ACTIVITY, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
     }
 
+    // Event handler for: When the proceed button is pressed.
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
-        Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + indexesSelected.toString());
+        Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
-        intent.putExtra("indexesSelected", indexesSelected);
+        intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();
         startActivity(intent);
-    }
-
-    private void getIndices() {
-        asyncHttpClient.setEnableRedirects(true, true, true);
-        asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
-            private final String CLASS_NAME = this.getClass().getName();
-            @Override
-            public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                Log.e(CLASS_NAME, "getIndices", throwable);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString) {
-                for (String line: responseString.split("\n")) {
-                    String url = line.replace("<", "").replace(">", "");
-                    String name = url.replaceAll("https://raw.githubusercontent.com/|/tars/tars.MD|master/", "");
-                    indexUrls.put(name, url);
-                    indexesSelected.put(name, url);
-                    Log.d(CLASS_NAME, getString(R.string.added_index_url) + url);
-                }
-                addCheckboxes();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.d(MAIN_ACTIVITY, "onBack Indices selected " + indexesSelected.toString());
     }
 }

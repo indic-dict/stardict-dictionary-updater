@@ -10,7 +10,6 @@
     <string name="proceed_button">Proceed?</string>
     <string name="added_dictionary_url">"Added dictionary: "</string>
     <string name="added_n_dictionary_urls" tools:ignore="PluralsCandidate">"Added %d dictionary-urls. Pick the dictionaries to install."</string>
-    <string name="use_n_dictionary_indexes">"Will get dictionaries from "</string>
     <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
     <string name="buttonWorking">Working</string>
     <string name="txtTryAgain">\n Do you want to try again?</string>
