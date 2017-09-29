@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -93,7 +94,7 @@ public class GetUrlActivity extends Activity {
             String filename = cb.getHint().toString();
             boolean proposedVersionNewer = true;
 
-            String[] dictnameParts = GetDictionariesActivity.getDictNameAndVersion(filename);
+            String[] dictnameParts = DictNameHelper.getDictNameAndVersion(filename);
             String dictname = dictnameParts[0];
             if (sharedDictVersionStore.contains(dictname)) {
                 String currentVersion = sharedDictVersionStore.getString(dictname, getString(R.string.defaultDictVersion));
@@ -119,6 +120,7 @@ public class GetUrlActivity extends Activity {
         Log.d(ACTIVITY_NAME, message);
     }
 
+    @Nullable
     private static String getIndexNameFromUrl(String url) {
         for (String key : indexesSelected.keySet()) {
             if (indexesSelected.get(key).equals(url)) {

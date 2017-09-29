@@ -20,11 +20,6 @@
     - invalidating cache and restarting
     - Refresh layout
   - Details [here])(https://stackoverflow.com/questions/29887722/error-rendering-problems-the-following-classes-could-not-be-found-android-suppo/30011016#30011016).
-- Generate signed APK:
-  - Error:
-        Error:Execution failed for task ':app:transformClassesWithJarMergingForRelease'.
-        > com.android.build.api.transform.TransformException: java.util.zip.ZipException: duplicate entry: org/objectweb/asm/AnnotationVisitor.class
-  - [Question](https://stackoverflow.com/questions/46478092/android-apk-duplicate-entry-org-objectweb-asm-annotationvisitor-class) on stack exchange.
 
 # For dictionary contributors
 * Just open an issue in the most appropriate project (stardict-sanskrit, stardict-hindI, stardict-kannada, stardict-pAlI, stardict-tamiL, stardict-telugu), or if there is no match, in this project.

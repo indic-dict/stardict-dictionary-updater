@@ -16,5 +16,5 @@
 #   public *;
 #}
 
--keepattributes InnerClasses
--dontoptimize
+#-keepattributes InnerClasses
+#-dontoptimize

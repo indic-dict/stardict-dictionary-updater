@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.common.io.Files;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.loopj.android.http.AsyncHttpClient;
@@ -28,7 +29,6 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -42,6 +42,7 @@ import java.util.Set;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends Activity {
+    private SharedPreferences.Editor dictVersionEditor;
     private final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
     private final List<String> dictFiles = new ArrayList<>();
@@ -55,13 +56,6 @@ public class GetDictionariesActivity extends Activity {
     private File downloadsDir;
     private File dictDir;
 
-    private static SharedPreferences.Editor dictVersionEditor;
-
-    public static String[] getDictNameAndVersion(String fileName) {
-        // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
-        // Hence calling getBaseName twice.
-        return FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__");
-    }
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -135,7 +129,7 @@ public class GetDictionariesActivity extends Activity {
         topText.setText(getString(R.string.finalMessage));
         List<String> dictNames = Lists.transform(dictionariesSelectedLst, new Function<String, String>() {
             public String apply(String in) {
-                return FilenameUtils.getBaseName(in);
+                return Files.getNameWithoutExtension(in);
             }
         });
         final StringBuilder failures = new StringBuilder("");
@@ -220,11 +214,14 @@ public class GetDictionariesActivity extends Activity {
     private void downloadDict(final int index) {
         final String url = dictionariesSelectedLst.get(index);
         Log.d("downloadDict", "Getting " + url);
-        final String fileName = FilenameUtils.getName(url);
-        asyncHttpClient.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0");
-        asyncHttpClient.setEnableRedirects(true, true, true);
-        // URL could be bad, hence the below.
         try {
+            final String fileName = url.substring(url.lastIndexOf("/")).replace("/", "");
+            if (fileName.isEmpty()) {
+                throw new IllegalArgumentException("fileName is empty for url " + url);
+            }
+            asyncHttpClient.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0");
+            asyncHttpClient.setEnableRedirects(true, true, true);
+            // URL could be bad, hence the below.
             asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
                 @Override
                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
@@ -253,10 +250,10 @@ public class GetDictionariesActivity extends Activity {
     }
 
     private void storeDictVersion(String fileName) {
-        String[] filenameParts = getDictNameAndVersion(fileName);
+        String[] filenameParts = DictNameHelper.getDictNameAndVersion(fileName);
         final String dictName = filenameParts[0];
         if (filenameParts.length > 1) {
-            String dictVersion = FilenameUtils.getBaseName(FilenameUtils.getBaseName(fileName)).split("__")[1];
+            String dictVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__")[1];
             dictVersionEditor.putString(dictName, dictVersion);
             dictVersionEditor.commit();
         } else {
@@ -267,7 +264,7 @@ public class GetDictionariesActivity extends Activity {
     }
 
     class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progress, result */ {
-        final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory();
+        final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
         final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
 
         void deleteTarFile(String sourceFile) {
@@ -324,12 +321,12 @@ public class GetDictionariesActivity extends Activity {
         protected Integer doInBackground(Integer... params) {
             int index = params[0];
             String archiveFileName = dictFiles.get(index);
-            String sourceFile = FilenameUtils.concat(downloadsDir.toString(), archiveFileName);
+            String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
 
             // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
-            final String baseName = FilenameUtils.getBaseName(FilenameUtils.getBaseName(archiveFileName)).split("__")[0];
-            final String initialDestDir = FilenameUtils.concat(dictDir.toString(), baseName);
-            File destDirFile = new File(initialDestDir);
+            final String baseName = Files.getNameWithoutExtension(Files.getNameWithoutExtension(archiveFileName)).split("__")[0];
+            File destDirFile = new File(dictDir.toString(), baseName);
+            final String initialDestDir = destDirFile.getAbsolutePath();
 
             Log.d("DictExtractor", "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
             if (destDirFile.exists()) {
@@ -343,7 +340,6 @@ public class GetDictionariesActivity extends Activity {
             String message2 = "Destination directory " + initialDestDir;
             Log.d("DictExtractor", message2);
             try {
-                compressorStreamFactory.setDecompressConcatenated(true);
                 ArchiveInputStream archiveInputStream = inputStreamFromArchive(sourceFile);
                 int totalFiles = 0;
                 while (archiveInputStream.getNextEntry() != null) {
@@ -359,12 +355,12 @@ public class GetDictionariesActivity extends Activity {
                 final byte[] buffer = new byte[50000];
                 String baseNameAccordingToArchiveEntries = null;
                 ArchiveEntry currentEntry;
-                File resourceDirFile = new File(FilenameUtils.concat(initialDestDir, "res"));
+                File resourceDirFile = new File(initialDestDir, "res");
                 int filesRead = 0;
                 while ((currentEntry = archiveInputStream.getNextEntry()) != null) {
                     filesRead = filesRead + 1;
-                    String destFileName = FilenameUtils.getName(currentEntry.getName());
-                    String destFileExtension = FilenameUtils.getExtension(destFileName);
+                    String destFileName = String.format("%s.%s", Files.getNameWithoutExtension(currentEntry.getName()), Files.getFileExtension(currentEntry.getName()));
+                    String destFileExtension = Files.getFileExtension(destFileName);
                     boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").endsWith("/res/");
                     Log.d("DictExtractor", "isResourceFile " + isResourceFile);
                     String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
@@ -378,12 +374,9 @@ public class GetDictionariesActivity extends Activity {
                     }
 
                     if (isResourceFile || destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
-                        String destFile = FilenameUtils.concat(destFileDir, destFileName);
+                        String destFile = new File(destFileDir, destFileName).getAbsolutePath();
                         if (!isResourceFile && destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
-                            String baseNameAccordingToArchiveEntry = FilenameUtils.getBaseName(destFileName);
-                            while (!FilenameUtils.getExtension(baseNameAccordingToArchiveEntry).isEmpty()) {
-                                baseNameAccordingToArchiveEntry = FilenameUtils.getBaseName(baseNameAccordingToArchiveEntry);
-                            }
+                            String baseNameAccordingToArchiveEntry = DictNameHelper.getNameWithoutAnyExtension(destFileName);
                             if (baseNameAccordingToArchiveEntries == null) {
                                 baseNameAccordingToArchiveEntries = baseNameAccordingToArchiveEntry;
                             } else {
@@ -406,7 +399,7 @@ public class GetDictionariesActivity extends Activity {
                 archiveInputStream.close();
                 if (baseNameAccordingToArchiveEntries != null && !baseNameAccordingToArchiveEntries.equals(baseName)) {
                     Log.d("DictExtractor", "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
-                    final String finalDestDir = FilenameUtils.concat(dictDir.toString(), baseNameAccordingToArchiveEntries);
+                    final String finalDestDir = new File(dictDir.toString(), baseNameAccordingToArchiveEntries).getAbsolutePath();
                     Log.d("DictExtractor", "destDirFile: " + destDirFile.toString() + ", finalDestDir: " + finalDestDir);
                     final File finalDestDirFile = new File(finalDestDir);
                     if (finalDestDirFile.exists()) {
