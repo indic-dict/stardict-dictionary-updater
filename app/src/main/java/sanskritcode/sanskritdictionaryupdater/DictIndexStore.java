@@ -23,6 +23,9 @@ class DictIndexStore implements Serializable{
     final BiMap<String, String> indexesSelected = HashBiMap.create(100);
     Map<String, List<String>> indexedDicts = new LinkedHashMap<>();
     Set<String> dictionariesSelectedSet = new HashSet<>();
+    final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
+    final List<String> downloadedArchiveBasenames = new ArrayList<>();
+    List<Boolean> dictFailure = new ArrayList<>();
 
     void getIndicesAddCheckboxes(final MainActivity activity) {
         final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();

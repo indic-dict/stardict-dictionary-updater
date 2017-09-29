@@ -28,9 +28,7 @@ import java.util.List;
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends Activity {
     private SharedPreferences.Editor dictVersionEditor;
-    private final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
-    private final List<String> downloadedDictFiles = new ArrayList<>();
-    private List<Boolean> dictFailure = new ArrayList<>();
+    private DictIndexStore dictIndexStore;
 
     private TextView topText;
     private Button button;
@@ -58,10 +56,9 @@ public class GetDictionariesActivity extends Activity {
         button_2.setVisibility(View.INVISIBLE);
         button_2.setEnabled(false);
         progressBar = findViewById(R.id.get_dict_progressBar);
-        //noinspection unchecked
-        DictIndexStore dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
-        dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
-        dictFailure = new ArrayList<>(Collections.nCopies(dictionariesSelectedLst.size(), false));
+        dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
+        dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
+        dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.d(getLocalClassName(), "Got write permissions");
         } else {
@@ -84,14 +81,15 @@ public class GetDictionariesActivity extends Activity {
             }
         }
 
-        if (dictionariesSelectedLst.size() == 0) {
+        if (dictIndexStore.dictionariesSelectedLst.size() == 0) {
             topText.setText(R.string.no_dicts_selected);
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
             button.setEnabled(true);
         }
 
-        DictDownloader dictDownloader = new DictDownloader(this, dictFailure, downloadedDictFiles, dictionariesSelectedLst,
+        DictDownloader dictDownloader = new DictDownloader(this,
+                dictIndexStore.dictFailure, dictIndexStore.downloadedArchiveBasenames, dictIndexStore.dictionariesSelectedLst,
                 downloadsDir, progressBar, topText);
         dictDownloader.downloadDict(0);
     }
@@ -101,15 +99,15 @@ public class GetDictionariesActivity extends Activity {
     }
 
     void whenAllDictsDownloaded() {
-        new DictExtractor(this, dictDir, dictFailure,
-                downloadedDictFiles, downloadsDir,
+        new DictExtractor(this, dictDir, dictIndexStore.dictFailure,
+                dictIndexStore.downloadedArchiveBasenames, downloadsDir,
                 progressBar, topText)
                 .execute();
     }
 
     void whenAllDictsExtracted() {
         topText.setText(getString(R.string.finalMessage));
-        List<String> dictNames = Lists.transform(dictionariesSelectedLst, new Function<String, String>() {
+        List<String> dictNames = Lists.transform(dictIndexStore.dictionariesSelectedLst, new Function<String, String>() {
             public String apply(String in) {
                 return Files.getNameWithoutExtension(in);
             }
@@ -117,7 +115,7 @@ public class GetDictionariesActivity extends Activity {
         final StringBuilder failures = new StringBuilder("");
         for (int i = 0; i < dictNames.size(); i++) {
             //noinspection StatementWithEmptyBody
-            if (dictFailure.get(i)) {
+            if (dictIndexStore.dictFailure.get(i)) {
                 failures.append("\n").append(dictNames.get(i));
             } else {
             }
@@ -126,7 +124,7 @@ public class GetDictionariesActivity extends Activity {
         StringBuilder successes = new StringBuilder("");
         for (int i = 0; i < dictNames.size(); i++) {
             //noinspection StatementWithEmptyBody
-            if (dictFailure.get(i)) {
+            if (dictIndexStore.dictFailure.get(i)) {
             } else {
                 successes.append("\n").append(dictNames.get(i));
             }

@@ -31,17 +31,17 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     private final GetDictionariesActivity getDictionariesActivity;
     private final File dictDir;
     private final List<Boolean> dictFailure;
-    private final List<String> downloadedDictFiles;
+    private final List<String> downloadedArchiveBasenames;
     private final File downloadsDir;
     private final ProgressBar progressBar;
     private final TextView topText;
 
     public DictExtractor(GetDictionariesActivity getDictionariesActivity, File dictDir, List<Boolean> dictFailure,
-                         List<String> downloadedDictFiles, File downloadsDir, ProgressBar progressBar, TextView topText) {
+                         List<String> downloadedArchiveBasenames, File downloadsDir, ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictDir = dictDir;
         this.dictFailure = dictFailure;
-        this.downloadedDictFiles = downloadedDictFiles;
+        this.downloadedArchiveBasenames = downloadedArchiveBasenames;
         this.downloadsDir = downloadsDir;
         this.progressBar = progressBar;
         this.topText = topText;
@@ -102,7 +102,7 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     }
 
     private void downloadFile(int index) {
-        String archiveFileName = downloadedDictFiles.get(index);
+        String archiveFileName = downloadedArchiveBasenames.get(index);
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
         setTopTextWhileExtracting(sourceFile, "");
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
@@ -208,7 +208,7 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
 
     @Override
     protected Void doInBackground(Void... params) {
-        for(int i=0; i<downloadedDictFiles.size(); i++) {
+        for(int i=0; i<downloadedArchiveBasenames.size(); i++) {
             downloadFile(i);
         }
         return null;

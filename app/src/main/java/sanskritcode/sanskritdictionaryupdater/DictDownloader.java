@@ -2,7 +2,6 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,18 +20,18 @@ class DictDownloader {
 
     private final GetDictionariesActivity getDictionariesActivity;
     private final List<Boolean> dictFailure;
-    private final List<String> downloadedDictFiles;
+    private final List<String> downloadedArchiveBasenames;
     private final ArrayList<String> dictionariesSelectedLst;
     private final File downloadsDir;
     private final ProgressBar progressBar;
     private final TextView topText;
 
     DictDownloader(GetDictionariesActivity getDictionariesActivity, List<Boolean> dictFailure,
-                          List<String> downloadedDictFiles, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
+                          List<String> downloadedArchiveBasenames, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
                           ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictFailure = dictFailure;
-        this.downloadedDictFiles = downloadedDictFiles;
+        this.downloadedArchiveBasenames = downloadedArchiveBasenames;
         this.dictionariesSelectedLst = dictionariesSelectedLst;
         this.downloadsDir = downloadsDir;
         this.topText = topText;
@@ -73,7 +72,7 @@ class DictDownloader {
             asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
                 @Override
                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
-                    downloadedDictFiles.add(fileName);
+                    downloadedArchiveBasenames.add(fileName);
                     Log.i("Got dictionary: ", fileName);
                     dictFailure.set(index, false);
                     downloadDict(index + 1);
