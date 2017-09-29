@@ -23,23 +23,23 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 
-class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progress, result */ {
+class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, result */ {
     private final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
     private final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
     private final GetDictionariesActivity getDictionariesActivity;
     private final File dictDir;
     private final List<Boolean> dictFailure;
-    private final List<String> dictFiles;
+    private final List<String> downloadedDictFiles;
     private final File downloadsDir;
     private final ProgressBar progressBar;
     private final TextView topText;
 
     public DictExtractor(GetDictionariesActivity getDictionariesActivity, File dictDir, List<Boolean> dictFailure,
-                         List<String> dictFiles, File downloadsDir, ProgressBar progressBar, TextView topText) {
+                         List<String> downloadedDictFiles, File downloadsDir, ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictDir = dictDir;
         this.dictFailure = dictFailure;
-        this.dictFiles = dictFiles;
+        this.downloadedDictFiles = downloadedDictFiles;
         this.downloadsDir = downloadsDir;
         this.progressBar = progressBar;
         this.topText = topText;
@@ -60,12 +60,8 @@ class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progr
     }
 
     @Override
-    protected void onPostExecute(Integer result) {
-        String fileName = dictFiles.get(result);
-        String message1 = "Extracted " + fileName;
-        Log.d("DictExtractor", message1);
-        topText.setText(message1);
-        getDictionariesActivity.extractDicts(result + 1);
+    protected void onPostExecute(Void result) {
+        getDictionariesActivity.whenAllDictsExtracted();
         progressBar.setVisibility(View.GONE);
     }
 
@@ -103,12 +99,11 @@ class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progr
         setTopTextWhileExtracting(values[2], values[3]);
     }
 
-    @Override
-    protected Integer doInBackground(Integer... params) {
-        int index = params[0];
-        String archiveFileName = dictFiles.get(index);
+    private void downloadFile(int index) {
+        String archiveFileName = downloadedDictFiles.get(index);
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
         setTopTextWhileExtracting(sourceFile, "");
+        publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
 
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
         final String baseName = Files.getNameWithoutExtension(Files.getNameWithoutExtension(archiveFileName)).split("__")[0];
@@ -206,6 +201,14 @@ class DictExtractor extends AsyncTask<Integer, String, Integer> /* params, progr
             dictFailure.set(index, true);
         }
         deleteTarFile(sourceFile);
-        return index;
+
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        for(int i=0; i<downloadedDictFiles.size(); i++) {
+            downloadFile(i);
+        }
+        return null;
     }
 }

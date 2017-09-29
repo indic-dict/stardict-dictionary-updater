@@ -16,9 +16,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.common.io.Files;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -93,7 +93,14 @@ public class GetDictionariesActivity extends Activity {
         finish();
     }
 
-    private void whenAllDictsExtracted() {
+    void whenAllDictsDownloaded() {
+        new DictExtractor(this, dictDir, dictFailure,
+                downloadedDictFiles, downloadsDir,
+                progressBar, topText)
+                .execute();
+    }
+
+    void whenAllDictsExtracted() {
         topText.setText(getString(R.string.finalMessage));
         List<String> dictNames = Lists.transform(dictionariesSelectedLst, new Function<String, String>() {
             public String apply(String in) {
@@ -144,17 +151,6 @@ public class GetDictionariesActivity extends Activity {
             }
         });
 
-    }
-
-    void extractDicts(int index) {
-        if (index >= downloadedDictFiles.size()) {
-            whenAllDictsExtracted();
-        } else {
-            new DictExtractor(this, dictDir, dictFailure,
-                    downloadedDictFiles, downloadsDir,
-                    progressBar, topText)
-                    .execute(index);
-        }
     }
 
 

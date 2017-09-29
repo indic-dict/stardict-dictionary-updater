@@ -46,7 +46,7 @@ class DictDownloader {
             button.setEnabled(true);
         } else {
             if (index >= dictionariesSelectedLst.size()) {
-                getDictionariesActivity.extractDicts(0);
+                getDictionariesActivity.whenAllDictsDownloaded();
             } else {
                 topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
                 topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
