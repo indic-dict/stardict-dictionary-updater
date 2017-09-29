@@ -1,0 +1,155 @@
+
+------------------------------------------------------------
+Root project
+------------------------------------------------------------
+
+No configurations
+
+------------------------------------------------------------
+Project :app
+------------------------------------------------------------
+
+compile - Classpath for compiling the main sources.
++--- com.android.tools.build:gradle:2.3.3
+|    \--- com.android.tools.build:gradle-core:2.3.3
+|         +--- com.android.tools.build:builder:2.3.3
+|         |    +--- com.android.tools.build:builder-model:2.3.3
+|         |    |    \--- com.android.tools:annotations:25.3.3
+|         |    +--- com.android.tools.build:builder-test-api:2.3.3
+|         |    |    \--- com.android.tools.ddms:ddmlib:25.3.3
+|         |    |         +--- com.android.tools:common:25.3.3
+|         |    |         |    +--- com.android.tools:annotations:25.3.3
+|         |    |         |    \--- com.google.guava:guava:18.0
+|         |    |         \--- net.sf.kxml:kxml2:2.3.0
+|         |    +--- com.android.tools:sdklib:25.3.3
+|         |    |    +--- com.android.tools.layoutlib:layoutlib-api:25.3.3
+|         |    |    |    +--- com.android.tools:common:25.3.3 (*)
+|         |    |    |    +--- net.sf.kxml:kxml2:2.3.0
+|         |    |    |    +--- com.android.tools:annotations:25.3.3
+|         |    |    |    \--- com.intellij:annotations:12.0
+|         |    |    +--- com.android.tools:dvlib:25.3.3
+|         |    |    |    \--- com.android.tools:common:25.3.3 (*)
+|         |    |    +--- com.android.tools:repository:25.3.3
+|         |    |    |    +--- com.android.tools:common:25.3.3 (*)
+|         |    |    |    +--- org.apache.commons:commons-compress:1.8.1 -> 1.14
+|         |    |    |    \--- com.google.jimfs:jimfs:1.1
+|         |    |    |         \--- com.google.guava:guava:18.0
+|         |    |    +--- com.google.code.gson:gson:2.2.4
+|         |    |    +--- org.apache.commons:commons-compress:1.8.1 -> 1.14
+|         |    |    +--- org.apache.httpcomponents:httpclient:4.1.1
+|         |    |    |    +--- org.apache.httpcomponents:httpcore:4.1
+|         |    |    |    +--- commons-logging:commons-logging:1.1.1
+|         |    |    |    \--- commons-codec:commons-codec:1.4
+|         |    |    \--- org.apache.httpcomponents:httpmime:4.1
+|         |    |         +--- org.apache.httpcomponents:httpcore:4.1
+|         |    |         \--- commons-logging:commons-logging:1.1.1
+|         |    +--- com.android.tools:sdk-common:25.3.3
+|         |    |    +--- com.android.tools:sdklib:25.3.3 (*)
+|         |    |    +--- com.android.tools.build:builder-test-api:2.3.3 (*)
+|         |    |    +--- com.android.tools.build:builder-model:2.3.3 (*)
+|         |    |    +--- org.bouncycastle:bcpkix-jdk15on:1.48
+|         |    |    |    \--- org.bouncycastle:bcprov-jdk15on:1.48
+|         |    |    \--- org.bouncycastle:bcprov-jdk15on:1.48
+|         |    +--- com.android.tools:common:25.3.3 (*)
+|         |    +--- com.android.tools.build:manifest-merger:25.3.3
+|         |    |    +--- com.android.tools:common:25.3.3 (*)
+|         |    |    +--- com.android.tools:sdklib:25.3.3 (*)
+|         |    |    +--- com.android.tools:sdk-common:25.3.3 (*)
+|         |    |    +--- net.sf.kxml:kxml2:2.3.0
+|         |    |    \--- com.google.code.gson:gson:2.2.4
+|         |    +--- com.android.tools.ddms:ddmlib:25.3.3 (*)
+|         |    +--- com.android.tools.jack:jack-api:0.13.0
+|         |    +--- com.android.tools.jill:jill-api:0.10.0
+|         |    +--- com.android.tools.analytics-library:protos:25.3.3
+|         |    |    \--- com.google.protobuf:protobuf-java:3.0.0
+|         |    +--- com.android.tools.analytics-library:shared:25.3.3
+|         |    |    +--- com.android.tools.analytics-library:protos:25.3.3 (*)
+|         |    |    +--- com.android.tools:annotations:25.3.3
+|         |    |    +--- com.android.tools:common:25.3.3 (*)
+|         |    |    +--- com.google.guava:guava:18.0
+|         |    |    \--- com.google.code.gson:gson:2.2.4
+|         |    +--- com.android.tools.analytics-library:tracker:25.3.3
+|         |    |    +--- com.android.tools:annotations:25.3.3
+|         |    |    +--- com.android.tools:common:25.3.3 (*)
+|         |    |    +--- com.android.tools.analytics-library:protos:25.3.3 (*)
+|         |    |    +--- com.android.tools.analytics-library:shared:25.3.3 (*)
+|         |    |    +--- com.google.protobuf:protobuf-java:3.0.0
+|         |    |    \--- com.google.guava:guava:18.0
+|         |    +--- com.squareup:javawriter:2.5.0
+|         |    +--- org.bouncycastle:bcpkix-jdk15on:1.48 (*)
+|         |    +--- org.bouncycastle:bcprov-jdk15on:1.48
+|         |    +--- org.ow2.asm:asm:5.0.4
+|         |    \--- org.ow2.asm:asm-tree:5.0.4
+|         |         \--- org.ow2.asm:asm:5.0.4
+|         +--- com.android.tools.lint:lint:25.3.3
+|         |    +--- com.android.tools.lint:lint-checks:25.3.3
+|         |    |    +--- com.android.tools.lint:lint-api:25.3.3
+|         |    |    |    +--- com.android.tools:sdk-common:25.3.3 (*)
+|         |    |    |    +--- com.android.tools.build:builder-model:2.3.3 (*)
+|         |    |    |    +--- com.android.tools.external.com-intellij:uast:162.2228.14
+|         |    |    |    +--- com.android.tools.external.lombok:lombok-ast:0.2.3
+|         |    |    |    |    \--- com.google.guava:guava:17.0 -> 18.0
+|         |    |    |    +--- org.ow2.asm:asm:5.0.4
+|         |    |    |    \--- org.ow2.asm:asm-tree:5.0.4 (*)
+|         |    |    \--- org.ow2.asm:asm-analysis:5.0.4
+|         |    |         \--- org.ow2.asm:asm-tree:5.0.4 (*)
+|         |    \--- org.eclipse.jdt.core.compiler:ecj:4.6.1
+|         +--- com.android.tools.build:transform-api:2.0.0-deprecated-use-gradle-api
+|         +--- com.android.tools.build:gradle-api:2.3.3
+|         |    +--- com.android.tools.build:builder-model:2.3.3 (*)
+|         |    \--- com.google.guava:guava:18.0
+|         +--- com.android.databinding:compilerCommon:2.3.3
+|         |    +--- com.android.databinding:baseLibrary:2.3.3
+|         |    +--- org.antlr:antlr4:4.5.3
+|         |    +--- commons-io:commons-io:2.4
+|         |    +--- com.googlecode.juniversalchardet:juniversalchardet:1.0.3
+|         |    +--- com.google.guava:guava:17.0 -> 18.0
+|         |    \--- com.android.tools:annotations:24.5.0 -> 25.3.3
+|         +--- org.ow2.asm:asm:5.0.4
+|         +--- org.ow2.asm:asm-commons:5.0.4
+|         |    \--- org.ow2.asm:asm-tree:5.0.4 (*)
+|         +--- net.sf.proguard:proguard-gradle:5.3.2
+|         |    \--- net.sf.proguard:proguard-base:5.3.2
+|         +--- org.jacoco:org.jacoco.core:0.7.5.201505241946
+|         |    \--- org.ow2.asm:asm-debug-all:5.0.1
+|         +--- org.jacoco:org.jacoco.report:0.7.5.201505241946
+|         |    +--- org.jacoco:org.jacoco.core:0.7.5.201505241946 (*)
+|         |    \--- org.ow2.asm:asm-debug-all:5.0.1
+|         +--- net.sf.jopt-simple:jopt-simple:4.9
+|         +--- com.google.protobuf:protobuf-java:3.0.0
+|         \--- org.antlr:antlr:3.5.2
+|              +--- org.antlr:antlr-runtime:3.5.2
+|              \--- org.antlr:ST4:4.0.8
+|                   \--- org.antlr:antlr-runtime:3.5.2
++--- com.android.support:appcompat-v7:26.1.0
+|    +--- com.android.support:support-annotations:26.1.0
+|    +--- com.android.support:support-v4:26.1.0
+|    |    +--- com.android.support:support-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- android.arch.lifecycle:runtime:1.0.0
+|    |    |         +--- android.arch.lifecycle:common:1.0.0
+|    |    |         \--- android.arch.core:common:1.0.0
+|    |    +--- com.android.support:support-media-compat:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-utils:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    +--- com.android.support:support-core-ui:26.1.0
+|    |    |    +--- com.android.support:support-annotations:26.1.0
+|    |    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    |    \--- com.android.support:support-fragment:26.1.0
+|    |         +--- com.android.support:support-compat:26.1.0 (*)
+|    |         +--- com.android.support:support-core-ui:26.1.0 (*)
+|    |         \--- com.android.support:support-core-utils:26.1.0 (*)
+|    +--- com.android.support:support-vector-drawable:26.1.0
+|    |    +--- com.android.support:support-annotations:26.1.0
+|    |    \--- com.android.support:support-compat:26.1.0 (*)
+|    \--- com.android.support:animated-vector-drawable:26.1.0
+|         +--- com.android.support:support-vector-drawable:26.1.0 (*)
+|         \--- com.android.support:support-core-ui:26.1.0 (*)
++--- com.loopj.android:android-async-http:1.4.9
+|    \--- cz.msebera.android:httpclient:4.3.6
+\--- org.apache.commons:commons-compress:1.14
+
+(*) - dependencies omitted (listed previously)
