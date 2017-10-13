@@ -26,6 +26,19 @@ class ErrorHandler {
         File outputFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
                 "logcat.txt");
         Log.i("SendLoagcatMail: ", "logcat file is " + outputFile.getAbsolutePath());
+
+
+        String deviceDetails= "Device details:";
+        deviceDetails += "\n OS Version: " + System.getProperty("os.version") + "(" + android.os.Build.VERSION.INCREMENTAL + ")";
+        deviceDetails += "\n OS API Level: "+android.os.Build.VERSION.RELEASE + "("+android.os.Build.VERSION.SDK_INT+")";
+        deviceDetails += "\n Device: " + android.os.Build.DEVICE;
+        deviceDetails += "\n Model (and Product): " + android.os.Build.MODEL + " ("+ android.os.Build.PRODUCT + ")";
+        Log.i("SendLoagcatMail: ", "deviceDetails: " + deviceDetails);
+
+        int versionCode = BuildConfig.VERSION_CODE;
+        String versionName = BuildConfig.VERSION_NAME;
+        Log.i("SendLoagcatMail: ", "App version: " + versionName + " with id " + versionCode);
+
         try {
             Runtime.getRuntime().exec(
                     "logcat -f " + outputFile.getAbsolutePath());
