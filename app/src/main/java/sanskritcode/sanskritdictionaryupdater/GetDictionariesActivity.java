@@ -100,12 +100,24 @@ public class GetDictionariesActivity extends Activity {
 
     void whenAllDictsDownloaded() {
         new DictExtractor(this, dictDir, dictIndexStore.dictFailure,
-                dictIndexStore.downloadedArchiveBasenames, downloadsDir,
-                progressBar, topText)
+                dictIndexStore.downloadedArchiveBasenames, downloadsDir)
                 .execute();
     }
 
+
+    /* Should only be called from the UI thread! */
+    void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
+        String message1 = "Extracting " + archiveName;
+        Log.d("DictExtracter", message1);
+        topText.setText(message1);
+        topText.append("\n" + getString(R.string.dont_navigate_away));
+        topText.append("\n" + "Current file: " + contentFileExtracted);
+    }
+
+
+    /* Should only be called from the UI thread! */
     void whenAllDictsExtracted() {
+        progressBar.setVisibility(View.GONE);
         topText.setText(getString(R.string.finalMessage));
         List<String> dictNames = Lists.transform(dictIndexStore.dictionariesSelectedLst, new Function<String, String>() {
             public String apply(String in) {
@@ -158,7 +170,7 @@ public class GetDictionariesActivity extends Activity {
 
     }
 
-
+    /* Should only be called from the UI thread! */
     void updateProgressBar(int progress, int total) {
         progressBar.setMax(total);
         progressBar.setProgress(progress);

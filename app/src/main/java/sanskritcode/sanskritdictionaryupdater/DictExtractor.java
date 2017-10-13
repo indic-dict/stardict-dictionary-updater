@@ -33,26 +33,14 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     private final List<Boolean> dictFailure;
     private final List<String> downloadedArchiveBasenames;
     private final File downloadsDir;
-    private final ProgressBar progressBar;
-    private final TextView topText;
 
     public DictExtractor(GetDictionariesActivity getDictionariesActivity, File dictDir, List<Boolean> dictFailure,
-                         List<String> downloadedArchiveBasenames, File downloadsDir, ProgressBar progressBar, TextView topText) {
+                         List<String> downloadedArchiveBasenames, File downloadsDir) {
         this.getDictionariesActivity = getDictionariesActivity;
         this.dictDir = dictDir;
         this.dictFailure = dictFailure;
         this.downloadedArchiveBasenames = downloadedArchiveBasenames;
         this.downloadsDir = downloadsDir;
-        this.progressBar = progressBar;
-        this.topText = topText;
-    }
-
-    private void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
-        String message1 = "Extracting " + archiveName;
-        Log.d("DictExtracter", message1);
-        topText.setText(message1);
-        topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
-        topText.append("\n" + "Current file: " + contentFileExtracted);
     }
 
     private void deleteTarFile(String sourceFile) {
@@ -64,7 +52,6 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     @Override
     protected void onPostExecute(Void result) {
         getDictionariesActivity.whenAllDictsExtracted();
-        progressBar.setVisibility(View.GONE);
     }
 
     private void cleanDirectory(File directory) {
@@ -98,13 +85,12 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
         getDictionariesActivity.updateProgressBar(Integer.parseInt(values[0]), Integer.parseInt(values[1]));
-        setTopTextWhileExtracting(values[2], values[3]);
+        getDictionariesActivity.setTopTextWhileExtracting(values[2], values[3]);
     }
 
     private void downloadFile(int index) {
         String archiveFileName = downloadedArchiveBasenames.get(index);
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
-        setTopTextWhileExtracting(sourceFile, "");
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
 
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
