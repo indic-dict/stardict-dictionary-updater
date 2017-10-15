@@ -132,7 +132,10 @@ public class GetDictionariesActivity extends Activity {
             } else {
             }
         }
-        if (failures.length() > 0) topText.append("\n" + "Failed on:" + failures);
+        if (failures.length() > 0) {
+            topText.append("\n" + "Failed on:" + failures);
+            Log.w(getLocalClassName(), failures.toString());
+        }
         StringBuilder successes = new StringBuilder("");
         for (int i = 0; i < dictNames.size(); i++) {
             //noinspection StatementWithEmptyBody
@@ -141,7 +144,10 @@ public class GetDictionariesActivity extends Activity {
                 successes.append("\n").append(dictNames.get(i));
             }
         }
-        if (successes.length() > 0) topText.append("\n" + "Succeeded on:" + successes);
+        if (successes.length() > 0) {
+            topText.append("\n" + "Succeeded on:" + successes);
+            Log.i(getLocalClassName(), successes.toString());
+        }
 
         button.setText(R.string.buttonValQuit);
         if (failures.length() == 0) {
