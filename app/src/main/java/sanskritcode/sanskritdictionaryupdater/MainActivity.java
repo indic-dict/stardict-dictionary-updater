@@ -37,6 +37,16 @@ public class MainActivity extends Activity {
 
     private Button button;
 
+    static void getPermission(String permissionString, Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
+            Log.d("Permissions", "Got permission: " + permissionString);
+        } else {
+            Log.w("Permissions", "Don't have permission: " + permissionString);
+            ActivityCompat.requestPermissions(activity, new String[]{permissionString}, 101);
+            Log.i("Permissions", "new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
+        }
+    }
+
     // Event handler for: When an index is (un) selected.
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -115,22 +125,9 @@ public class MainActivity extends Activity {
         button.setText(getString(R.string.buttonWorking));
         button.setClickable(false);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(getLocalClassName(), "Got INTERNET permissions");
-        } else {
-            Log.e(getLocalClassName(), "Don't have INTERNET permissions");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 102);
-            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET));
-        }
-
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(getLocalClassName(), "Got ACCESS_NETWORK_STATE permissions");
-        } else {
-            Log.e(getLocalClassName(), "Don't have ACCESS_NETWORK_STATE permissions");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 103);
-            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE));
-        }
+        MainActivity.getPermission(Manifest.permission.INTERNET, this);
+        MainActivity.getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this);
+        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
 
         dictIndexStore.getIndicesAddCheckboxes(this);
     }

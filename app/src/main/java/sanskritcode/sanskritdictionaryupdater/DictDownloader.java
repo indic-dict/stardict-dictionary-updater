@@ -1,5 +1,6 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.Manifest;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -61,6 +62,7 @@ class DictDownloader {
             getDictionariesActivity.whenAllDictsDownloaded();
             return;
         }
+        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
 
         topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
         topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));

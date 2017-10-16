@@ -59,13 +59,7 @@ public class GetDictionariesActivity extends Activity {
         dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
         dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
         dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(getLocalClassName(), "Got write permissions");
-        } else {
-            Log.e(getLocalClassName(), "Don't have write permissions");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-            Log.i(getLocalClassName(), "new permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE));
-        }
+        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
 
         File sdcard = Environment.getExternalStorageDirectory();
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");

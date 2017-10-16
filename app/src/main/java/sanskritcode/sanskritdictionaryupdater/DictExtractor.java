@@ -1,10 +1,8 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.Manifest;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.common.io.Files;
 
@@ -88,9 +86,10 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
         getDictionariesActivity.setTopTextWhileExtracting(values[2], values[3]);
     }
 
-    private void downloadFile(int index) {
+    private void extractFile(int index) {
         String archiveFileName = downloadedArchiveBasenames.get(index);
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
+        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
 
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
@@ -195,7 +194,7 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     @Override
     protected Void doInBackground(Void... params) {
         for(int i=0; i<downloadedArchiveBasenames.size(); i++) {
-            downloadFile(i);
+            extractFile(i);
         }
         return null;
     }
