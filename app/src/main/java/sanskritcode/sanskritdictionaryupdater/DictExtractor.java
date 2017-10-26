@@ -31,6 +31,8 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     private final List<Boolean> dictFailure;
     private final List<String> downloadedArchiveBasenames;
     private final File downloadsDir;
+    // See http://stardict-4.sourceforge.net/StarDictFileFormat
+    private final String VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX = "ifo|dz|dict|idx|syn|rifo|ridx|rdic";
 
     public DictExtractor(GetDictionariesActivity getDictionariesActivity, File dictDir, List<Boolean> dictFailure,
                          List<String> downloadedArchiveBasenames, File downloadsDir) {
@@ -142,9 +144,9 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                     destFileDir = resourceDirFile.getAbsolutePath();
                 }
 
-                if (isResourceFile || destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
+                if (isResourceFile || destFileExtension.matches(VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX)) {
                     String destFile = new File(destFileDir, destFileName).getAbsolutePath();
-                    if (!isResourceFile && destFileExtension.matches("ifo|dz|dict|idx|rifo|ridx|rdic")) {
+                    if (!isResourceFile && destFileExtension.matches(VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX)) {
                         String baseNameAccordingToArchiveEntry = DictNameHelper.getNameWithoutAnyExtension(destFileName);
                         if (baseNameAccordingToArchiveEntries == null) {
                             baseNameAccordingToArchiveEntries = baseNameAccordingToArchiveEntry;
