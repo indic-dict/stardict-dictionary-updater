@@ -48,7 +48,7 @@ dependencies {
 
     // For some collection functions, file utilities.
     //noinspection GradleDynamicVersion
-    compile group: 'com.google.guava', name: 'guava', version: '20.+'
+    compile group: 'com.google.guava', name: 'guava', version: '21.+'
     // UNSOLVED PROBLEM.
     // Note from 20170927
     // Error:Execution failed for task ':app:transformClassesWithJarMergingForRelease'.
