@@ -2,17 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 322
-        versionName "3.2.2"
-//        multiDexEnabled = true
-//        jackOptions {
-//            enabled false
-//        }
+        versionCode 323
+        versionName "3.2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

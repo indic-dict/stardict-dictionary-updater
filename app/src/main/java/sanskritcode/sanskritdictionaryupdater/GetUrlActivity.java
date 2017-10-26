@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,12 @@ public class GetUrlActivity extends Activity {
     private LinearLayout layout;
     private TextView topText;
     private Button button;
-    private final List<CheckBox> checkBoxes = new ArrayList<>();
+    private final Map<String, CheckBox> dictCheckBoxes = new HashMap<>();
+    private final Map<String, CheckBox> indexCheckBoxes = new HashMap<>();
 
     private SharedPreferences sharedDictVersionStore;
 
-    private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
+    private final CompoundButton.OnCheckedChangeListener dictCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
                 dictIndexStore.dictionariesSelectedSet.add(buttonView.getHint().toString());
@@ -40,6 +42,14 @@ public class GetUrlActivity extends Activity {
                 dictIndexStore.dictionariesSelectedSet.remove(buttonView.getHint().toString());
             }
             enableButtonIfDictsSelected();
+        }
+    };
+
+    private final CompoundButton.OnCheckedChangeListener indexCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            for (String url : dictIndexStore.indexedDicts.get(buttonView.getHint().toString())) {
+                dictCheckBoxes.get(url).setChecked(isChecked);
+            }
         }
     };
 
@@ -78,9 +88,10 @@ public class GetUrlActivity extends Activity {
         startActivity(intent);
     }
 
+    // TODO: In certain cases, it could be that the dictdata directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
     private void selectCheckboxes() {
         int autoUnselectedDicts = 0;
-        for (CheckBox cb : checkBoxes) {
+        for (CheckBox cb : dictCheckBoxes.values()) {
             // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
             String filename = cb.getHint().toString();
             boolean proposedVersionNewer = true;
@@ -114,15 +125,18 @@ public class GetUrlActivity extends Activity {
     void addCheckboxes(Map<String, List<String>> indexedDicts) {
         layout = findViewById(R.id.get_url_layout);
         for (String indexName : indexedDicts.keySet()) {
-            TextView text = new TextView(getApplicationContext());
-            text.setBackgroundColor(Color.YELLOW);
-            text.setTextColor(Color.BLACK);
-            text.setLayoutParams(new LinearLayout.LayoutParams(
+            CheckBox indexBox = new CheckBox(getApplicationContext());
+            indexBox.setBackgroundColor(Color.YELLOW);
+            indexBox.setTextColor(Color.BLACK);
+            indexBox.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
-            text.setVisibility(View.VISIBLE);
-            text.setText(String.format(getString(R.string.fromSomeIndex), indexName));
-            layout.addView(text);
+            indexBox.setVisibility(View.VISIBLE);
+            indexBox.setText(String.format(getString(R.string.fromSomeIndex), indexName));
+            indexBox.setHint(indexName);
+            indexBox.setOnCheckedChangeListener(indexCheckboxListener);
+            indexCheckBoxes.put(indexName, indexBox);
+            layout.addView(indexBox);
 
             for (String url : indexedDicts.get(indexName)) {
                 CheckBox cb = new CheckBox(getApplicationContext());
@@ -130,12 +144,12 @@ public class GetUrlActivity extends Activity {
                 cb.setHint(url);
                 cb.setTextColor(Color.BLACK);
                 layout.addView(cb, layout.getChildCount());
-                cb.setOnCheckedChangeListener(checkboxListener);
-                checkBoxes.add(cb);
+                cb.setOnCheckedChangeListener(dictCheckboxListener);
+                dictCheckBoxes.put(url, cb);
             }
         }
 
-        String message = String.format(getString(R.string.added_n_dictionary_urls), checkBoxes.size());
+        String message = String.format(getString(R.string.added_n_dictionary_urls), dictCheckBoxes.size());
         Log.i(ACTIVITY_NAME, message);
         topText = findViewById(R.id.get_url_textView);
         topText.setText(message);
