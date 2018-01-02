@@ -20,3 +20,5 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/en-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/en-head/other-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-english/master/other-head/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-marathi/master/ma-head/other-entries/tars/tars.MD>
+
