@@ -25,5 +25,5 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-nepali/master/ne-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-malayalam/master/ml-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-panjabi/master/pa-head/en-entries/tars/tars.MD>
-<https://raw.githubusercontent.com/sanskrit-coders/stardict-oriya/master/or-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-oriya/master/or-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-assamese/master/as-head/en-entries/tars/tars.MD>
