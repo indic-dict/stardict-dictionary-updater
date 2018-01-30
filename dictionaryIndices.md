@@ -27,3 +27,4 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-panjabi/master/pa-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-oriya/master/or-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-assamese/master/as-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-sinhala/master/si-head/en-entries/tars/tars.MD>
