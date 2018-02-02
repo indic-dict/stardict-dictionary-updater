@@ -77,7 +77,10 @@ class DictIndexStore implements Serializable{
                         Log.e(LOGGER_NAME, "Failed ", throwable);
                         String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                         getUrlActivity.topText.setText(message);
-                        getUrlActivity.sendLoagcatMail();
+                        // The below would result in
+                        // java.lang.RuntimeException: android.os.FileUriExposedException: file:///storage/emulated/0/logcat.txt exposed beyond app through ClipData.Item.getUri()
+                        // A known issue: https://github.com/loopj/android-async-http/issues/891
+                        // getUrlActivity.sendLoagcatMail();
                     }
 
                     @Override
