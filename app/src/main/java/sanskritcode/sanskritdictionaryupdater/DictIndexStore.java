@@ -87,7 +87,7 @@ class DictIndexStore implements Serializable{
                 });
             } catch (Throwable throwable) {
                 Log.e(getClass().getName(), "error with " + url, throwable);
-                ErrorHandler.sendLoagcatMail(getUrlActivity);
+                getUrlActivity.sendLoagcatMail();
             }
         }
     }

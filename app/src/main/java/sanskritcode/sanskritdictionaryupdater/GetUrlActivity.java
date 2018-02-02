@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
-public class GetUrlActivity extends Activity {
+public class GetUrlActivity extends BaseActivity {
     private static final String ACTIVITY_NAME = "GetUrlActivity";
     private DictIndexStore dictIndexStore;
 
@@ -46,9 +46,9 @@ public class GetUrlActivity extends Activity {
 
     private final CompoundButton.OnCheckedChangeListener indexCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        for (String url : dictIndexStore.indexedDicts.get(buttonView.getHint().toString())) {
-            dictCheckBoxes.get(url).setChecked(isChecked);
-        }
+            for (String url : dictIndexStore.indexedDicts.get(buttonView.getHint().toString())) {
+                dictCheckBoxes.get(url).setChecked(isChecked);
+            }
         }
     };
 
@@ -75,9 +75,19 @@ public class GetUrlActivity extends Activity {
         dictIndexStore.getIndexedDictsSetCheckboxes(this);
     }
 
+    // Called when another activity comes inbetween and is dismissed.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.showNetworkInfo((TextView)findViewById(R.id.get_url_textView2));
+    }
+
+
     private void enableButtonIfDictsSelected() {
         button = findViewById(R.id.get_url_button);
         button.setEnabled(!dictIndexStore.dictionariesSelectedSet.isEmpty());
+        // dictIndexStore.dictionariesSelectedSet.
+        // button.setText();
         Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
 

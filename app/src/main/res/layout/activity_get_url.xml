@@ -33,6 +33,13 @@ android:fadeScrollbars="false"
             android:text="@string/proceed_button"
             />
 
+        <TextView
+            android:id="@+id/get_url_textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="invisible"/>
+
 
     </LinearLayout>
 </ScrollView>

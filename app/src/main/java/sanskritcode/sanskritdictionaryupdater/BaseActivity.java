@@ -2,25 +2,31 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
 
-class ErrorHandler {
-    public static void sendLoagcatMail(Activity baseActivity){
-        if (ContextCompat.checkSelfPermission(baseActivity, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(baseActivity.getLocalClassName(), "Got READ_LOGS permissions");
+abstract class BaseActivity extends Activity {
+    public void sendLoagcatMail(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(this.getLocalClassName(), "Got READ_LOGS permissions");
         } else {
-            Log.e(baseActivity.getLocalClassName(), "Don't have READ_LOGS permissions");
-            ActivityCompat.requestPermissions(baseActivity, new String[]{Manifest.permission.READ_LOGS}, 103);
-            Log.i(baseActivity.getLocalClassName(), "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(baseActivity, Manifest.permission.READ_LOGS));
+            Log.e(this.getLocalClassName(), "Don't have READ_LOGS permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_LOGS}, 103);
+            Log.i(this.getLocalClassName(), "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS));
         }
         // save logcat in file
         File outputFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
@@ -45,7 +51,7 @@ class ErrorHandler {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Log.e(baseActivity.getLocalClassName(), "Alas error! ", e);
+            Log.e(this.getLocalClassName(), "Alas error! ", e);
         }
 
         //send file using email
@@ -58,7 +64,35 @@ class ErrorHandler {
         emailIntent .putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outputFile));
         // the mail subject
         emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Stardict Updater App Failure report.");
-        baseActivity.startActivity(Intent.createChooser(emailIntent , "Email failure report to maker?..."));
+        this.startActivity(Intent.createChooser(emailIntent , "Email failure report to maker?..."));
+    }
+
+    void showNetworkInfo(TextView warningText) {
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        boolean isWiFi = activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+
+        warningText.setBackgroundColor(Color.LTGRAY);
+        warningText.setTextColor(Color.RED);
+        if (isConnected) {
+            if (isWiFi) {
+                warningText.setVisibility(View.INVISIBLE);
+            } else {
+                warningText.setText(R.string.connected_nowifi);
+                warningText.setVisibility(View.VISIBLE);
+            }
+        } else {
+            warningText.setText(R.string.noConnection);
+            warningText.setVisibility(View.VISIBLE);
+        }
+
     }
 
 }

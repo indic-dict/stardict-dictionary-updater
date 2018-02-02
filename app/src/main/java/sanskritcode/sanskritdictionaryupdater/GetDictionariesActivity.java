@@ -5,11 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
-public class GetDictionariesActivity extends Activity {
+public class GetDictionariesActivity extends BaseActivity {
     private SharedPreferences.Editor dictVersionEditor;
     private DictIndexStore dictIndexStore;
 
@@ -86,6 +83,13 @@ public class GetDictionariesActivity extends Activity {
                 dictIndexStore.dictFailure, dictIndexStore.downloadedArchiveBasenames, dictIndexStore.dictionariesSelectedLst,
                 downloadsDir, progressBar, topText);
         dictDownloader.downloadDict(0);
+    }
+
+    // Called when another activity comes inbetween and is dismissed.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
     }
 
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
@@ -156,14 +160,14 @@ public class GetDictionariesActivity extends Activity {
             button.setEnabled(false);
         }
 
-        final Activity thisActivity = this;
+        final BaseActivity thisActivity = this;
         button_2.setText(R.string.PROBLEM_SEND_LOG);
         button_2.setVisibility(View.VISIBLE);
         button_2.setEnabled(true);
         button_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ErrorHandler.sendLoagcatMail(thisActivity);
+                thisActivity.sendLoagcatMail();
                 finishAffinity();
             }
         });

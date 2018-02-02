@@ -2,12 +2,9 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,8 +28,8 @@ import java.util.Map;
  * <p>
  * IntraActivity lifecycle looks like this: http://stackoverflow.com/questions/6509791/onrestart-vs-onresume-android-lifecycle-question
  */
-public class MainActivity extends Activity {
-    private static final String MAIN_ACTIVITY = "MainActivity";
+public class MainActivity extends BaseActivity {
+    private static final String ACTIVITY_NAME = "MainActivity";
     private final DictIndexStore dictIndexStore = new DictIndexStore();
 
     private Button button;
@@ -85,37 +82,11 @@ public class MainActivity extends Activity {
         // getDictionaries(0);
     }
 
-    private void showNetworkInfo() {
-        ConnectivityManager cm =
-                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        boolean isWiFi = activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
-
-        TextView warningText = findViewById(R.id.main_textView2);
-        warningText.setBackgroundColor(Color.LTGRAY);
-        warningText.setTextColor(Color.RED);
-        if (isConnected) {
-            if (isWiFi) {
-                warningText.setVisibility(View.INVISIBLE);
-            } else {
-                warningText.setText(R.string.connected_nowifi);
-                warningText.setVisibility(View.VISIBLE);
-            }
-        } else {
-            warningText.setText(R.string.noConnection);
-            warningText.setVisibility(View.VISIBLE);
-        }
-
-    }
-
     // Called everytime at activity load time, even when back button is pressed - as startActivity(intent) is called.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(MAIN_ACTIVITY, "onCreate Indices selected " + dictIndexStore.indexesSelected.toString());
+        Log.d(ACTIVITY_NAME, "onCreate Indices selected " + dictIndexStore.indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -132,18 +103,19 @@ public class MainActivity extends Activity {
         dictIndexStore.getIndicesAddCheckboxes(this);
     }
 
+    // Called when another activity comes inbetween and is dismissed.
     @Override
     protected void onResume() {
         super.onResume();
-        showNetworkInfo();
+        this.showNetworkInfo((TextView)findViewById(R.id.main_textView2));
         button.setText(R.string.proceed_button);
         button.setClickable(true);
-        Log.d(MAIN_ACTIVITY, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
+        Log.d(ACTIVITY_NAME, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
     }
 
     // Event handler for: When the proceed button is pressed.
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
-        Log.d(MAIN_ACTIVITY, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
+        Log.d(ACTIVITY_NAME, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();

@@ -21,4 +21,13 @@ class DictNameHelper {
     static String[] getDictNameAndVersion(String fileName) {
         return getNameWithoutAnyExtension(fileName).split("__");
     }
+
+    static int getSize(String fileName) {
+        String[] dictnameParts = DictNameHelper.getDictNameAndVersion(fileName);
+        if (dictnameParts.length > 2) {
+            return Integer.parseInt(dictnameParts[2].replaceAll("MB", "")) + 1;
+        } else {
+            return 1;
+        }
+    }
 }
