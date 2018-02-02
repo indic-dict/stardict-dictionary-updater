@@ -42,6 +42,7 @@
         <activity
             android:name=".ExtractDictionariesActivity"
             android:label="@string/title_activity_extract_dictionaries"
+            android:configChanges="orientation"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

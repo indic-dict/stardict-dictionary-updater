@@ -9,28 +9,38 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+enum DictStatus {
+    NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE,
+}
+
+class DictInfo implements Serializable {
+    DictStatus status = DictStatus.NOT_TRIED;
+    String downloadedArchiveBasename;
+    String url;
+    DictInfo(String urlIn) {
+        url = urlIn;
+    }
+}
 
 class DictIndexStore implements Serializable {
     private final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     // DictIndexStore must be serializable, hence we use specific class names below.
-    final Map<String, String> indexUrls = new LinkedHashMap<>();
+    private final Map<String, String> indexUrls = new LinkedHashMap<>();
     final BiMap<String, String> indexesSelected = HashBiMap.create(100);
     Map<String, List<String>> indexedDicts = new LinkedHashMap<>();
-    Set<String> dictionariesSelectedSet = new HashSet<>();
-    final ArrayList<String> dictionariesSelectedLst = new ArrayList<>();
-    final List<String> downloadedArchiveBasenames = new ArrayList<>();
-    List<Boolean> dictFailure = new ArrayList<>();
+    Map<String, DictInfo> dictionariesSelectedMap = new HashMap<>();
     int autoUnselectedDicts = 0;
 
     int estimateDictionariesSelectedMBs() {
         int size = 0;
-        for (String dictUrl : dictionariesSelectedSet) {
+        for (String dictUrl : dictionariesSelectedMap.keySet()) {
             size += DictNameHelper.getSize(dictUrl);
         }
         return size;
@@ -113,7 +123,7 @@ class DictIndexStore implements Serializable {
                 }
             }
         } else {
-            getUrlActivity.addCheckboxes(indexedDicts, dictionariesSelectedSet);
+            getUrlActivity.addCheckboxes(indexedDicts, dictionariesSelectedMap.keySet());
         }
     }
 }

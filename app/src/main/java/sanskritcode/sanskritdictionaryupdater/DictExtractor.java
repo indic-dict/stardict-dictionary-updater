@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.List;
 
 /**
  * Extracts all selected dictionaries sequentially in ONE Async task (doBackground() being run outside the UI thread).
@@ -27,19 +26,16 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     private final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
     private final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
     private final ExtractDictionariesActivity activity;
-    private final File dictDir;
-    private final List<Boolean> dictFailure;
-    private final List<String> downloadedArchiveBasenames;
     private final File downloadsDir;
     // See http://stardict-4.sourceforge.net/StarDictFileFormat
     private final String VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX = "ifo|dz|dict|idx|syn|rifo|ridx|rdic";
+    private final DictIndexStore dictIndexStore;
+    private final File dictDir;
 
-    DictExtractor(ExtractDictionariesActivity activity, File dictDir, List<Boolean> dictFailure,
-                  List<String> downloadedArchiveBasenames, File downloadsDir) {
+    DictExtractor(ExtractDictionariesActivity activity, File dictDir, DictIndexStore dictIndexStore, File downloadsDir) {
         this.activity = activity;
+        this.dictIndexStore = dictIndexStore;
         this.dictDir = dictDir;
-        this.dictFailure = dictFailure;
-        this.downloadedArchiveBasenames = downloadedArchiveBasenames;
         this.downloadsDir = downloadsDir;
     }
 
@@ -88,8 +84,13 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
         activity.setTopTextWhileExtracting(values[2], values[3]);
     }
 
-    private void extractFile(int index) {
-        String archiveFileName = downloadedArchiveBasenames.get(index);
+    private void extractFile(DictInfo dictInfo) {
+        String archiveFileName = dictInfo.downloadedArchiveBasename;
+        if ( dictInfo.status != DictStatus.DOWNLOAD_SUCCESS) {
+            Log.w("DictExtractor", "Skipping " + archiveFileName + " withs status " + dictInfo.status);
+            return;
+        }
+
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity);
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
@@ -182,12 +183,12 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
             }
 
 
-            dictFailure.set(index, false);
+            dictInfo.status = DictStatus.EXTRACTION_SUCCESS;
             Log.d("DictExtractor", "success!");
             activity.storeDictVersion(archiveFileName);
         } catch (Exception e) {
             Log.e("DictExtractor", "IOEx:", e);
-            dictFailure.set(index, true);
+            dictInfo.status = DictStatus.EXTRACTION_FAILURE;
         }
         deleteTarFile(sourceFile);
 
@@ -195,8 +196,8 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
 
     @Override
     protected Void doInBackground(Void... params) {
-        for(int i=0; i<downloadedArchiveBasenames.size(); i++) {
-            extractFile(i);
+        for(DictInfo dictInfo : dictIndexStore.dictionariesSelectedMap.values()) {
+            extractFile(dictInfo);
         }
         return null;
     }

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -39,8 +38,6 @@ public class GetDictionariesActivity extends BaseActivity {
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
             dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
-            dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
-            dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
         }
         // Suppressed intellij warning about missing commit. storeDictVersion() has it.
         dictVersionEditor = sharedDictVersionStore.edit();
@@ -69,7 +66,7 @@ public class GetDictionariesActivity extends BaseActivity {
             }
         }
 
-        if (dictIndexStore.dictionariesSelectedLst.size() == 0) {
+        if (dictIndexStore.dictionariesSelectedMap.size() == 0) {
             topText.setText(R.string.no_dicts_selected);
             topText.append(getString(R.string.txtTryAgain));
             button.setText(R.string.proceed_button);
@@ -77,7 +74,7 @@ public class GetDictionariesActivity extends BaseActivity {
         }
 
         DictDownloader dictDownloader = new DictDownloader(this,
-                dictIndexStore.dictFailure, dictIndexStore.downloadedArchiveBasenames, dictIndexStore.dictionariesSelectedLst,
+                dictIndexStore,
                 downloadsDir, progressBar, topText);
         dictDownloader.downloadDict(0);
     }
@@ -87,11 +84,6 @@ public class GetDictionariesActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
     void whenAllDictsDownloaded() {

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +34,9 @@ public class GetUrlActivity extends BaseActivity {
     private final CompoundButton.OnCheckedChangeListener dictCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (isChecked) {
-                dictIndexStore.dictionariesSelectedSet.add(buttonView.getHint().toString());
+                dictIndexStore.dictionariesSelectedMap.put(buttonView.getHint().toString(), new DictInfo(buttonView.getHint().toString()));
             } else {
-                dictIndexStore.dictionariesSelectedSet.remove(buttonView.getHint().toString());
+                dictIndexStore.dictionariesSelectedMap.remove(buttonView.getHint().toString());
             }
             enableButtonIfDictsSelected();
         }
@@ -84,9 +83,9 @@ public class GetUrlActivity extends BaseActivity {
 
     private void enableButtonIfDictsSelected() {
         button = findViewById(R.id.get_url_button);
-        button.setEnabled(!dictIndexStore.dictionariesSelectedSet.isEmpty());
+        button.setEnabled(!dictIndexStore.dictionariesSelectedMap.isEmpty());
         int estimatedSize = dictIndexStore.estimateDictionariesSelectedMBs();
-        String message = String.format(getString(R.string.get_dicts_button), dictIndexStore.dictionariesSelectedSet.size(),estimatedSize);
+        String message = String.format(getString(R.string.get_dicts_button), dictIndexStore.dictionariesSelectedMap.size(),estimatedSize);
         button.setText(message);
         Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
@@ -174,6 +173,5 @@ public class GetUrlActivity extends BaseActivity {
         topText = findViewById(R.id.get_url_textView);
         topText.setText(message);
         selectCheckboxes(dictionariesSelectedSet);
-        button.setText(getString(R.string.proceed_button));
     }
 }

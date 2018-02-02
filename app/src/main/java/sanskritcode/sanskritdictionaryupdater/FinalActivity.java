@@ -1,5 +1,6 @@
 package sanskritcode.sanskritdictionaryupdater;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -24,16 +25,11 @@ public class FinalActivity extends BaseActivity {
         setContentView(R.layout.activity_final);
         TextView topText = findViewById(R.id.final_act_textView);
         topText.setText(getString(R.string.finalMessage));
-        List<String> dictNames = Lists.transform(dictIndexStore.dictionariesSelectedLst, new Function<String, String>() {
-            public String apply(String in) {
-                return Files.getNameWithoutExtension(in);
-            }
-        });
         final StringBuilder failures = new StringBuilder("");
-        for (int i = 0; i < dictNames.size(); i++) {
+        for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
-            if (dictIndexStore.dictFailure.get(i)) {
-                failures.append("\n").append(dictNames.get(i));
+            if (dictInfo.status == DictStatus.DOWNLOAD_FAILURE || dictInfo.status == DictStatus.EXTRACTION_FAILURE ) {
+                failures.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url));
             } else {
             }
         }
@@ -42,11 +38,11 @@ public class FinalActivity extends BaseActivity {
             Log.w(getLocalClassName(), failures.toString());
         }
         StringBuilder successes = new StringBuilder("");
-        for (int i = 0; i < dictNames.size(); i++) {
+        for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
-            if (dictIndexStore.dictFailure.get(i)) {
+            if (dictInfo.status == DictStatus.EXTRACTION_SUCCESS) {
             } else {
-                successes.append("\n").append(dictNames.get(i));
+                successes.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url));
             }
         }
         if (successes.length() > 0) {
@@ -80,6 +76,15 @@ public class FinalActivity extends BaseActivity {
                 finishAffinity();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, GetUrlActivity.class);
+        intent.putExtra("dictIndexStore", dictIndexStore);
+        // intent.putStringArrayListExtra();
+        startActivity(intent);
     }
 
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {

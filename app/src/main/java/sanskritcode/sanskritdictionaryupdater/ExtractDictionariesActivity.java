@@ -5,12 +5,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -56,8 +54,7 @@ public class ExtractDictionariesActivity extends BaseActivity{
             }
         }
 
-        new DictExtractor(this, dictDir, dictIndexStore.dictFailure,
-                dictIndexStore.downloadedArchiveBasenames, downloadsDir)
+        new DictExtractor(this, dictDir, dictIndexStore, downloadsDir)
                 .execute();
     }
 
@@ -82,6 +79,15 @@ public class ExtractDictionariesActivity extends BaseActivity{
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, GetUrlActivity.class);
+        intent.putExtra("dictIndexStore", dictIndexStore);
+        // intent.putStringArrayListExtra();
+        startActivity(intent);
+    }
 
     /* Should only be called from the UI thread! */
     void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {

@@ -10,9 +10,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Expected flow: downloadDict(0) -> ... -> downloadDict(index) ->  downloadDict(index + 1) -> ...
@@ -27,20 +24,15 @@ class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     private final GetDictionariesActivity getDictionariesActivity;
-    private final List<Boolean> dictFailure;
-    private final List<String> downloadedArchiveBasenames;
-    private final ArrayList<String> dictionariesSelectedLst;
     private final File downloadsDir;
     private final ProgressBar progressBar;
     private final TextView topText;
+    private final DictIndexStore dictIndexStore;
 
-    DictDownloader(GetDictionariesActivity getDictionariesActivity, List<Boolean> dictFailure,
-                          List<String> downloadedArchiveBasenames, ArrayList<String> dictionariesSelectedLst, File downloadsDir,
-                          ProgressBar progressBar, TextView topText) {
+
+    DictDownloader(GetDictionariesActivity getDictionariesActivity, DictIndexStore dictIndexStore, File downloadsDir, ProgressBar progressBar, TextView topText) {
         this.getDictionariesActivity = getDictionariesActivity;
-        this.dictFailure = dictFailure;
-        this.downloadedArchiveBasenames = downloadedArchiveBasenames;
-        this.dictionariesSelectedLst = dictionariesSelectedLst;
+        this.dictIndexStore = dictIndexStore;
         this.downloadsDir = downloadsDir;
         this.topText = topText;
         this.progressBar = progressBar;
@@ -52,24 +44,30 @@ class DictDownloader {
         String message = "Failed to get " + url;
         Log.e("downloadDict", message + ":", throwable);
         topText.setText(message);
-        dictFailure.set(index, true);
+        dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_FAILURE;
         downloadDict(index + 1);
         progressBar.setVisibility(View.GONE);
     }
 
     void downloadDict(final int index) {
         // Stop condition of the recursion.
-        if (index >= dictionariesSelectedLst.size()) {
+        if (index >= dictIndexStore.dictionariesSelectedMap.size()) {
             getDictionariesActivity.whenAllDictsDownloaded();
             return;
         }
+        final DictInfo dictInfo = (DictInfo) dictIndexStore.dictionariesSelectedMap.values().toArray()[index];
+        final String url = dictInfo.url;
+        if (dictInfo.status != DictStatus.NOT_TRIED) {
+            Log.w("downloadDict", "Skipping " + url + " withs status " + dictInfo.status);
+            downloadDict(index + 1);
+            return;
+        }
+        Log.d("downloadDict", "Getting " + url);
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
 
-        topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), dictionariesSelectedLst.get(index)));
+        topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), url));
         topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
         Log.d("downloadDict ", topText.getText().toString());
-        final String url = dictionariesSelectedLst.get(index);
-        Log.d("downloadDict", "Getting " + url);
         try {
             final String fileName = url.substring(url.lastIndexOf("/")).replace("/", "");
             if (fileName.isEmpty()) {
@@ -81,9 +79,9 @@ class DictDownloader {
             asyncHttpClient.get(url, new FileAsyncHttpResponseHandler(new File(downloadsDir, fileName)) {
                 @Override
                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
-                    downloadedArchiveBasenames.add(fileName);
+                    dictIndexStore.dictionariesSelectedMap.get(url).downloadedArchiveBasename = fileName;
                     Log.i("Got dictionary: ", fileName);
-                    dictFailure.set(index, false);
+                    dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_SUCCESS;
                     downloadDict(index + 1);
                     progressBar.setVisibility(View.GONE);
                 }
