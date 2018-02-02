@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 323
-        versionName "3.2.3"
+        targetSdkVersion 27
+        versionCode 324
+        versionName "3.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -31,31 +31,17 @@ android {
     }
 
     configurations.all {
-        // See https://docs.gradle.org/current/dsl/org.gradle.api.artifacts.ResolutionStrategy.html
-        resolutionStrategy.dependencySubstitution {
-            // Don't remember why this line came to be.
-            // substitute module('org.apache.commons:commons-io:1.3.2') with module('commons-io:commons-io:1.3.2')
-        }
+//        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
 }
 
 // Repositories are listed in ../build.gradle.
 dependencies {
-//    compile 'com.android.support:multidex:1.0.1'
-//    compile 'com.android.support:support-core-utils:26.1.0'
     //noinspection GradleDynamicVersion
-    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:appcompat-v7:27.+'
 
     // For some collection functions, file utilities.
-    //noinspection GradleDynamicVersion
-    compile group: 'com.google.guava', name: 'guava', version: '21.+'
-    // UNSOLVED PROBLEM.
-    // Note from 20170927
-    // Error:Execution failed for task ':app:transformClassesWithJarMergingForRelease'.
-    // > com.android.build.api.transform.TransformException: java.util.zip.ZipException: duplicate entry: org/objectweb/asm/AnnotationVisitor.class
-    //
-    // Futile tip: https://stackoverflow.com/questions/34374213/duplicate-entry-error-jsonpath-with-gson
-    //   Adding  { exclude group: 'org.objectweb.asm' } did not help.
+    compile group: 'com.google.guava', name: 'guava', version: '23.0-android'
 
     compile ('com.loopj.android:android-async-http:1.4.9')
 
@@ -64,6 +50,10 @@ dependencies {
     // Required for instrumented tests
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+
+        // For Error:Execution failed for task ':app:preDebugAndroidTestBuild'.
+        // > Conflict with dependency 'com.google.code.findbugs:jsr305' in project ':app'. Resolved versions for app (1.3.9) and test app (2.0.1) differ. See https://d.android.com/r/tools/test-apk-dependency-conflicts.html for details.
+        exclude group: 'com.google.code.findbugs'
     })
     testCompile 'junit:junit:4.12'
 }

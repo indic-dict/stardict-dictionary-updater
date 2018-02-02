@@ -110,6 +110,7 @@ public class GetDictionariesActivity extends BaseActivity {
         topText.setText(message1);
         topText.append("\n" + getString(R.string.dont_navigate_away));
         topText.append("\n" + "Current file: " + contentFileExtracted);
+        this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
     }
 
 
