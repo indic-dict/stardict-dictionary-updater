@@ -85,8 +85,9 @@ public class GetUrlActivity extends BaseActivity {
     private void enableButtonIfDictsSelected() {
         button = findViewById(R.id.get_url_button);
         button.setEnabled(!dictIndexStore.dictionariesSelectedSet.isEmpty());
-        // dictIndexStore.dictionariesSelectedSet.
-        // button.setText();
+        int estimatedSize = dictIndexStore.estimateDictionariesSelectedMBs();
+        String message = String.format(getString(R.string.get_dicts_button), dictIndexStore.dictionariesSelectedSet.size(),estimatedSize);
+        button.setText(message);
         Log.d(ACTIVITY_NAME, "button enablement " + button.isEnabled());
     }
 

@@ -27,6 +27,14 @@ class DictIndexStore implements Serializable{
     final List<String> downloadedArchiveBasenames = new ArrayList<>();
     List<Boolean> dictFailure = new ArrayList<>();
 
+    int estimateDictionariesSelectedMBs() {
+        int size = 0;
+        for (String dictUrl : dictionariesSelectedSet) {
+            size += DictNameHelper.getSize(dictUrl);
+        }
+        return size;
+    }
+
     void getIndicesAddCheckboxes(final MainActivity activity) {
         final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
         asyncHttpClient.setEnableRedirects(true, true, true);
