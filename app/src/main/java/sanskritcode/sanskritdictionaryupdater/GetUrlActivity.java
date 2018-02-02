@@ -25,7 +25,7 @@ public class GetUrlActivity extends BaseActivity {
     private DictIndexStore dictIndexStore;
 
     private LinearLayout layout;
-    private TextView topText;
+    TextView topText;
     private Button button;
     private final Map<String, CheckBox> dictCheckBoxes = new HashMap<>();
     private final Map<String, CheckBox> indexCheckBoxes = new HashMap<>();

@@ -75,6 +75,9 @@ class DictIndexStore implements Serializable{
                     @Override
                     public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
                         Log.e(LOGGER_NAME, "Failed ", throwable);
+                        String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
+                        getUrlActivity.topText.setText(message);
+                        getUrlActivity.sendLoagcatMail();
                     }
 
                     @Override
@@ -95,6 +98,8 @@ class DictIndexStore implements Serializable{
                 });
             } catch (Throwable throwable) {
                 Log.e(getClass().getName(), "error with " + url, throwable);
+                String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
+                getUrlActivity.topText.setText(message);
                 getUrlActivity.sendLoagcatMail();
             }
         }

@@ -29,5 +29,6 @@
     <string name="gettingSomeDict">Getting %s</string>
     <string name="fromSomeIndex">From %s</string>
     <string name="get_dicts_button" tools:ignore="PluralsCandidate">Get %d dicts (~ %d MB+)?</string>
+    <string name="index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>
 
 </resources>
