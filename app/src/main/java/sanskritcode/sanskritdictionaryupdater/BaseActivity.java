@@ -23,11 +23,20 @@ import java.io.File;
 import java.io.IOException;
 
 abstract class BaseActivity extends Activity {
+    protected DictIndexStore dictIndexStore = null;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("dictIndexStore", dictIndexStore);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Force portrait mode. Observed app redownloading dicts and crashing.
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (savedInstanceState != null && savedInstanceState.containsKey("dictIndexStore")) {
+            dictIndexStore = (DictIndexStore) savedInstanceState.get("dictIndexStore");
+        }
     }
 
     public void sendLoagcatMail(){

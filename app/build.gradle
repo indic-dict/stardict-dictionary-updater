@@ -7,8 +7,8 @@ android {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 325
-        versionName "3.2.5"
+        versionCode 327
+        versionName "3.2.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

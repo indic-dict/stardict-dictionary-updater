@@ -25,7 +25,6 @@ import java.util.List;
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends BaseActivity {
     private SharedPreferences.Editor dictVersionEditor;
-    private DictIndexStore dictIndexStore;
 
     private TextView topText;
     private Button button;
@@ -42,6 +41,9 @@ public class GetDictionariesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
+        if (dictIndexStore == null) {
+            dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
+        }
         // Suppressed intellij warning about missing commit. storeDictVersion() has it.
         dictVersionEditor = sharedDictVersionStore.edit();
         setContentView(R.layout.activity_get_dictionaries);
@@ -53,7 +55,6 @@ public class GetDictionariesActivity extends BaseActivity {
         button_2.setVisibility(View.INVISIBLE);
         button_2.setEnabled(false);
         progressBar = findViewById(R.id.get_dict_progressBar);
-        dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
         dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
         dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);

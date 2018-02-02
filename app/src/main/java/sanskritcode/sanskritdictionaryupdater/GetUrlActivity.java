@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends BaseActivity {
     private static final String ACTIVITY_NAME = "GetUrlActivity";
-    private DictIndexStore dictIndexStore;
 
     private LinearLayout layout;
     TextView topText;
@@ -58,11 +58,11 @@ public class GetUrlActivity extends BaseActivity {
         layout = findViewById(R.id.get_url_layout);
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
-
-        dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
+        if (dictIndexStore == null) {
+            dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
+        }
         Log.d(getLocalClassName(), "whenActivityLoaded dictIndexStore.indexedDicts " + dictIndexStore.indexedDicts);
         Log.d(getLocalClassName(), "indexesSelected " + dictIndexStore.indexesSelected.toString());
-        dictIndexStore.dictionariesSelectedSet = new HashSet<>();
         setContentView(R.layout.activity_get_url);
         topText = findViewById(R.id.get_url_textView);
 
@@ -98,40 +98,51 @@ public class GetUrlActivity extends BaseActivity {
     }
 
     // TODO: In certain cases, it could be that the dictdata directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
-    private void selectCheckboxes() {
-        int autoUnselectedDicts = 0;
-        for (CheckBox cb : dictCheckBoxes.values()) {
-            // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
-            String filename = cb.getHint().toString();
-            boolean proposedVersionNewer = true;
+    private void selectCheckboxes(Set<String> dictionariesSelectedSet) {
+        if (dictionariesSelectedSet == null) {
+            for (CheckBox cb : dictCheckBoxes.values()) {
+                // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
+                String filename = cb.getHint().toString();
+                boolean proposedVersionNewer = true;
 
-            String[] dictnameParts = DictNameHelper.getDictNameAndVersion(filename);
-            String dictname = dictnameParts[0];
-            if (sharedDictVersionStore.contains(dictname)) {
-                String currentVersion = sharedDictVersionStore.getString(dictname, getString(R.string.defaultDictVersion));
-                String proposedVersion = getString(R.string.defaultDictVersion);
-                if (dictnameParts.length > 1) {
-                    proposedVersion = dictnameParts[1];
+                String[] dictnameParts = DictNameHelper.getDictNameAndVersion(filename);
+                String dictname = dictnameParts[0];
+                if (sharedDictVersionStore.contains(dictname)) {
+                    String currentVersion = sharedDictVersionStore.getString(dictname, getString(R.string.defaultDictVersion));
+                    String proposedVersion = getString(R.string.defaultDictVersion);
+                    if (dictnameParts.length > 1) {
+                        proposedVersion = dictnameParts[1];
+                    }
+                    proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
                 }
-                proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
-            }
 
-            if (proposedVersionNewer) {
-                cb.setChecked(true);
-            } else {
-                cb.setChecked(false);
-                autoUnselectedDicts++;
+                if (proposedVersionNewer) {
+                    cb.setChecked(true);
+                } else {
+                    cb.setChecked(false);
+                    dictIndexStore.autoUnselectedDicts++;
+                }
+            }
+        } else {
+            for (CheckBox cb : dictCheckBoxes.values()) {
+                String filename = cb.getHint().toString();
+                if (dictionariesSelectedSet.contains(filename)) {
+                    cb.setChecked(true);
+                } else {
+                    cb.setChecked(false);
+                }
             }
         }
+
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
         enableButtonIfDictsSelected();
 
-        @SuppressLint("DefaultLocale") String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), autoUnselectedDicts);
+        @SuppressLint("DefaultLocale") String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), dictIndexStore.autoUnselectedDicts);
         topText.append(message);
         Log.d(ACTIVITY_NAME, message);
     }
 
-    void addCheckboxes(Map<String, List<String>> indexedDicts) {
+    void addCheckboxes(Map<String, List<String>> indexedDicts, Set<String> dictionariesSelectedSet) {
         layout = findViewById(R.id.get_url_layout);
         for (String indexName : indexedDicts.keySet()) {
             CheckBox indexBox = new CheckBox(getApplicationContext());
@@ -162,7 +173,7 @@ public class GetUrlActivity extends BaseActivity {
         Log.i(ACTIVITY_NAME, message);
         topText = findViewById(R.id.get_url_textView);
         topText.setText(message);
-        selectCheckboxes();
+        selectCheckboxes(dictionariesSelectedSet);
         button.setText(getString(R.string.proceed_button));
     }
 }

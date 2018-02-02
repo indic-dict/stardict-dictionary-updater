@@ -30,7 +30,6 @@ import java.util.Map;
  */
 public class MainActivity extends BaseActivity {
     private static final String ACTIVITY_NAME = "MainActivity";
-    private final DictIndexStore dictIndexStore = new DictIndexStore();
 
     private Button button;
 
@@ -86,6 +85,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (dictIndexStore == null){
+            dictIndexStore = new DictIndexStore();
+        }
         Log.d(ACTIVITY_NAME, "onCreate Indices selected " + dictIndexStore.indexesSelected.toString());
         setContentView(R.layout.activity_main);
 
@@ -99,7 +101,6 @@ public class MainActivity extends BaseActivity {
         MainActivity.getPermission(Manifest.permission.INTERNET, this);
         MainActivity.getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this);
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
-
         dictIndexStore.getIndicesAddCheckboxes(this);
     }
 
