@@ -2,15 +2,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Stardict Dictionary Updater</string>
-    <string name="main_top_info">ॐ तत् सत्। Shall we update your Stardict dictionary files?\n
+    <string name="main_top_info">ॐ तत् सत्। Shall we update your Stardict dictionary files? (Details: http://bit.ly/dict-update-app ) \n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
-        Please scroll + select the dictionary lists you want to use, then click the button. (Details: http://bit.ly/dict-update-app ).\n
+        (This is only a dictionary updater software. You NEED some Stardict-compatible dictionary utility (Eg: ebdic [Rated high], ColorDict, GoldenDict, GoldenDict paid …) separately.) \n
+        Please scroll + select the dictionary lists you want to use, then click the button.\n
     </string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="proceed_button">Proceed?</string>
     <string name="added_dictionary_url">"Added dictionary: "</string>
     <string name="added_n_dictionary_urls" tools:ignore="PluralsCandidate">"Added %d dictionary-urls. Pick the dictionaries to install."</string>
-    <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
+    <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: ebdic [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
     <string name="buttonWorking">Working</string>
     <string name="txtTryAgain">\n Do you want to try again?</string>
     <string name="title_activity_get_url">Dict updater: Select Dictionaries!</string>

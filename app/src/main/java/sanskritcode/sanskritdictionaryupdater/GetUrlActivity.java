@@ -15,7 +15,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,9 +46,9 @@ public class GetUrlActivity extends Activity {
 
     private final CompoundButton.OnCheckedChangeListener indexCheckboxListener = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            for (String url : dictIndexStore.indexedDicts.get(buttonView.getHint().toString())) {
-                dictCheckBoxes.get(url).setChecked(isChecked);
-            }
+        for (String url : dictIndexStore.indexedDicts.get(buttonView.getHint().toString())) {
+            dictCheckBoxes.get(url).setChecked(isChecked);
+        }
         }
     };
 

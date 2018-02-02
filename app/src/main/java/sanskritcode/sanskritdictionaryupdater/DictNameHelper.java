@@ -8,7 +8,9 @@ import com.google.common.io.Files;
 class DictNameHelper {
 
     @NonNull
-    public static String getNameWithoutAnyExtension(String somePath) {
+    static String getNameWithoutAnyExtension(String somePath) {
+        // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
+        // Hence calling getBaseName twice.
         String baseName = Files.getNameWithoutExtension(somePath);
         while (!Files.getFileExtension(baseName).isEmpty()) {
             baseName = Files.getNameWithoutExtension(baseName);
@@ -16,9 +18,7 @@ class DictNameHelper {
         return baseName;
     }
 
-    public static String[] getDictNameAndVersion(String fileName) {
-        // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
-        // Hence calling getBaseName twice.
+    static String[] getDictNameAndVersion(String fileName) {
         return getNameWithoutAnyExtension(fileName).split("__");
     }
 }
