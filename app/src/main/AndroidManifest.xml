@@ -33,6 +33,23 @@
         <activity
             android:name=".GetDictionariesActivity"
             android:label="@string/title_activity_get_dictionaries"
+            android:configChanges="orientation"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sanskritcode.sanskritdictionaryupdater.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ExtractDictionariesActivity"
+            android:label="@string/title_activity_extract_dictionaries"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sanskritcode.sanskritdictionaryupdater.MainActivity" />
+        </activity>
+        <activity
+            android:name=".FinalActivity"
+            android:label="@string/title_final_activity"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

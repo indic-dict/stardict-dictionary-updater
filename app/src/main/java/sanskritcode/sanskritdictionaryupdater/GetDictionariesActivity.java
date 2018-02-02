@@ -2,9 +2,10 @@ package sanskritcode.sanskritdictionaryupdater;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -13,14 +14,9 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
-import com.google.common.io.Files;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends BaseActivity {
@@ -43,6 +39,8 @@ public class GetDictionariesActivity extends BaseActivity {
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
             dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
+            dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
+            dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
         }
         // Suppressed intellij warning about missing commit. storeDictVersion() has it.
         dictVersionEditor = sharedDictVersionStore.edit();
@@ -55,8 +53,6 @@ public class GetDictionariesActivity extends BaseActivity {
         button_2.setVisibility(View.INVISIBLE);
         button_2.setEnabled(false);
         progressBar = findViewById(R.id.get_dict_progressBar);
-        dictIndexStore.dictionariesSelectedLst.addAll(dictIndexStore.dictionariesSelectedSet);
-        dictIndexStore.dictFailure = new ArrayList<>(Collections.nCopies(dictIndexStore.dictionariesSelectedLst.size(), false));
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
 
         File sdcard = Environment.getExternalStorageDirectory();
@@ -93,87 +89,15 @@ public class GetDictionariesActivity extends BaseActivity {
         this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
     }
 
-    public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
-        finish();
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     void whenAllDictsDownloaded() {
-        new DictExtractor(this, dictDir, dictIndexStore.dictFailure,
-                dictIndexStore.downloadedArchiveBasenames, downloadsDir)
-                .execute();
-    }
-
-
-    /* Should only be called from the UI thread! */
-    void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
-        String message1 = "Extracting " + archiveName;
-        Log.d("DictExtracter", message1);
-        topText.setText(message1);
-        topText.append("\n" + getString(R.string.dont_navigate_away));
-        topText.append("\n" + "Current file: " + contentFileExtracted);
-        this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
-    }
-
-
-    /* Should only be called from the UI thread! */
-    void whenAllDictsExtracted() {
-        progressBar.setVisibility(View.GONE);
-        topText.setText(getString(R.string.finalMessage));
-        List<String> dictNames = Lists.transform(dictIndexStore.dictionariesSelectedLst, new Function<String, String>() {
-            public String apply(String in) {
-                return Files.getNameWithoutExtension(in);
-            }
-        });
-        final StringBuilder failures = new StringBuilder("");
-        for (int i = 0; i < dictNames.size(); i++) {
-            //noinspection StatementWithEmptyBody
-            if (dictIndexStore.dictFailure.get(i)) {
-                failures.append("\n").append(dictNames.get(i));
-            } else {
-            }
-        }
-        if (failures.length() > 0) {
-            topText.append("\n" + "Failed on:" + failures);
-            Log.w(getLocalClassName(), failures.toString());
-        }
-        StringBuilder successes = new StringBuilder("");
-        for (int i = 0; i < dictNames.size(); i++) {
-            //noinspection StatementWithEmptyBody
-            if (dictIndexStore.dictFailure.get(i)) {
-            } else {
-                successes.append("\n").append(dictNames.get(i));
-            }
-        }
-        if (successes.length() > 0) {
-            topText.append("\n" + "Succeeded on:" + successes);
-            Log.i(getLocalClassName(), successes.toString());
-        }
-
-        button.setText(R.string.buttonValQuit);
-        if (failures.length() == 0) {
-            button.setEnabled(true);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finishAffinity();
-                }
-            });
-        } else {
-            button.setEnabled(false);
-        }
-
-        final BaseActivity thisActivity = this;
-        button_2.setText(R.string.PROBLEM_SEND_LOG);
-        button_2.setVisibility(View.VISIBLE);
-        button_2.setEnabled(true);
-        button_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                thisActivity.sendLoagcatMail();
-                finishAffinity();
-            }
-        });
-
+        Intent intent = new Intent(this, ExtractDictionariesActivity.class);
+        intent.putExtra("dictIndexStore", dictIndexStore);
+        startActivity(intent);
     }
 
     /* Should only be called from the UI thread! */
@@ -181,20 +105,6 @@ public class GetDictionariesActivity extends BaseActivity {
         progressBar.setMax(total);
         progressBar.setProgress(progress);
         progressBar.setVisibility(View.VISIBLE);
-    }
-
-    void storeDictVersion(String fileName) {
-        String[] filenameParts = DictNameHelper.getDictNameAndVersion(fileName);
-        final String dictName = filenameParts[0];
-        if (filenameParts.length > 1) {
-            String dictVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__")[1];
-            dictVersionEditor.putString(dictName, dictVersion);
-            dictVersionEditor.commit();
-        } else {
-            Log.w("DictExtractor", "Storing default dictionary version for " + fileName);
-            dictVersionEditor.putString(dictName, getString(R.string.defaultDictVersion));
-            dictVersionEditor.commit();
-        }
     }
 
     @Override

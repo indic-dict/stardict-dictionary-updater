@@ -17,7 +17,10 @@
     <string name="title_activity_get_url">Dict updater: Select Dictionaries!</string>
     <string name="pick_dictionaries">Which dictionaries shall we install?</string>
     <string name="title_activity_get_dictionaries">Dict updater: Downloading!</string>
+    <string name="title_activity_extract_dictionaries">Dict updater: Extracting!</string>
+    <string name="title_final_activity">Dict updater: Done!</string>
     <string name="installing_dictionaries">Installing dictionaries. Please wait. \n !!Don\'t navigate away or we\'ll have to restart.!!\n</string>
+    <string name="extracting_dictionaries">Extracting dictionaries. Please wait. \n !!Don\'t navigate away or we\'ll have to restart.!!\n</string>
     <string name="added_index_url">Added Index: </string>
     <string name="buttonValQuit">Quit?</string>
     <string name="dict_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
