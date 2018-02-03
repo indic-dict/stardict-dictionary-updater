@@ -9,6 +9,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -101,8 +102,10 @@ class DictIndexStore implements Serializable {
             indexedDicts = new LinkedHashMap<>();
             Log.i(getClass().getName(), "Will get dictionaries from " + indexesSelected.size());
             asyncHttpClient.setEnableRedirects(true, true, true);
-            for (String name : indexesSelected.keySet()) {
+            for (final String name : indexesSelected.keySet()) {
                 final String url = indexesSelected.get(name);
+                final DictIndexStore dictIndexStore = this;
+
                 try {
                     asyncHttpClient.get(url, new TextHttpResponseHandler() {
                         final String LOGGER_NAME = "getIndexedDicts";
@@ -110,12 +113,19 @@ class DictIndexStore implements Serializable {
                         @Override
                         public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
                             Log.e(LOGGER_NAME, "Failed ", throwable);
+                            BaseActivity.largeLog(LOGGER_NAME, dictIndexStore.toString());
                             String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                             getUrlActivity.topText.setText(message);
                             // The below would result in
                             // java.lang.RuntimeException: android.os.FileUriExposedException: file:///storage/emulated/0/logcat.txt exposed beyond app through ClipData.Item.getUri()
                             // A known issue: https://github.com/loopj/android-async-http/issues/891
                             // getUrlActivity.sendLoagcatMail();
+
+                            // Just proceed with the next dict.
+                            indexedDicts.put(name, Arrays.asList(url.replaceAll("[_/.]+", "_") + "_indexGettingFailed"));
+                            if (indexesSelected.size() == indexedDicts.size()) {
+                                getUrlActivity.addCheckboxes(indexedDicts, null);
+                            }
                         }
 
                         @Override

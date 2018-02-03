@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity {
         if (dictIndexStore == null){
             dictIndexStore = new DictIndexStore();
         }
-        Log.d(ACTIVITY_NAME, "onCreate Indices selected " + dictIndexStore.indexesSelected.toString());
+        largeLog(ACTIVITY_NAME, dictIndexStore.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
         this.showNetworkInfo((TextView)findViewById(R.id.main_textView2));
         button.setText(R.string.proceed_button);
         button.setClickable(true);
-        Log.d(ACTIVITY_NAME, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
+//        Log.d(ACTIVITY_NAME, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
     }
 
     // Event handler for: When the proceed button is pressed.
