@@ -92,6 +92,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
+        // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.setMovementMethod(LinkMovementMethod.getInstance());
 
         button = findViewById(R.id.main_button);

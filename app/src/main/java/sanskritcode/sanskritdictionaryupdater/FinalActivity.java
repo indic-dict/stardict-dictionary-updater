@@ -25,6 +25,7 @@ public class FinalActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_final);
         TextView topText = findViewById(R.id.final_act_textView);
+        // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.setMovementMethod(LinkMovementMethod.getInstance());
         topText.setText(getString(R.string.finalMessage));
         largeLog(getLocalClassName(), dictIndexStore.toString());

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +44,8 @@ public class GetDictionariesActivity extends BaseActivity {
         dictVersionEditor = sharedDictVersionStore.edit();
         setContentView(R.layout.activity_get_dictionaries);
         topText = findViewById(R.id.get_dict_textView);
+        // For clickable links. See https://stackoverflow.com/a/20647011/444644
+        topText.setMovementMethod(LinkMovementMethod.getInstance());
         button = findViewById(R.id.get_dict_button);
         button.setText(getString(R.string.buttonWorking));
         button.setEnabled(false);

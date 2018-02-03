@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -64,6 +65,8 @@ public class GetUrlActivity extends BaseActivity {
         Log.d(getLocalClassName(), "indexesSelected " + dictIndexStore.indexesSelected.toString());
         setContentView(R.layout.activity_get_url);
         topText = findViewById(R.id.get_url_textView);
+        // For clickable links. See https://stackoverflow.com/a/20647011/444644
+        topText.setMovementMethod(LinkMovementMethod.getInstance());
 
         button = findViewById(R.id.get_url_button);
         button.setText(getString(R.string.buttonWorking));
