@@ -25,6 +25,14 @@ import java.io.IOException;
 abstract class BaseActivity extends Activity {
     protected DictIndexStore dictIndexStore = null;
 
+    public static void largeLog(String tag, String content) {
+        if (content.length() > 4000) {
+            Log.v(tag, content.substring(0, 4000));
+            largeLog(tag, content.substring(4000));
+        } else {
+            Log.v(tag, content);
+        }
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

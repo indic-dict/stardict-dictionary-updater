@@ -25,12 +25,12 @@ public class FinalActivity extends BaseActivity {
         setContentView(R.layout.activity_final);
         TextView topText = findViewById(R.id.final_act_textView);
         topText.setText(getString(R.string.finalMessage));
+        largeLog(getLocalClassName(), dictIndexStore.toString());
         final StringBuilder failures = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
-            if (dictInfo.status == DictStatus.DOWNLOAD_FAILURE || dictInfo.status == DictStatus.EXTRACTION_FAILURE ) {
+            if (dictInfo.status != DictStatus.EXTRACTION_SUCCESS ) {
                 failures.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url));
-            } else {
             }
         }
         if (failures.length() > 0) {
@@ -41,7 +41,6 @@ public class FinalActivity extends BaseActivity {
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
             if (dictInfo.status == DictStatus.EXTRACTION_SUCCESS) {
-            } else {
                 successes.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url));
             }
         }

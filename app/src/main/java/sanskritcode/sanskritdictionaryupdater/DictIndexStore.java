@@ -27,6 +27,13 @@ class DictInfo implements Serializable {
     DictInfo(String urlIn) {
         url = urlIn;
     }
+
+    @Override
+    public String toString() {
+        return "\n status: " + status
+                + "\n downloadedArchiveBasename: " + downloadedArchiveBasename
+                + "\n url: " + url;
+    }
 }
 
 class DictIndexStore implements Serializable {
@@ -37,6 +44,18 @@ class DictIndexStore implements Serializable {
     Map<String, List<String>> indexedDicts = new LinkedHashMap<>();
     Map<String, DictInfo> dictionariesSelectedMap = new HashMap<>();
     int autoUnselectedDicts = 0;
+
+    @Override
+    public String toString() {
+        return ("\nindex_indexorum: " + index_indexorum
+                + "\nindexUrls: " + indexUrls
+                + "\nindexesSelected: " + indexesSelected
+                + "\nindexedDicts: " + indexedDicts
+                + "\nautoUnselectedDicts: " + autoUnselectedDicts
+                + "\ndictionariesSelectedMap: " + dictionariesSelectedMap
+        );
+    }
+
 
     int estimateDictionariesSelectedMBs() {
         int size = 0;
