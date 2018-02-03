@@ -21,7 +21,6 @@ android:fadeScrollbars="false"
             android:id="@+id/get_url_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:longClickable="false"
             android:scrollbars="vertical"
             android:text="@string/pick_dictionaries"/>
 

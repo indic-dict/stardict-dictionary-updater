@@ -20,9 +20,6 @@
             android:id="@+id/main_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:linksClickable="true"
-            android:longClickable="false"
             android:scrollbars="vertical"
             android:text="@string/main_top_info"
             android:textSize="18sp"/>
