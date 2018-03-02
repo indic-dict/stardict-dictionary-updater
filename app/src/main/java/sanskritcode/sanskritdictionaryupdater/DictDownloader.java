@@ -42,7 +42,8 @@ class DictDownloader {
     // Log errors, record failure, get the next dictionary.
     private void handleDownloadDictFailure(final int index, String url, Throwable throwable) {
         String message = "Failed to get " + url;
-        Log.e("downloadDict", message + ":", throwable);
+        String logTag = (getClass().getSimpleName() + ":handleDownloadDictFailure").substring(0,26);
+        Log.e(logTag, message + ":", throwable);
         topText.setText(message);
         dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_FAILURE;
         downloadDict(index + 1);
@@ -50,6 +51,7 @@ class DictDownloader {
     }
 
     void downloadDict(final int index) {
+        String logTag = getClass().getSimpleName() + ":downloadDict";
         // Stop condition of the recursion.
         if (index >= dictIndexStore.dictionariesSelectedMap.size()) {
             getDictionariesActivity.whenAllDictsDownloaded();
@@ -58,11 +60,11 @@ class DictDownloader {
         final DictInfo dictInfo = (DictInfo) dictIndexStore.dictionariesSelectedMap.values().toArray()[index];
         final String url = dictInfo.url;
         if (dictInfo.status != DictStatus.NOT_TRIED) {
-            Log.w("downloadDict", "Skipping " + url + " withs status " + dictInfo.status);
+            Log.w(logTag, "Skipping " + url + " withs status " + dictInfo.status);
             downloadDict(index + 1);
             return;
         }
-        Log.d("downloadDict", "Getting " + url);
+        Log.d(logTag, "Getting " + url);
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
 
         topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), url));
@@ -94,7 +96,8 @@ class DictDownloader {
 
                 @Override
                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, File file) {
-                    Log.e("downloadDict", "status " + statusCode);
+                    final String LOGGER_NAME = (getClass().getSimpleName() + ":onFailure").substring(0,26);
+                    Log.e(LOGGER_NAME, "status " + statusCode);
                     handleDownloadDictFailure(index, url, throwable);
                 }
             });

@@ -35,6 +35,7 @@ public class GetDictionariesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":onCreate").substring(0,26);
         SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
@@ -59,13 +60,13 @@ public class GetDictionariesActivity extends BaseActivity {
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (!downloadsDir.exists()) {
             if (!downloadsDir.mkdirs()) {
-                Log.w(getLocalClassName(), "Returned false while mkdirs " + downloadsDir);
+                Log.w(LOGGER_NAME, "Returned false while mkdirs " + downloadsDir);
             }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (!dictDir.exists()) {
             if (!dictDir.mkdirs()) {
-                Log.w(getLocalClassName(), "Returned false while mkdirs " + dictDir);
+                Log.w(LOGGER_NAME, "Returned false while mkdirs " + dictDir);
             }
         }
 

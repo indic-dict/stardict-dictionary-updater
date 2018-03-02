@@ -27,6 +27,7 @@ public class ExtractDictionariesActivity extends BaseActivity{
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":onCreate").substring(0,26);
         super.onCreate(savedInstanceState);
         SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
@@ -44,13 +45,13 @@ public class ExtractDictionariesActivity extends BaseActivity{
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (!downloadsDir.exists()) {
             if (!downloadsDir.mkdirs()) {
-                Log.w(getLocalClassName(), "Returned false while mkdirs " + downloadsDir);
+                Log.w(LOGGER_NAME, "Returned false while mkdirs " + downloadsDir);
             }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (!dictDir.exists()) {
             if (!dictDir.mkdirs()) {
-                Log.w(getLocalClassName(), "Returned false while mkdirs " + dictDir);
+                Log.w(LOGGER_NAME, "Returned false while mkdirs " + dictDir);
             }
         }
 
@@ -66,6 +67,7 @@ public class ExtractDictionariesActivity extends BaseActivity{
     }
 
     void storeDictVersion(String fileName) {
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":storeDictVersion").substring(0,26);
         String[] filenameParts = DictNameHelper.getDictNameAndVersion(fileName);
         final String dictName = filenameParts[0];
         if (filenameParts.length > 1) {
@@ -73,7 +75,7 @@ public class ExtractDictionariesActivity extends BaseActivity{
             dictVersionEditor.putString(dictName, dictVersion);
             dictVersionEditor.commit();
         } else {
-            Log.w("DictExtractor", "Storing default dictionary version for " + fileName);
+            Log.w(LOGGER_NAME, "Storing default dictionary version for " + fileName);
             dictVersionEditor.putString(dictName, getString(R.string.defaultDictVersion));
             dictVersionEditor.commit();
         }
@@ -91,8 +93,9 @@ public class ExtractDictionariesActivity extends BaseActivity{
 
     /* Should only be called from the UI thread! */
     void setTopTextWhileExtracting(String archiveName, String contentFileExtracted) {
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":setTopTextWhileExtracting").substring(0,26);
         String message1 = "Extracting " + archiveName;
-        Log.d("DictExtracter", message1);
+        Log.d(LOGGER_NAME, message1);
         topText.setText(message1);
         topText.append("\n" + getString(R.string.dont_navigate_away));
         topText.append("\n" + "Current file: " + contentFileExtracted);

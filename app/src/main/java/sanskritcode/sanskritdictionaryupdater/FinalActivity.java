@@ -28,7 +28,8 @@ public class FinalActivity extends BaseActivity {
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.setMovementMethod(LinkMovementMethod.getInstance());
         topText.setText(getString(R.string.finalMessage));
-        largeLog(getLocalClassName(), dictIndexStore.toString());
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":onCreate").substring(0,26);
+        largeLog(LOGGER_NAME, dictIndexStore.toString());
         final StringBuilder failures = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
@@ -38,7 +39,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (failures.length() > 0) {
             topText.append("\n" + "Failed on:" + failures);
-            Log.w(getLocalClassName(), failures.toString());
+            Log.w(LOGGER_NAME, failures.toString());
         }
         StringBuilder successes = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
@@ -49,7 +50,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (successes.length() > 0) {
             topText.append("\n" + "Succeeded on:" + successes);
-            Log.i(getLocalClassName(), successes.toString());
+            Log.i(LOGGER_NAME, successes.toString());
         }
 
         Button button = findViewById(R.id.final_act_button);

@@ -29,17 +29,16 @@ import java.util.Map;
  * IntraActivity lifecycle looks like this: http://stackoverflow.com/questions/6509791/onrestart-vs-onresume-android-lifecycle-question
  */
 public class MainActivity extends BaseActivity {
-    private static final String ACTIVITY_NAME = "MainActivity";
-
     private Button button;
 
     static void getPermission(String permissionString, Activity activity) {
+        final String LOGGER_NAME = ("MainActivity:getPermission").substring(0,26);
         if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("Permissions", "Got permission: " + permissionString);
+            Log.d(LOGGER_NAME, "Got permission: " + permissionString);
         } else {
-            Log.w("Permissions", "Don't have permission: " + permissionString);
+            Log.w(LOGGER_NAME, "Don't have permission: " + permissionString);
             ActivityCompat.requestPermissions(activity, new String[]{permissionString}, 101);
-            Log.i("Permissions", "new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
+            Log.i(LOGGER_NAME, "new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
         }
     }
 
@@ -85,10 +84,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final String LOGGER_NAME = ("MainActivity:onCreate").substring(0,26);
         if (dictIndexStore == null){
             dictIndexStore = new DictIndexStore();
         }
-        largeLog(ACTIVITY_NAME, dictIndexStore.toString());
+        largeLog(LOGGER_NAME, dictIndexStore.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -117,7 +117,8 @@ public class MainActivity extends BaseActivity {
 
     // Event handler for: When the proceed button is pressed.
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
-        Log.d(ACTIVITY_NAME, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
+        final String LOGGER_NAME = ("MainActivity:buttonPressed1").substring(0,26);
+        Log.d(LOGGER_NAME, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();

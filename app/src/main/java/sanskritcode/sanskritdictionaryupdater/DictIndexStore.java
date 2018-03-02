@@ -67,14 +67,14 @@ class DictIndexStore implements Serializable {
     }
 
     void getIndicesAddCheckboxes(final MainActivity activity) {
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":getIndicesAddCheckboxes").substring(0,26);
         if (indexUrls.isEmpty()) {
             final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.setEnableRedirects(true, true, true);
             asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
-                private final String CLASS_NAME = this.getClass().getName();
                 @Override
                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                    Log.e(CLASS_NAME, "getIndices", throwable);
+                    Log.e(LOGGER_NAME, "getIndices", throwable);
                 }
 
                 @Override
@@ -85,7 +85,7 @@ class DictIndexStore implements Serializable {
                         indexUrls.put(name, url);
                         //noinspection ResultOfMethodCallIgnored
                         indexesSelected.put(name, url);
-                        Log.d(getClass().getName(), activity.getString(R.string.added_index_url) + url);
+                        Log.d(LOGGER_NAME, activity.getString(R.string.added_index_url) + url);
                     }
                     activity.addCheckboxes(indexUrls, indexesSelected);
                 }
@@ -97,10 +97,11 @@ class DictIndexStore implements Serializable {
 
     // Populates indexedDicts
     void getIndexedDictsSetCheckboxes(final GetUrlActivity getUrlActivity) {
+        final String LOGGER_NAME = (getClass().getSimpleName() + ":getIndexedDictsSetCheckboxes").substring(0,26);
         if (indexedDicts.isEmpty()) {
             final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
             indexedDicts = new LinkedHashMap<>();
-            Log.i(getClass().getName(), "Will get dictionaries from " + indexesSelected.size());
+            Log.i(LOGGER_NAME, "Will get dictionaries from " + indexesSelected.size());
             asyncHttpClient.setEnableRedirects(true, true, true);
             for (final String name : indexesSelected.keySet()) {
                 final String url = indexesSelected.get(name);
@@ -108,8 +109,6 @@ class DictIndexStore implements Serializable {
 
                 try {
                     asyncHttpClient.get(url, new TextHttpResponseHandler() {
-                        final String LOGGER_NAME = "getIndexedDicts";
-
                         @Override
                         public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
                             Log.e(LOGGER_NAME, "Failed ", throwable);
@@ -145,7 +144,7 @@ class DictIndexStore implements Serializable {
                         }
                     });
                 } catch (Throwable throwable) {
-                    Log.e(getClass().getName(), "error with " + url, throwable);
+                    Log.e(LOGGER_NAME, "error with " + url, throwable);
                     String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                     getUrlActivity.topText.setText(message);
                     getUrlActivity.sendLoagcatMail();
