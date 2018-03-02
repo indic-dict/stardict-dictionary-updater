@@ -88,6 +88,7 @@ public class MainActivity extends BaseActivity {
         if (dictIndexStore == null){
             dictIndexStore = new DictIndexStore();
         }
+        Log.i(LOGGER_NAME, "onCreate: ************************STARTS****************************");
         largeLog(LOGGER_NAME, dictIndexStore.toString());
         setContentView(R.layout.activity_main);
 

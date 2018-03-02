@@ -90,7 +90,7 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
         String archiveFileName = dictInfo.downloadedArchiveBasename;
         String LOGGER_NAME = getClass().getSimpleName() + ":extractFile";
         if ( dictInfo.status != DictStatus.DOWNLOAD_SUCCESS) {
-            Log.w(LOGGER_NAME, "Skipping " + archiveFileName + " withs status " + dictInfo.status);
+            Log.w(LOGGER_NAME, "Skipping " + archiveFileName + " with status " + dictInfo.status);
             return;
         }
 
@@ -136,20 +136,18 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                 filesRead = filesRead + 1;
                 String destFileName = String.format("%s.%s", Files.getNameWithoutExtension(currentEntry.getName()), Files.getFileExtension(currentEntry.getName()));
                 String destFileExtension = Files.getFileExtension(destFileName);
-                boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").endsWith("/res/");
+                boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").contains("/res/");
                 Log.d(LOGGER_NAME, "isResourceFile " + isResourceFile);
                 String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
                 Log.d(LOGGER_NAME, message3);
-                if (isResourceFile && !resourceDirFile.exists()) {
-                    Log.i(LOGGER_NAME, "Creating afresh the resource directory " + resourceDirFile.mkdirs());
-                }
                 String destFileDir = initialDestDir;
                 if (isResourceFile) {
-                    destFileDir = resourceDirFile.getAbsolutePath();
+                    destFileDir = resourceDirFile.getAbsolutePath() + currentEntry.getName().replace(destFileName, "").replaceFirst(".*/res/", "");
                 }
 
                 if (isResourceFile || destFileExtension.matches(VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX)) {
                     String destFile = new File(destFileDir, destFileName).getAbsolutePath();
+                    File destFileDirFile = new File(destFileDir);
                     if (!isResourceFile && destFileExtension.matches(VALID_NON_RESOURCE_FILE_EXTENSIONS_REGEX)) {
                         String baseNameAccordingToArchiveEntry = DictNameHelper.getNameWithoutAnyExtension(destFileName);
                         if (baseNameAccordingToArchiveEntries == null) {
@@ -159,6 +157,9 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                                 throw new Exception("baseNameAccordingToArchiveEntries inconsistent for: " + destFileName + "  Expected " + baseNameAccordingToArchiveEntries);
                             }
                         }
+                    }
+                    if (!destFileDirFile.exists()) {
+                        Log.i(LOGGER_NAME, "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs());
                     }
                     FileOutputStream fos = new FileOutputStream(destFile);
                     int n;

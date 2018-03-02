@@ -39,7 +39,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (failures.length() > 0) {
             topText.append("\n" + "Failed on:" + failures);
-            Log.w(LOGGER_NAME, failures.toString());
+            Log.w(LOGGER_NAME, topText.getText().toString());
         }
         StringBuilder successes = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
@@ -50,7 +50,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (successes.length() > 0) {
             topText.append("\n" + "Succeeded on:" + successes);
-            Log.i(LOGGER_NAME, successes.toString());
+            Log.w(LOGGER_NAME, topText.getText().toString());
         }
 
         Button button = findViewById(R.id.final_act_button);

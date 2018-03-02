@@ -42,8 +42,8 @@ class DictDownloader {
     // Log errors, record failure, get the next dictionary.
     private void handleDownloadDictFailure(final int index, String url, Throwable throwable) {
         String message = "Failed to get " + url;
-        String logTag = (getClass().getSimpleName() + ":handleDownloadDictFailure").substring(0,26);
-        Log.e(logTag, message + ":", throwable);
+        String LOGGER_NAME = (getClass().getSimpleName() + ":handleDownloadDictFailure").substring(0,26);
+        Log.e(LOGGER_NAME, message + ":", throwable);
         topText.setText(message);
         dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_FAILURE;
         downloadDict(index + 1);
@@ -51,7 +51,7 @@ class DictDownloader {
     }
 
     void downloadDict(final int index) {
-        String logTag = getClass().getSimpleName() + ":downloadDict";
+        String LOGGER_NAME = getClass().getSimpleName() + ":downloadDict";
         // Stop condition of the recursion.
         if (index >= dictIndexStore.dictionariesSelectedMap.size()) {
             getDictionariesActivity.whenAllDictsDownloaded();
@@ -59,12 +59,13 @@ class DictDownloader {
         }
         final DictInfo dictInfo = (DictInfo) dictIndexStore.dictionariesSelectedMap.values().toArray()[index];
         final String url = dictInfo.url;
+        // TODO: Getting messages like:  Skipping null withs status DOWNLOAD_FAILURE .
         if (dictInfo.status != DictStatus.NOT_TRIED) {
-            Log.w(logTag, "Skipping " + url + " withs status " + dictInfo.status);
+            Log.w(LOGGER_NAME, "Skipping " + url + " with status " + dictInfo.status);
             downloadDict(index + 1);
             return;
         }
-        Log.d(logTag, "Getting " + url);
+        Log.d(LOGGER_NAME, "Getting " + url);
         MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
 
         topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), url));
