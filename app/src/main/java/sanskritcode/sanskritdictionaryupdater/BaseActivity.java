@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -26,13 +27,25 @@ abstract class BaseActivity extends Activity {
     protected DictIndexStore dictIndexStore = null;
 
     void getPermission(String permissionString, Activity activity) {
-        final String LOGGER_NAME = getLocalClassName();
+        final String LOGGER_TAG = getLocalClassName();
         if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(LOGGER_NAME, "getPermission: Got permission: " + permissionString);
+            Log.d(LOGGER_TAG, "getPermission: Got permission: " + permissionString);
         } else {
-            Log.w(LOGGER_NAME, "getPermission: Don't have permission: " + permissionString);
+            Log.w(LOGGER_TAG, "getPermission: Don't have permission: " + permissionString);
             ActivityCompat.requestPermissions(activity, new String[]{permissionString}, 101);
-            Log.i(LOGGER_NAME, "getPermission: new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
+            Log.i(LOGGER_TAG, "getPermission: new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
+        }
+    }
+
+    protected String getVersion() {
+        final String LOGGER_TAG = getLocalClassName();
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            return pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.w(LOGGER_TAG, "getVersion:" + "Version getting failed.");
+            e.printStackTrace();
+            return "Version getting failed.";
         }
     }
 

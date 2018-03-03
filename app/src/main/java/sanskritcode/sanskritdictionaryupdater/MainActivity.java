@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class MainActivity extends BaseActivity {
     private Button button;
-    final String LOGGER_NAME = getClass().getSimpleName();
+    final String LOGGER_TAG = getClass().getSimpleName();
 
     // Event handler for: When an index is (un) selected.
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
@@ -77,8 +77,8 @@ public class MainActivity extends BaseActivity {
         if (dictIndexStore == null){
             dictIndexStore = new DictIndexStore();
         }
-        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
-        largeLog(LOGGER_NAME, "onCreate: " + dictIndexStore.toString());
+        Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************");
+        largeLog(LOGGER_TAG, "onCreate: " + dictIndexStore.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -107,8 +107,8 @@ public class MainActivity extends BaseActivity {
 
     // Event handler for: When the proceed button is pressed.
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
-        final String LOGGER_NAME = ("MainActivity:buttonPressed1").substring(0,26);
-        Log.d(LOGGER_NAME, "buttonPressed1: " + "Indices selected " + dictIndexStore.indexesSelected.toString());
+        final String LOGGER_TAG = ("MainActivity:buttonPressed1").substring(0,26);
+        Log.d(LOGGER_TAG, "buttonPressed1: " + "Indices selected " + dictIndexStore.indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();

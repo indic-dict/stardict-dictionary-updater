@@ -20,7 +20,7 @@ import java.util.Collections;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends BaseActivity {
-    final String LOGGER_NAME = getClass().getSimpleName();
+    final String LOGGER_TAG = getClass().getSimpleName();
     private SharedPreferences.Editor dictVersionEditor;
 
     private TextView topText;
@@ -36,7 +36,7 @@ public class GetDictionariesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
+        Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************");
         SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
@@ -61,13 +61,13 @@ public class GetDictionariesActivity extends BaseActivity {
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (!downloadsDir.exists()) {
             if (!downloadsDir.mkdirs()) {
-                Log.w(LOGGER_NAME, ":onCreate:" + "Returned false while mkdirs " + downloadsDir);
+                Log.w(LOGGER_TAG, ":onCreate:" + "Returned false while mkdirs " + downloadsDir);
             }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (!dictDir.exists()) {
             if (!dictDir.mkdirs()) {
-                Log.w(LOGGER_NAME, ":onCreate:" + "Returned false while mkdirs " + dictDir);
+                Log.w(LOGGER_TAG, ":onCreate:" + "Returned false while mkdirs " + dictDir);
             }
         }
 

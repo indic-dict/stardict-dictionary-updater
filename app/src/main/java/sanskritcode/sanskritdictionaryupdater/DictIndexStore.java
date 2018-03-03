@@ -39,7 +39,7 @@ class DictInfo implements Serializable {
 }
 
 class DictIndexStore implements Serializable {
-    private final String LOGGER_NAME = getClass().getSimpleName();
+    private final String LOGGER_TAG = getClass().getSimpleName();
     private final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     // DictIndexStore must be serializable, hence we use specific class names below.
     private final Map<String, String> indexUrls = new LinkedHashMap<>();
@@ -75,7 +75,7 @@ class DictIndexStore implements Serializable {
             asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                    Log.e(LOGGER_NAME, ":getIndicesAddCheckboxes:" +"getIndices", throwable);
+                    Log.e(LOGGER_TAG, ":getIndicesAddCheckboxes:" +"getIndices", throwable);
                 }
 
                 @Override
@@ -86,7 +86,7 @@ class DictIndexStore implements Serializable {
                         indexUrls.put(name, url);
                         //noinspection ResultOfMethodCallIgnored
                         indexesSelected.put(name, url);
-                        Log.d(LOGGER_NAME, ":getIndicesAddCheckboxes:" + activity.getString(R.string.added_index_url) + url);
+                        Log.d(LOGGER_TAG, ":getIndicesAddCheckboxes:" + activity.getString(R.string.added_index_url) + url);
                     }
                     activity.addCheckboxes(indexUrls, indexesSelected);
                 }
@@ -101,7 +101,7 @@ class DictIndexStore implements Serializable {
         if (indexedDicts.isEmpty()) {
             final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
             indexedDicts = new LinkedHashMap<>();
-            Log.i(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"Will get dictionaries from " + indexesSelected.size());
+            Log.i(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" +"Will get dictionaries from " + indexesSelected.size());
             asyncHttpClient.setEnableRedirects(true, true, true);
             for (final String name : indexesSelected.keySet()) {
                 final String url = indexesSelected.get(name);
@@ -111,8 +111,8 @@ class DictIndexStore implements Serializable {
                     asyncHttpClient.get(url, new TextHttpResponseHandler() {
                         @Override
                         public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
-                            Log.e(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"Failed ", throwable);
-                            BaseActivity.largeLog(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +dictIndexStore.toString());
+                            Log.e(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" +"Failed ", throwable);
+                            BaseActivity.largeLog(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" +dictIndexStore.toString());
                             String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                             getUrlActivity.topText.setText(message);
                             // The below would result in
@@ -133,9 +133,9 @@ class DictIndexStore implements Serializable {
                             for (String line : responseString.split("\n")) {
                                 String dictUrl = line.replace("<", "").replace(">", "");
                                 urls.add(dictUrl);
-                                Log.d(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +getUrlActivity.getApplicationContext().getString(R.string.added_dictionary_url) + dictUrl);
+                                Log.d(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" +getUrlActivity.getApplicationContext().getString(R.string.added_dictionary_url) + dictUrl);
                             }
-                            Log.d(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" + "Index handled: " + url);
+                            Log.d(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" + "Index handled: " + url);
                             indexedDicts.put(indexesSelected.inverse().get(url), urls);
 
                             if (indexesSelected.size() == indexedDicts.size()) {
@@ -144,7 +144,7 @@ class DictIndexStore implements Serializable {
                         }
                     });
                 } catch (Throwable throwable) {
-                    Log.e(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"error with " + url, throwable);
+                    Log.e(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" +"error with " + url, throwable);
                     String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                     getUrlActivity.topText.setText(message);
                     getUrlActivity.sendLoagcatMail();
