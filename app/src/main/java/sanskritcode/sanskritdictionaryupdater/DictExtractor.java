@@ -137,9 +137,6 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                 String destFileName = String.format("%s.%s", Files.getNameWithoutExtension(currentEntry.getName()), Files.getFileExtension(currentEntry.getName()));
                 String destFileExtension = Files.getFileExtension(destFileName);
                 boolean isResourceFile = !destFileName.isEmpty() && currentEntry.getName().replace(destFileName, "").contains("/res/");
-                Log.d(LOGGER_NAME, "isResourceFile " + isResourceFile);
-                String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
-                Log.d(LOGGER_NAME, message3);
                 String destFileDir = initialDestDir;
                 if (isResourceFile) {
                     destFileDir = resourceDirFile.getAbsolutePath() + currentEntry.getName().replace(destFileName, "").replaceFirst(".*/res/", "");
@@ -170,6 +167,9 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                     publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile);
                 } else {
                     Log.w(LOGGER_NAME, "Not extracting " + currentEntry.getName());
+                    Log.d(LOGGER_NAME, "isResourceFile " + isResourceFile);
+                    String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
+                    Log.d(LOGGER_NAME, message3);
                 }
             }
             archiveInputStream.close();
