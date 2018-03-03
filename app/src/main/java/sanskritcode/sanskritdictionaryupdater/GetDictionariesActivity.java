@@ -20,6 +20,7 @@ import java.util.Collections;
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetDictionariesActivity extends BaseActivity {
+    final String LOGGER_NAME = getClass().getSimpleName();
     private SharedPreferences.Editor dictVersionEditor;
 
     private TextView topText;
@@ -35,7 +36,7 @@ public class GetDictionariesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String LOGGER_NAME = (getClass().getSimpleName() + ":onCreate").substring(0,26);
+        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
         SharedPreferences sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
@@ -54,19 +55,19 @@ public class GetDictionariesActivity extends BaseActivity {
         button_2.setVisibility(View.INVISIBLE);
         button_2.setEnabled(false);
         progressBar = findViewById(R.id.get_dict_progressBar);
-        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
+        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
 
         File sdcard = Environment.getExternalStorageDirectory();
         downloadsDir = new File(sdcard.getAbsolutePath() + "/Download/dicttars");
         if (!downloadsDir.exists()) {
             if (!downloadsDir.mkdirs()) {
-                Log.w(LOGGER_NAME, "Returned false while mkdirs " + downloadsDir);
+                Log.w(LOGGER_NAME, ":onCreate:" + "Returned false while mkdirs " + downloadsDir);
             }
         }
         dictDir = new File(sdcard.getAbsolutePath() + "/dictdata");
         if (!dictDir.exists()) {
             if (!dictDir.mkdirs()) {
-                Log.w(LOGGER_NAME, "Returned false while mkdirs " + dictDir);
+                Log.w(LOGGER_NAME, ":onCreate:" + "Returned false while mkdirs " + dictDir);
             }
         }
 

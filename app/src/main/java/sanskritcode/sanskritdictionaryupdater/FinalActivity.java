@@ -16,10 +16,12 @@ import com.google.common.io.Files;
 import java.util.List;
 
 public class FinalActivity extends BaseActivity {
+    final String LOGGER_NAME = getClass().getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
         if (dictIndexStore == null) {
             dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
         }
@@ -28,8 +30,7 @@ public class FinalActivity extends BaseActivity {
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.setMovementMethod(LinkMovementMethod.getInstance());
         topText.setText(getString(R.string.finalMessage));
-        final String LOGGER_NAME = (getClass().getSimpleName() + ":onCreate").substring(0,26);
-        largeLog(LOGGER_NAME, dictIndexStore.toString());
+        largeLog(LOGGER_NAME, ":onCreate:" + dictIndexStore.toString());
         final StringBuilder failures = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
             //noinspection StatementWithEmptyBody
@@ -39,7 +40,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (failures.length() > 0) {
             topText.append("\n" + "Failed on:" + failures);
-            Log.w(LOGGER_NAME, topText.getText().toString());
+            Log.w(LOGGER_NAME, ":onCreate:" + topText.getText().toString());
         }
         StringBuilder successes = new StringBuilder("");
         for (DictInfo dictInfo: dictIndexStore.dictionariesSelectedMap.values()) {
@@ -50,7 +51,7 @@ public class FinalActivity extends BaseActivity {
         }
         if (successes.length() > 0) {
             topText.append("\n" + "Succeeded on:" + successes);
-            Log.w(LOGGER_NAME, topText.getText().toString());
+            Log.w(LOGGER_NAME,":onCreate:" +  topText.getText().toString());
         }
 
         Button button = findViewById(R.id.final_act_button);

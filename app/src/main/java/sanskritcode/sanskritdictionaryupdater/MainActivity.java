@@ -30,17 +30,7 @@ import java.util.Map;
  */
 public class MainActivity extends BaseActivity {
     private Button button;
-
-    static void getPermission(String permissionString, Activity activity) {
-        final String LOGGER_NAME = ("MainActivity:getPermission").substring(0,26);
-        if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(LOGGER_NAME, "Got permission: " + permissionString);
-        } else {
-            Log.w(LOGGER_NAME, "Don't have permission: " + permissionString);
-            ActivityCompat.requestPermissions(activity, new String[]{permissionString}, 101);
-            Log.i(LOGGER_NAME, "new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
-        }
-    }
+    final String LOGGER_NAME = getClass().getSimpleName();
 
     // Event handler for: When an index is (un) selected.
     private final CompoundButton.OnCheckedChangeListener checkboxListener = new CompoundButton.OnCheckedChangeListener() {
@@ -84,12 +74,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String LOGGER_NAME = ("MainActivity:onCreate").substring(0,26);
         if (dictIndexStore == null){
             dictIndexStore = new DictIndexStore();
         }
-        Log.i(LOGGER_NAME, "onCreate: ************************STARTS****************************");
-        largeLog(LOGGER_NAME, dictIndexStore.toString());
+        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
+        largeLog(LOGGER_NAME, "onCreate: " + dictIndexStore.toString());
         setContentView(R.layout.activity_main);
 
         TextView topText = findViewById(R.id.main_textView);
@@ -100,9 +89,9 @@ public class MainActivity extends BaseActivity {
         button.setText(getString(R.string.buttonWorking));
         button.setClickable(false);
 
-        MainActivity.getPermission(Manifest.permission.INTERNET, this);
-        MainActivity.getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this);
-        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
+        getPermission(Manifest.permission.INTERNET, this);
+        getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this);
+        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this);
         dictIndexStore.getIndicesAddCheckboxes(this);
     }
 
@@ -119,7 +108,7 @@ public class MainActivity extends BaseActivity {
     // Event handler for: When the proceed button is pressed.
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
         final String LOGGER_NAME = ("MainActivity:buttonPressed1").substring(0,26);
-        Log.d(LOGGER_NAME, "buttonPressed1 Indices selected " + dictIndexStore.indexesSelected.toString());
+        Log.d(LOGGER_NAME, "buttonPressed1: " + "Indices selected " + dictIndexStore.indexesSelected.toString());
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();

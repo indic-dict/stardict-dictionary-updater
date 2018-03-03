@@ -10,6 +10,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -38,6 +39,7 @@ class DictInfo implements Serializable {
 }
 
 class DictIndexStore implements Serializable {
+    private final String LOGGER_NAME = getClass().getSimpleName();
     private final String index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md";
     // DictIndexStore must be serializable, hence we use specific class names below.
     private final Map<String, String> indexUrls = new LinkedHashMap<>();
@@ -67,14 +69,13 @@ class DictIndexStore implements Serializable {
     }
 
     void getIndicesAddCheckboxes(final MainActivity activity) {
-        final String LOGGER_NAME = (getClass().getSimpleName() + ":getIndicesAddCheckboxes").substring(0,26);
         if (indexUrls.isEmpty()) {
             final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.setEnableRedirects(true, true, true);
             asyncHttpClient.get(index_indexorum, new TextHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                    Log.e(LOGGER_NAME, "getIndices", throwable);
+                    Log.e(LOGGER_NAME, ":getIndicesAddCheckboxes:" +"getIndices", throwable);
                 }
 
                 @Override
@@ -85,7 +86,7 @@ class DictIndexStore implements Serializable {
                         indexUrls.put(name, url);
                         //noinspection ResultOfMethodCallIgnored
                         indexesSelected.put(name, url);
-                        Log.d(LOGGER_NAME, activity.getString(R.string.added_index_url) + url);
+                        Log.d(LOGGER_NAME, ":getIndicesAddCheckboxes:" + activity.getString(R.string.added_index_url) + url);
                     }
                     activity.addCheckboxes(indexUrls, indexesSelected);
                 }
@@ -97,11 +98,10 @@ class DictIndexStore implements Serializable {
 
     // Populates indexedDicts
     void getIndexedDictsSetCheckboxes(final GetUrlActivity getUrlActivity) {
-        final String LOGGER_NAME = (getClass().getSimpleName() + ":getIndexedDictsSetCheckboxes").substring(0,26);
         if (indexedDicts.isEmpty()) {
             final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
             indexedDicts = new LinkedHashMap<>();
-            Log.i(LOGGER_NAME, "Will get dictionaries from " + indexesSelected.size());
+            Log.i(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"Will get dictionaries from " + indexesSelected.size());
             asyncHttpClient.setEnableRedirects(true, true, true);
             for (final String name : indexesSelected.keySet()) {
                 final String url = indexesSelected.get(name);
@@ -111,8 +111,8 @@ class DictIndexStore implements Serializable {
                     asyncHttpClient.get(url, new TextHttpResponseHandler() {
                         @Override
                         public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable){
-                            Log.e(LOGGER_NAME, "Failed ", throwable);
-                            BaseActivity.largeLog(LOGGER_NAME, dictIndexStore.toString());
+                            Log.e(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"Failed ", throwable);
+                            BaseActivity.largeLog(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +dictIndexStore.toString());
                             String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                             getUrlActivity.topText.setText(message);
                             // The below would result in
@@ -121,7 +121,7 @@ class DictIndexStore implements Serializable {
                             // getUrlActivity.sendLoagcatMail();
 
                             // Just proceed with the next dict.
-                            indexedDicts.put(name, Arrays.asList(url.replaceAll("[_/.]+", "_") + "_indexGettingFailed"));
+                            indexedDicts.put(name, Collections.singletonList(url.replaceAll("[_/.]+", "_") + "_indexGettingFailed"));
                             if (indexesSelected.size() == indexedDicts.size()) {
                                 getUrlActivity.addCheckboxes(indexedDicts, null);
                             }
@@ -133,9 +133,9 @@ class DictIndexStore implements Serializable {
                             for (String line : responseString.split("\n")) {
                                 String dictUrl = line.replace("<", "").replace(">", "");
                                 urls.add(dictUrl);
-                                Log.d(LOGGER_NAME, getUrlActivity.getApplicationContext().getString(R.string.added_dictionary_url) + dictUrl);
+                                Log.d(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +getUrlActivity.getApplicationContext().getString(R.string.added_dictionary_url) + dictUrl);
                             }
-                            Log.d(LOGGER_NAME, "Index handled: " + url);
+                            Log.d(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" + "Index handled: " + url);
                             indexedDicts.put(indexesSelected.inverse().get(url), urls);
 
                             if (indexesSelected.size() == indexedDicts.size()) {
@@ -144,7 +144,7 @@ class DictIndexStore implements Serializable {
                         }
                     });
                 } catch (Throwable throwable) {
-                    Log.e(LOGGER_NAME, "error with " + url, throwable);
+                    Log.e(LOGGER_NAME, ":getIndexedDictsSetCheckboxes:" +"error with " + url, throwable);
                     String message = String.format(getUrlActivity.getString(R.string.index_download_failed), url);
                     getUrlActivity.topText.setText(message);
                     getUrlActivity.sendLoagcatMail();

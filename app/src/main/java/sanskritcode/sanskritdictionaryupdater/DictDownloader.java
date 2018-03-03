@@ -22,7 +22,7 @@ import java.io.File;
  */
 class DictDownloader {
     private static final AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
-
+    private String LOGGER_NAME = getClass().getSimpleName();
     private final GetDictionariesActivity getDictionariesActivity;
     private final File downloadsDir;
     private final ProgressBar progressBar;
@@ -42,8 +42,7 @@ class DictDownloader {
     // Log errors, record failure, get the next dictionary.
     private void handleDownloadDictFailure(final int index, String url, Throwable throwable) {
         String message = "Failed to get " + url;
-        String LOGGER_NAME = (getClass().getSimpleName() + ":handleDownloadDictFailure").substring(0,26);
-        Log.e(LOGGER_NAME, message + ":", throwable);
+        Log.e(LOGGER_NAME, ":handleDownloadDictFailure:" +message + ":", throwable);
         topText.setText(message);
         dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_FAILURE;
         downloadDict(index + 1);
@@ -51,7 +50,6 @@ class DictDownloader {
     }
 
     void downloadDict(final int index) {
-        String LOGGER_NAME = getClass().getSimpleName() + ":downloadDict";
         // Stop condition of the recursion.
         if (index >= dictIndexStore.dictionariesSelectedMap.size()) {
             getDictionariesActivity.whenAllDictsDownloaded();
@@ -61,16 +59,16 @@ class DictDownloader {
         final String url = dictInfo.url;
         // TODO: Getting messages like:  Skipping null withs status DOWNLOAD_FAILURE .
         if (dictInfo.status != DictStatus.NOT_TRIED) {
-            Log.w(LOGGER_NAME, "Skipping " + url + " with status " + dictInfo.status);
+            Log.w(LOGGER_NAME, ":downloadDict:" + "Skipping " + url + " with status " + dictInfo.status);
             downloadDict(index + 1);
             return;
         }
-        Log.d(LOGGER_NAME, "Getting " + url);
-        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
+        Log.d(LOGGER_NAME, ":downloadDict:" + "Getting " + url);
+        getDictionariesActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity);
 
         topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), url));
         topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away));
-        Log.d("downloadDict ", topText.getText().toString());
+        Log.d(LOGGER_NAME, "downloadDict: " + topText.getText().toString());
         try {
             final String fileName = url.substring(url.lastIndexOf("/")).replace("/", "");
             if (fileName.isEmpty()) {
@@ -83,7 +81,7 @@ class DictDownloader {
                 @Override
                 public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, File file) {
                     dictIndexStore.dictionariesSelectedMap.get(url).downloadedArchiveBasename = fileName;
-                    Log.i("Got dictionary: ", fileName);
+                    Log.i(LOGGER_NAME, ":downloadDict:" + "Got dictionary: " + fileName);
                     dictIndexStore.dictionariesSelectedMap.get(url).status = DictStatus.DOWNLOAD_SUCCESS;
                     downloadDict(index + 1);
                     progressBar.setVisibility(View.GONE);
@@ -97,8 +95,7 @@ class DictDownloader {
 
                 @Override
                 public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, File file) {
-                    final String LOGGER_NAME = (getClass().getSimpleName() + ":onFailure").substring(0,26);
-                    Log.e(LOGGER_NAME, "status " + statusCode);
+                    Log.e(LOGGER_NAME, ":onFailure:" + "status " + statusCode);
                     handleDownloadDictFailure(index, url, throwable);
                 }
             });

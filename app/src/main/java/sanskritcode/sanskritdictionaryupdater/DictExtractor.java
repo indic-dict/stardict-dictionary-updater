@@ -1,6 +1,7 @@
 package sanskritcode.sanskritdictionaryupdater;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,6 +26,8 @@ import java.io.FileOutputStream;
 class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, result */ {
     private final CompressorStreamFactory compressorStreamFactory = new CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/);
     private final ArchiveStreamFactory archiveStreamFactory = new ArchiveStreamFactory();
+    private final String LOGGER_NAME = getClass().getSimpleName();
+    @SuppressLint("StaticFieldLeak")
     private final ExtractDictionariesActivity activity;
     private final File downloadsDir;
     // See http://stardict-4.sourceforge.net/StarDictFileFormat
@@ -40,10 +43,9 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     }
 
     private void deleteTarFile(String sourceFile) {
-        String LOGGER_NAME = (getClass().getSimpleName() + ":handleDownloadDictFailure").substring(0,26);
         String message4 = "Deleting " + sourceFile + " " + new File(sourceFile).delete();
         // topText.append(message4);
-        Log.d(LOGGER_NAME, message4);
+        Log.d(LOGGER_NAME,  ":handleDownloadDictFailure:" + message4);
     }
 
     @Override
@@ -52,21 +54,20 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
     }
 
     private void cleanDirectory(File directory) {
-        String LOGGER_NAME = getClass().getSimpleName() + ":cleanDirectory";
-        Log.i(LOGGER_NAME, "Cleaning " + directory);
+        Log.i(LOGGER_NAME, ":cleanDirectory:" + "Cleaning " + directory);
 
         File[] files = directory.listFiles();
-        Log.d(LOGGER_NAME, "Deleting " + files.length);
+        Log.d(LOGGER_NAME, ":cleanDirectory:" + "Deleting " + files.length);
         //noinspection ConstantConditions
         if (files == null) {  // null if security restricted
-            Log.e(LOGGER_NAME, "Could not list files - got null");
+            Log.e(LOGGER_NAME, ":cleanDirectory:" + "Could not list files - got null");
         }
 
         for (File file : files) {
             if (file.isDirectory()) {
                 cleanDirectory(file);
             }
-            Log.d(LOGGER_NAME, "Deleting " + file.getName() + " with result " + file.delete());
+            Log.d(LOGGER_NAME, ":cleanDirectory:" + "Deleting " + file.getName() + " with result " + file.delete());
         }
     }
 
@@ -88,14 +89,13 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
 
     private void extractFile(DictInfo dictInfo) {
         String archiveFileName = dictInfo.downloadedArchiveBasename;
-        String LOGGER_NAME = getClass().getSimpleName() + ":extractFile";
         if ( dictInfo.status != DictStatus.DOWNLOAD_SUCCESS) {
-            Log.w(LOGGER_NAME, "Skipping " + archiveFileName + " with status " + dictInfo.status);
+            Log.w(LOGGER_NAME, ":extractFile:" + "Skipping " + archiveFileName + " with status " + dictInfo.status);
             return;
         }
 
         String sourceFile = new File(downloadsDir.toString(), archiveFileName).getAbsolutePath();
-        MainActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity);
+        activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity);
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "");
 
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
@@ -103,17 +103,17 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
         File destDirFile = new File(dictDir.toString(), baseName);
         final String initialDestDir = destDirFile.getAbsolutePath();
 
-        Log.d(LOGGER_NAME, "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
+        Log.d(LOGGER_NAME, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
         if (destDirFile.exists()) {
-            Log.i(LOGGER_NAME, "Cleaning " + initialDestDir);
+            Log.i(LOGGER_NAME, ":extractFile:" + "Cleaning " + initialDestDir);
             cleanDirectory(destDirFile);
         } else {
-            Log.i(LOGGER_NAME, "Creating afresh the directory " + destDirFile.mkdirs());
+            Log.i(LOGGER_NAME, ":extractFile:" + "Creating afresh the directory " + destDirFile.mkdirs());
         }
-        Log.d(LOGGER_NAME, "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
+        Log.d(LOGGER_NAME, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory());
 
         String message2 = "Destination directory " + initialDestDir;
-        Log.d(LOGGER_NAME, message2);
+        Log.d(LOGGER_NAME, ":extractFile:" + message2);
         try {
             ArchiveInputStream archiveInputStream = inputStreamFromArchive(sourceFile);
             int totalFiles = 0;
@@ -156,7 +156,7 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                         }
                     }
                     if (!destFileDirFile.exists()) {
-                        Log.i(LOGGER_NAME, "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs());
+                        Log.i(LOGGER_NAME, ":extractFile:" + "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs());
                     }
                     FileOutputStream fos = new FileOutputStream(destFile);
                     int n;
@@ -166,32 +166,33 @@ class DictExtractor extends AsyncTask<Void, String, Void> /* params, progress, r
                     fos.close();
                     publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile);
                 } else {
-                    Log.w(LOGGER_NAME, "Not extracting " + currentEntry.getName());
-                    Log.d(LOGGER_NAME, "isResourceFile " + isResourceFile);
+                    Log.w(LOGGER_NAME, ":extractFile:" + "Not extracting " + currentEntry.getName());
+                    //noinspection ConstantConditions
+                    Log.d(LOGGER_NAME, ":extractFile:" + "isResourceFile " + isResourceFile);
                     String message3 = "Destination: " + destFileName + "\nArchive entry: " + currentEntry.getName();
-                    Log.d(LOGGER_NAME, message3);
+                    Log.d(LOGGER_NAME,":extractFile:" +  message3);
                 }
             }
             archiveInputStream.close();
             if (baseNameAccordingToArchiveEntries != null && !baseNameAccordingToArchiveEntries.equals(baseName)) {
-                Log.d(LOGGER_NAME, "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
+                Log.d(LOGGER_NAME, ":extractFile:" + "baseName: " + baseName + ", baseNameAccordingToArchiveEntries: " + baseNameAccordingToArchiveEntries);
                 final String finalDestDir = new File(dictDir.toString(), baseNameAccordingToArchiveEntries).getAbsolutePath();
-                Log.d(LOGGER_NAME, "destDirFile: " + destDirFile.toString() + ", finalDestDir: " + finalDestDir);
+                Log.d(LOGGER_NAME, ":extractFile:" + "destDirFile: " + destDirFile.toString() + ", finalDestDir: " + finalDestDir);
                 final File finalDestDirFile = new File(finalDestDir);
                 if (finalDestDirFile.exists()) {
                     cleanDirectory(finalDestDirFile);
-                    Log.w(LOGGER_NAME, "Deleting preexisting dict directory with result: " + finalDestDirFile.delete());
+                    Log.w(LOGGER_NAME, ":extractFile:" + "Deleting preexisting dict directory with result: " + finalDestDirFile.delete());
                 }
                 final boolean result = destDirFile.renameTo(finalDestDirFile);
-                Log.w(LOGGER_NAME, "Renaming the dict directory with result: " + result);
+                Log.w(LOGGER_NAME, ":extractFile:" + "Renaming the dict directory with result: " + result);
             }
 
 
             dictInfo.status = DictStatus.EXTRACTION_SUCCESS;
-            Log.d(LOGGER_NAME, "success!");
+            Log.d(LOGGER_NAME, ":extractFile:" + "success!");
             activity.storeDictVersion(archiveFileName);
         } catch (Exception e) {
-            Log.e(LOGGER_NAME, "IOEx:", e);
+            Log.e(LOGGER_NAME, ":extractFile:" + "IOEx:", e);
             dictInfo.status = DictStatus.EXTRACTION_FAILURE;
         }
         deleteTarFile(sourceFile);

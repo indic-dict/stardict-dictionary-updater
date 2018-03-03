@@ -23,6 +23,7 @@ import java.util.Set;
 // See comment in MainActivity.java for a rough overall understanding of the code.
 public class GetUrlActivity extends BaseActivity {
     private static final String ACTIVITY_NAME = "GetUrlActivity";
+    final String LOGGER_NAME = getClass().getSimpleName();
 
     private LinearLayout layout;
     TextView topText;
@@ -54,16 +55,16 @@ public class GetUrlActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String LOGGER_NAME = (getLocalClassName() + ":onCreate").substring(0,26);
 
+        Log.i(LOGGER_NAME, "onCreate:" + "************************STARTS****************************");
         layout = findViewById(R.id.get_url_layout);
         sharedDictVersionStore = getSharedPreferences(
                 getString(R.string.dict_version_store), Context.MODE_PRIVATE);
         if (dictIndexStore == null) {
             dictIndexStore = (DictIndexStore) getIntent().getSerializableExtra("dictIndexStore");
         }
-        Log.d(LOGGER_NAME, "whenActivityLoaded dictIndexStore.indexedDicts " + dictIndexStore.indexedDicts);
-        Log.d(LOGGER_NAME, "indexesSelected " + dictIndexStore.indexesSelected.toString());
+        Log.d(LOGGER_NAME, ":onCreate:" + "whenActivityLoaded dictIndexStore.indexedDicts " + dictIndexStore.indexedDicts);
+        Log.d(LOGGER_NAME, ":onCreate:" + "indexesSelected " + dictIndexStore.indexesSelected.toString());
         setContentView(R.layout.activity_get_url);
         topText = findViewById(R.id.get_url_textView);
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
@@ -86,13 +87,12 @@ public class GetUrlActivity extends BaseActivity {
 
 
     private void enableButtonIfDictsSelected() {
-        final String LOGGER_NAME = (getLocalClassName() + ":enableButtonIfDictsSelected").substring(0,26);
         button = findViewById(R.id.get_url_button);
         button.setEnabled(!dictIndexStore.dictionariesSelectedMap.isEmpty());
         int estimatedSize = dictIndexStore.estimateDictionariesSelectedMBs();
         String message = String.format(getString(R.string.get_dicts_button), dictIndexStore.dictionariesSelectedMap.size(),estimatedSize);
         button.setText(message);
-        Log.d(LOGGER_NAME, "button enablement " + button.isEnabled());
+        Log.d(LOGGER_NAME, ":enableButtonIfDictsSelected:" + "button enablement " + button.isEnabled());
     }
 
     public void buttonPressed1(@SuppressWarnings("UnusedParameters") View v) {
@@ -103,7 +103,6 @@ public class GetUrlActivity extends BaseActivity {
 
     // TODO: In certain cases, it could be that the dictdata directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
     private void selectCheckboxes(Set<String> dictionariesSelectedSet) {
-        final String LOGGER_NAME = (getLocalClassName() + ":selectCheckboxes").substring(0,26);
         if (dictionariesSelectedSet == null) {
             for (CheckBox cb : dictCheckBoxes.values()) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
@@ -144,11 +143,10 @@ public class GetUrlActivity extends BaseActivity {
 
         @SuppressLint("DefaultLocale") String message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore.getAll().size(), dictIndexStore.autoUnselectedDicts);
         topText.append(message);
-        Log.d(LOGGER_NAME, message);
+        Log.d(LOGGER_NAME, ":selectCheckboxes:" +  message);
     }
 
     void addCheckboxes(Map<String, List<String>> indexedDicts, Set<String> dictionariesSelectedSet) {
-        final String LOGGER_NAME = (getLocalClassName() + ":addCheckboxes").substring(0,26);
         layout = findViewById(R.id.get_url_layout);
         for (String indexName : indexedDicts.keySet()) {
             CheckBox indexBox = new CheckBox(getApplicationContext());
@@ -176,7 +174,7 @@ public class GetUrlActivity extends BaseActivity {
         }
 
         String message = String.format(getString(R.string.added_n_dictionary_urls), dictCheckBoxes.size());
-        Log.i(LOGGER_NAME, message);
+        Log.i(LOGGER_NAME, ":addCheckboxes:" + message);
         topText = findViewById(R.id.get_url_textView);
         topText.setText(message);
         selectCheckboxes(dictionariesSelectedSet);

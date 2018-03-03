@@ -25,12 +25,24 @@ import java.io.IOException;
 abstract class BaseActivity extends Activity {
     protected DictIndexStore dictIndexStore = null;
 
+    void getPermission(String permissionString, Activity activity) {
+        final String LOGGER_NAME = getLocalClassName();
+        if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(LOGGER_NAME, "getPermission: Got permission: " + permissionString);
+        } else {
+            Log.w(LOGGER_NAME, "getPermission: Don't have permission: " + permissionString);
+            ActivityCompat.requestPermissions(activity, new String[]{permissionString}, 101);
+            Log.i(LOGGER_NAME, "getPermission: new permission: " + ContextCompat.checkSelfPermission(activity, permissionString));
+        }
+    }
+
+
     public static void largeLog(String tag, String content) {
         if (content.length() > 4000) {
-            Log.v(tag, content.substring(0, 4000));
+            Log.v(tag, tag + ":" + content.substring(0, 4000));
             largeLog(tag, content.substring(4000));
         } else {
-            Log.v(tag, content);
+            Log.v(tag, tag + ":" + content);
         }
     }
     @Override
@@ -49,16 +61,16 @@ abstract class BaseActivity extends Activity {
 
     public void sendLoagcatMail(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(this.getLocalClassName(), "Got READ_LOGS permissions");
+            Log.d(this.getLocalClassName(), "SendLoagcatMail: " + "Got READ_LOGS permissions");
         } else {
-            Log.e(this.getLocalClassName(), "Don't have READ_LOGS permissions");
+            Log.e(this.getLocalClassName(), "SendLoagcatMail: " + "Don't have READ_LOGS permissions");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_LOGS}, 103);
-            Log.i(this.getLocalClassName(), "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS));
+            Log.i(this.getLocalClassName(), "SendLoagcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS));
         }
         // save logcat in file
         File outputFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),
                 "logcat.txt");
-        Log.i("SendLoagcatMail: ", "logcat file is " + outputFile.getAbsolutePath());
+        Log.i(this.getLocalClassName(), "SendLoagcatMail: " + "logcat file is " + outputFile.getAbsolutePath());
 
 
         String deviceDetails= "Device details:";
@@ -66,11 +78,11 @@ abstract class BaseActivity extends Activity {
         deviceDetails += "\n OS API Level: "+android.os.Build.VERSION.RELEASE + "("+android.os.Build.VERSION.SDK_INT+")";
         deviceDetails += "\n Device: " + android.os.Build.DEVICE;
         deviceDetails += "\n Model (and Product): " + android.os.Build.MODEL + " ("+ android.os.Build.PRODUCT + ")";
-        Log.i("SendLoagcatMail: ", "deviceDetails: " + deviceDetails);
+        Log.i(this.getLocalClassName(), "SendLoagcatMail: " + "deviceDetails: " + deviceDetails);
 
         int versionCode = BuildConfig.VERSION_CODE;
         String versionName = BuildConfig.VERSION_NAME;
-        Log.i("SendLoagcatMail: ", "App version: " + versionName + " with id " + versionCode);
+        Log.i(this.getLocalClassName(), "SendLoagcatMail: " + "App version: " + versionName + " with id " + versionCode);
 
         try {
             Runtime.getRuntime().exec(
@@ -78,7 +90,7 @@ abstract class BaseActivity extends Activity {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            Log.e(this.getLocalClassName(), "Alas error! ", e);
+            Log.e(this.getLocalClassName(), "SendLoagcatMail: " + "Alas error! ", e);
         }
 
         //send file using email
