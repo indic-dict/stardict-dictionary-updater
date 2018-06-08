@@ -6,6 +6,10 @@
 # For code contributors
 - See comment in MainActivity.java for a rough understanding of the code.
 - Review notifications setup: https://support.google.com/googleplay/android-developer/answer/138230?hl=en
+- Debugging
+  - Parsing adb logcat:
+    - Use a good log viewer like `lnav Downloads/logcat.txt`
+    - Look for lines with string "****************" to get an idea of when activity lifecycle methods are called.
 - Generating dependency tree:
   - `gradle app:dependencies > dep_tree_android.txt`
   - `gradle -q dependencies app:dependencies --configuration compile > dep_tree.txt`

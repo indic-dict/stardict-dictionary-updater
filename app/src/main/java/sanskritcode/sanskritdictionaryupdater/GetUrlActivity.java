@@ -82,6 +82,7 @@ public class GetUrlActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************");
         this.showNetworkInfo((TextView)findViewById(R.id.get_url_textView2));
     }
 
@@ -117,6 +118,7 @@ public class GetUrlActivity extends BaseActivity {
                     if (dictnameParts.length > 1) {
                         proposedVersion = dictnameParts[1];
                     }
+                    //noinspection ComparatorResultComparison
                     proposedVersionNewer = (proposedVersion.compareTo(currentVersion) > 1);
                 }
 

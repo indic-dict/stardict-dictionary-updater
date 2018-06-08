@@ -88,6 +88,7 @@ public class GetDictionariesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************");
         this.showNetworkInfo((TextView)findViewById(R.id.get_dict_textView2));
     }
 

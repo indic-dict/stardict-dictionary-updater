@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************");
         this.showNetworkInfo((TextView)findViewById(R.id.main_textView2));
         button.setText(R.string.proceed_button);
         button.setClickable(true);

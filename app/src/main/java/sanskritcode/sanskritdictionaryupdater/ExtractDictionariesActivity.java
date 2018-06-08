@@ -60,6 +60,12 @@ public class ExtractDictionariesActivity extends BaseActivity{
                 .execute();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************");
+    }
+
     /* Should only be called from the UI thread! */
     void updateProgressBar(int progress, int total) {
         progressBar.setMax(total);
@@ -85,6 +91,7 @@ public class ExtractDictionariesActivity extends BaseActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Log.i(LOGGER_TAG, "Back pressed.");
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();

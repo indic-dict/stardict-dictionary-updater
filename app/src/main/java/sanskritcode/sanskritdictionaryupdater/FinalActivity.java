@@ -84,8 +84,15 @@ public class FinalActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************");
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Log.i(LOGGER_TAG, "Back pressed");
         Intent intent = new Intent(this, GetUrlActivity.class);
         intent.putExtra("dictIndexStore", dictIndexStore);
         // intent.putStringArrayListExtra();
