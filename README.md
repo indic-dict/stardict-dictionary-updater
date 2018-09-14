@@ -1,5 +1,6 @@
 # For end users
-* Play store link: https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater
+* Play store link: <https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater>
+* Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
 * [Ratings Certificate](https://iarcweb.azurewebsites.net/Dashboard/Certificate/74e40614-671c-421e-9969-1c80da21a267)
 * Signed apk is also [released](https://github.com/sanskrit-coders/stardict-dictionary-updater/releases) in this repository.
 
