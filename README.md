@@ -2,7 +2,7 @@
 * Play store link: <https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater>
 * Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
 * [Ratings Certificate](https://iarcweb.azurewebsites.net/Dashboard/Certificate/74e40614-671c-421e-9969-1c80da21a267)
-* Signed apk is also [released](https://github.com/sanskrit-coders/stardict-dictionary-updater/releases) in this repository.
+* Signed apk is also [released](https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/app/release/app-release.apk) in this repository.
 
 # For code contributors
 - See comment in MainActivity.java for a rough understanding of the code.
