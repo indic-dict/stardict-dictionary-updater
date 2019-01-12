@@ -4,8 +4,8 @@
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/french-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/german-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/other-entries/tars/tars.MD>
-<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-kAvya/tars/tars.MD>
-<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-vyAkaraNa/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit-kAvya/master/tars/tars.MD>
+<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit-vyAkaraNa/master/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-hindi/master/hi-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/sanskrit-coders/stardict-hindi/master/en-head/tars/tars.MD>
