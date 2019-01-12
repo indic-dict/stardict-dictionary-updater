@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 335
         versionName "3.3.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -38,10 +38,10 @@ android {
 // Repositories are listed in ../build.gradle.
 dependencies {
     //noinspection GradleDynamicVersion
-    implementation 'com.android.support:appcompat-v7:27.+'
+    implementation 'com.android.support:appcompat-v7:28.+'
 
     // For some collection functions, file utilities.
-    implementation group: 'com.google.guava', name: 'guava', version: '23.0-android'
+    implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-android'
 
     implementation ('com.loopj.android:android-async-http:1.4.9')
 
