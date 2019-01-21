@@ -58,12 +58,17 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
 
     @Throws(FileNotFoundException::class, CompressorException::class, ArchiveException::class)
     private fun inputStreamFromArchive(sourceFile: String): ArchiveInputStream {
-        // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
-        // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
-        return archiveStreamFactory.createArchiveInputStream(
-                BufferedInputStream(compressorStreamFactory.createCompressorInputStream(
-                        BufferedInputStream(FileInputStream(sourceFile))
-                )))
+        try {
+            // To handle "IllegalArgumentException: Mark is not supported", we wrap with a BufferedInputStream
+            // as suggested in http://apache-commons.680414.n4.nabble.com/Compress-Reading-archives-within-archives-td746866.html
+            return archiveStreamFactory.createArchiveInputStream(
+                    BufferedInputStream(compressorStreamFactory.createCompressorInputStream(
+                            BufferedInputStream(FileInputStream(sourceFile))
+                    )))
+        } catch (compressorException: CompressorException) {
+            return archiveStreamFactory.createArchiveInputStream(
+                   BufferedInputStream(FileInputStream(sourceFile)))
+        }
     }
 
     override fun onProgressUpdate(vararg values: String) {
@@ -121,9 +126,11 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                     break
                 }
                 filesRead = filesRead + 1
-                val destFileName = String.format("%s.%s", Files.getNameWithoutExtension(currentEntry.name), Files.getFileExtension(currentEntry.name))
+                if(currentEntry.isDirectory) {
+                    continue
+                }
                 val destFileDirFile = File(initialDestDir, File(currentEntry.name).parent?:"")
-                val destFile = File(destFileDirFile, destFileName).absolutePath
+                val destFile = File(destFileDirFile, File(currentEntry.name).name).absolutePath
                 if (!destFileDirFile.exists()) {
                     Log.i(LOGGER_TAG, ":extractFile:" + "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs())
                 }
