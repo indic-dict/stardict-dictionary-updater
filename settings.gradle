@@ -1,1 +1,1 @@
-include ':app', ':downloaderLibrary'
+include ':dictUpdaterApp', ':downloaderLibrary'

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dictUpdaterApp/dictUpdaterApp.iml" filepath="$PROJECT_DIR$/dictUpdaterApp/dictUpdaterApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/downloaderLibrary/downloaderLibrary.iml" filepath="$PROJECT_DIR$/downloaderLibrary/downloaderLibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/stardict-dictionary-updater.iml" filepath="$PROJECT_DIR$/stardict-dictionary-updater.iml" />
     </modules>
