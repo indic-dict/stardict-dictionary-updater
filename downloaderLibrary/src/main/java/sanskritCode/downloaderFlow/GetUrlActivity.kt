@@ -1,6 +1,5 @@
 package sanskritCode.downloaderFlow
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -19,23 +18,23 @@ class GetUrlActivity : BaseActivity() {
     private var layout: LinearLayout? = null
     internal var topText: TextView? = null
     private var button: Button? = null
-    private val dictCheckBoxes = HashMap<String, CheckBox>()
+    private val archiveCheckBoxes = HashMap<String, CheckBox>()
     private val indexCheckBoxes = HashMap<String, CheckBox>()
 
-    private var sharedDictVersionStore: SharedPreferences? = null
+    private var sharedArchiveVersionStore: SharedPreferences? = null
 
-    private val dictCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+    private val archiveCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         if (isChecked) {
-            dictIndexStore!!.dictionariesSelectedMap[buttonView.hint.toString()] = DictInfo(buttonView.hint.toString())
+            archiveIndexStore!!.archivesSelectedMap[buttonView.hint.toString()] = ArchiveInfo(buttonView.hint.toString())
         } else {
-            dictIndexStore!!.dictionariesSelectedMap.remove(buttonView.hint.toString())
+            archiveIndexStore!!.archivesSelectedMap.remove(buttonView.hint.toString())
         }
-        enableButtonIfDictsSelected()
+        enableButtonIfArchivesSelected()
     }
 
     private val indexCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-        for (url in dictIndexStore!!.indexedDicts[buttonView.hint.toString()]!!) {
-            dictCheckBoxes[url]!!.isChecked = isChecked
+        for (url in archiveIndexStore!!.indexedArchives[buttonView.hint.toString()]!!) {
+            archiveCheckBoxes[url]!!.isChecked = isChecked
         }
     }
 
@@ -44,13 +43,13 @@ class GetUrlActivity : BaseActivity() {
 
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         layout = findViewById(R.id.get_url_layout)
-        sharedDictVersionStore = getSharedPreferences(
-                getString(R.string.dict_version_store), Context.MODE_PRIVATE)
-        if (dictIndexStore == null) {
-            dictIndexStore = intent.getSerializableExtra("dictIndexStore") as DictIndexStore
+        sharedArchiveVersionStore = getSharedPreferences(
+                getString(R.string.archive_version_store), Context.MODE_PRIVATE)
+        if (archiveIndexStore == null) {
+            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
-        Log.d(LOGGER_TAG, ":onCreate:" + "whenActivityLoaded dictIndexStore.indexedDicts " + dictIndexStore!!.indexedDicts)
-        Log.d(LOGGER_TAG, ":onCreate:" + "indexesSelected " + dictIndexStore!!.indexesSelected.toString())
+        Log.d(LOGGER_TAG, ":onCreate:" + "whenActivityLoaded archiveIndexStore.indexedArchives " + archiveIndexStore!!.indexedArchives)
+        Log.d(LOGGER_TAG, ":onCreate:" + "indexesSelected " + archiveIndexStore!!.indexesSelected.toString())
         setContentView(R.layout.activity_get_url)
         topText = findViewById(R.id.get_url_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
@@ -61,7 +60,7 @@ class GetUrlActivity : BaseActivity() {
         button!!.isEnabled = false
 
         setContentView(R.layout.activity_get_url)
-        dictIndexStore!!.getIndexedDictsSetCheckboxes(this)
+        archiveIndexStore!!.getIndexedArchivesSetCheckboxes(this)
     }
 
     // Called when another activity comes inbetween and is dismissed.
@@ -72,37 +71,37 @@ class GetUrlActivity : BaseActivity() {
     }
 
 
-    private fun enableButtonIfDictsSelected() {
+    private fun enableButtonIfArchivesSelected() {
         button = findViewById(R.id.get_url_button)
-        button!!.isEnabled = !dictIndexStore!!.dictionariesSelectedMap.isEmpty()
-        val estimatedSize = dictIndexStore!!.estimateDictionariesSelectedMBs()
-        val message = String.format(getString(R.string.get_dicts_button), dictIndexStore!!.dictionariesSelectedMap.size, estimatedSize)
+        button!!.isEnabled = !archiveIndexStore!!.archivesSelectedMap.isEmpty()
+        val estimatedSize = archiveIndexStore!!.estimateArchivesSelectedMBs()
+        val message = String.format(getString(R.string.get_archives_button), archiveIndexStore!!.archivesSelectedMap.size, estimatedSize)
         button!!.setText(message)
-        Log.d(LOGGER_TAG, ":enableButtonIfDictsSelected:" + "button enablement " + button!!.isEnabled)
+        Log.d(LOGGER_TAG, ":enableButtonIfArchivesSelected:" + "button enablement " + button!!.isEnabled)
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun buttonPressed1(v: View) {
-        val intent = Intent(this, GetDictionariesActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+        val intent = Intent(this, GetArchivesActivity::class.java)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         startActivity(intent)
     }
 
-    // TODO: In certain cases, it could be that the dictdata directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
-    private fun selectCheckboxes(dictionariesSelectedSet: Set<String>?) {
-        if (dictionariesSelectedSet == null) {
-            for (cb in dictCheckBoxes.values) {
+    // TODO: In certain cases, it could be that the destination directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
+    private fun selectCheckboxes(archivesSelectedSet: Set<String>?) {
+        if (archivesSelectedSet == null) {
+            for (cb in archiveCheckBoxes.values) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
                 val filename = cb.hint.toString()
                 var proposedVersionNewer = true
 
-                val dictnameParts = DictNameHelper.getDictNameAndVersion(filename)
-                val dictname = dictnameParts[0]
-                if (sharedDictVersionStore!!.contains(dictname)) {
-                    val currentVersion = sharedDictVersionStore!!.getString(dictname, getString(R.string.defaultDictVersion))
-                    var proposedVersion = getString(R.string.defaultDictVersion)
-                    if (dictnameParts.size > 1) {
-                        proposedVersion = dictnameParts[1]
+                val archiveNameParts = ArchiveNameHelper.getArchiveNameAndVersion(filename)
+                val archiveName = archiveNameParts[0]
+                if (sharedArchiveVersionStore!!.contains(archiveName)) {
+                    val currentVersion = sharedArchiveVersionStore!!.getString(archiveName, getString(R.string.defaultArchiveVersion))
+                    var proposedVersion = getString(R.string.defaultArchiveVersion)
+                    if (archiveNameParts.size > 1) {
+                        proposedVersion = archiveNameParts[1]
                     }
 
                     proposedVersionNewer = proposedVersion.compareTo(currentVersion!!) > 1
@@ -112,13 +111,13 @@ class GetUrlActivity : BaseActivity() {
                     cb.isChecked = true
                 } else {
                     cb.isChecked = false
-                    dictIndexStore!!.autoUnselectedDicts++
+                    archiveIndexStore!!.autoUnselectedArchives++
                 }
             }
         } else {
-            for (cb in dictCheckBoxes.values) {
+            for (cb in archiveCheckBoxes.values) {
                 val filename = cb.hint.toString()
-                if (dictionariesSelectedSet.contains(filename)) {
+                if (archivesSelectedSet.contains(filename)) {
                     cb.isChecked = true
                 } else {
                     cb.isChecked = false
@@ -127,16 +126,16 @@ class GetUrlActivity : BaseActivity() {
         }
 
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
-        enableButtonIfDictsSelected()
+        enableButtonIfArchivesSelected()
 
-        @SuppressLint("DefaultLocale") val message = String.format("Based on what we remember installing (%1d dicts) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d dictionaries which don\\'t seem to be new or updated. You can reselect.", sharedDictVersionStore!!.all.size, dictIndexStore!!.autoUnselectedDicts)
+        val message = String.format(getString(R.string.autoSelectedArchivesMessage), sharedArchiveVersionStore!!.all.size, archiveIndexStore!!.autoUnselectedArchives)
         topText?.append(message)
         Log.d(LOGGER_TAG, ":selectCheckboxes:$message")
     }
 
-    internal fun addCheckboxes(indexedDicts: Map<String, List<String>>, dictionariesSelectedSet: Set<String>?) {
+    internal fun addCheckboxes(indexedArchives: Map<String, List<String>>, archivesSelectedSet: Set<String>?) {
         layout = findViewById(R.id.get_url_layout)
-        for (indexName in indexedDicts.keys) {
+        for (indexName in indexedArchives.keys) {
             val indexBox = CheckBox(applicationContext)
             indexBox.setBackgroundColor(Color.YELLOW)
             indexBox.setTextColor(Color.BLACK)
@@ -150,22 +149,22 @@ class GetUrlActivity : BaseActivity() {
             indexCheckBoxes[indexName] = indexBox
             layout!!.addView(indexBox)
 
-            for (url in indexedDicts[indexName]!!) {
+            for (url in indexedArchives[indexName]!!) {
                 val cb = CheckBox(applicationContext)
                 cb.setText(url.replace(".*/".toRegex(), ""))
                 cb.hint = url
                 cb.setTextColor(Color.BLACK)
                 layout!!.addView(cb, layout!!.childCount)
-                cb.setOnCheckedChangeListener(dictCheckboxListener)
-                dictCheckBoxes[url] = cb
+                cb.setOnCheckedChangeListener(archiveCheckboxListener)
+                archiveCheckBoxes[url] = cb
             }
         }
 
-        val message = String.format(getString(R.string.added_n_dictionary_urls), dictCheckBoxes.size)
+        val message = String.format(getString(R.string.added_n_archive_urls), archiveCheckBoxes.size)
         Log.i(LOGGER_TAG, ":addCheckboxes:$message")
         topText = findViewById(R.id.get_url_textView)
         topText?.setText(message)
-        selectCheckboxes(dictionariesSelectedSet)
+        selectCheckboxes(archivesSelectedSet)
     }
 
     companion object {

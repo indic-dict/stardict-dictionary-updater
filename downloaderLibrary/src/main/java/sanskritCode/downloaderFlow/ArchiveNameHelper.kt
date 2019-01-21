@@ -3,7 +3,7 @@ package sanskritCode.downloaderFlow
 import com.google.common.io.Files
 
 
-internal object DictNameHelper {
+internal object ArchiveNameHelper {
 
     fun getNameWithoutAnyExtension(somePath: String): String {
         // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27.tar.gz
@@ -15,14 +15,14 @@ internal object DictNameHelper {
         return baseName
     }
 
-    fun getDictNameAndVersion(fileName: String): Array<String> {
+    fun getArchiveNameAndVersion(fileName: String): Array<String> {
         return getNameWithoutAnyExtension(fileName).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
     }
 
     fun getSize(fileName: String): Int {
-        val dictnameParts = getDictNameAndVersion(fileName)
-        return if (dictnameParts.size > 2) {
-            Integer.parseInt(dictnameParts[2].replace("MB".toRegex(), "")) + 1
+        val archiveNameParts = getArchiveNameAndVersion(fileName)
+        return if (archiveNameParts.size > 2) {
+            Integer.parseInt(archiveNameParts[2].replace("MB".toRegex(), "")) + 1
         } else {
             1
         }

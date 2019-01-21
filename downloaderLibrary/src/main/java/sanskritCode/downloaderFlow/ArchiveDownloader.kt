@@ -8,13 +8,11 @@ import android.widget.TextView
 
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.FileAsyncHttpResponseHandler
-import sanskritCode.downloaderFlow.DictIndexStore
-import sanskritCode.downloaderFlow.DictStatus
 
 import java.io.File
 
 /**
- * Expected flow: downloadDict(0) -> ... -> downloadDict(index) ->  downloadDict(index + 1) -> ...
+ * Expected flow: downloadArchive(0) -> ... -> downloadArchive(index) ->  downloadArchive(index + 1) -> ...
  *
  * Why are we using recursion?
  * - FileAsyncHttpResponseHandler only download one file at a time.
@@ -22,40 +20,40 @@ import java.io.File
  * DefaultHttpClient within an async task.
  * - Stack depth is expected to be quite small (in the 100-s).
  */
-internal class DictDownloader(private val getDictionariesActivity: GetDictionariesActivity, private val dictIndexStore: DictIndexStore, private val downloadsDir: File, private val progressBar: ProgressBar, private val topText: TextView) {
+internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesActivity, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File, private val progressBar: ProgressBar, private val topText: TextView) {
     private val LOGGER_TAG = javaClass.getSimpleName()
 
     // Runs in the UI thread.
-    // Log errors, record failure, get the next dictionary.
-    private fun handleDownloadDictFailure(index: Int, url: String, throwable: Throwable) {
+    // Log errors, record failure, get the next archive.
+    private fun handleDownloadFailure(index: Int, url: String, throwable: Throwable) {
         val message = "Failed to get $url"
-        Log.e(LOGGER_TAG, ":handleDownloadDictFailure:$message:", throwable)
+        Log.e(LOGGER_TAG, ":handleDownloadFailure:$message:", throwable)
         topText.text = message
-        dictIndexStore.dictionariesSelectedMap[url]!!.status = DictStatus.DOWNLOAD_FAILURE
-        downloadDict(index + 1)
+        archiveIndexStore.archivesSelectedMap[url]!!.status = ArchiveStatus.DOWNLOAD_FAILURE
+        downloadArchive(index + 1)
         progressBar.visibility = View.GONE
     }
 
-    fun downloadDict(index: Int) {
+    fun downloadArchive(index: Int) {
         // Stop condition of the recursion.
-        if (index >= dictIndexStore.dictionariesSelectedMap.size) {
-            getDictionariesActivity.whenAllDictsDownloaded()
+        if (index >= archiveIndexStore.archivesSelectedMap.size) {
+            getArchivesActivity.whenAllDownloaded()
             return
         }
-        val dictInfo = dictIndexStore.dictionariesSelectedMap.values.toTypedArray()[index]
-        val url = dictInfo.url
+        val archiveInfo = archiveIndexStore.archivesSelectedMap.values.toTypedArray()[index]
+        val url = archiveInfo.url
         // TODO: Getting messages like:  Skipping null withs status DOWNLOAD_FAILURE .
-        if (dictInfo.status != DictStatus.NOT_TRIED) {
-            Log.w(LOGGER_TAG, ":downloadDict:" + "Skipping " + url + " with status " + dictInfo.status)
-            downloadDict(index + 1)
+        if (archiveInfo.status != ArchiveStatus.NOT_TRIED) {
+            Log.w(LOGGER_TAG, ":downloadArchive:" + "Skipping " + url + " with status " + archiveInfo.status)
+            downloadArchive(index + 1)
             return
         }
-        Log.d(LOGGER_TAG, ":downloadDict:Getting $url")
-        getDictionariesActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getDictionariesActivity)
+        Log.d(LOGGER_TAG, ":downloadArchive:Getting $url")
+        getArchivesActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getArchivesActivity)
 
-        topText.setText(String.format(getDictionariesActivity.getString(R.string.gettingSomeDict), url))
-        topText.append("\n" + getDictionariesActivity.getString(R.string.dont_navigate_away))
-        Log.d(LOGGER_TAG, "downloadDict: " + topText.text.toString())
+        topText.setText(String.format(getArchivesActivity.getString(R.string.gettingSomeArchive), url))
+        topText.append("\n" + getArchivesActivity.getString(R.string.dont_navigate_away))
+        Log.d(LOGGER_TAG, "downloadArchive: " + topText.text.toString())
         try {
             val fileName = url.substring(url.lastIndexOf("/")).replace("/", "")
             if (fileName.isEmpty()) {
@@ -66,25 +64,25 @@ internal class DictDownloader(private val getDictionariesActivity: GetDictionari
             // URL could be bad, hence the below.
             asyncHttpClient.get(url, object : FileAsyncHttpResponseHandler(File(downloadsDir, fileName)) {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, file: File) {
-                    dictIndexStore.dictionariesSelectedMap[url]!!.downloadedArchiveBasename = fileName
-                    Log.i(LOGGER_TAG, ":downloadDict:Got dictionary: $fileName")
-                    dictIndexStore.dictionariesSelectedMap[url]!!.status = DictStatus.DOWNLOAD_SUCCESS
-                    downloadDict(index + 1)
+                    archiveIndexStore.archivesSelectedMap[url]!!.downloadedArchiveBasename = fileName
+                    Log.i(LOGGER_TAG, ":downloadArchive:Got archive: $fileName")
+                    archiveIndexStore.archivesSelectedMap[url]!!.status = ArchiveStatus.DOWNLOAD_SUCCESS
+                    downloadArchive(index + 1)
                     progressBar.visibility = View.GONE
                 }
 
                 override fun onProgress(bytesWritten: Long, totalSize: Long) {
                     super.onProgress(bytesWritten, totalSize)
-                    getDictionariesActivity.updateProgressBar(bytesWritten.toInt(), totalSize.toInt())
+                    getArchivesActivity.updateProgressBar(bytesWritten.toInt(), totalSize.toInt())
                 }
 
                 override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, throwable: Throwable, file: File) {
                     Log.e(LOGGER_TAG, ":onFailure:status $statusCode")
-                    handleDownloadDictFailure(index, url, throwable)
+                    handleDownloadFailure(index, url, throwable)
                 }
             })
         } catch (throwable: Throwable) {
-            handleDownloadDictFailure(index, url, throwable)
+            handleDownloadFailure(index, url, throwable)
         }
 
     }

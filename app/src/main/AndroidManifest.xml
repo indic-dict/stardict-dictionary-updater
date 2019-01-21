@@ -31,8 +31,8 @@
                 android:value="sanskritCode.downloaderFlow.MainActivity" />
         </activity>
         <activity
-            android:name="sanskritCode.downloaderFlow.GetDictionariesActivity"
-            android:label="@string/title_activity_get_dictionaries"
+            android:name="sanskritCode.downloaderFlow.GetArchivesActivity"
+            android:label="@string/title_activity_get_archives"
             android:configChanges="orientation"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data
@@ -40,8 +40,8 @@
                 android:value="sanskritCode.downloaderFlow.MainActivity" />
         </activity>
         <activity
-            android:name="sanskritCode.downloaderFlow.ExtractDictionariesActivity"
-            android:label="@string/title_activity_extract_dictionaries"
+            android:name="sanskritCode.downloaderFlow.ExtractArchivesActivity"
+            android:label="@string/title_activity_extract_archives"
             android:configChanges="orientation"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data

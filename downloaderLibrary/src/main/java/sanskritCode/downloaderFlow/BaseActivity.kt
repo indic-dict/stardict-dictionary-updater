@@ -4,12 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,7 +20,7 @@ import java.io.File
 import java.io.IOException
 
 abstract class BaseActivity : Activity() {
-    protected var dictIndexStore: DictIndexStore? = null
+    protected var archiveIndexStore: ArchiveIndexStore? = null
 
     protected val version: String
         get() {
@@ -52,13 +49,13 @@ abstract class BaseActivity : Activity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable("dictIndexStore", dictIndexStore)
+        outState.putSerializable("archiveIndexStore", archiveIndexStore)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null && savedInstanceState.containsKey("dictIndexStore")) {
-            dictIndexStore = savedInstanceState.get("dictIndexStore") as DictIndexStore
+        if (savedInstanceState != null && savedInstanceState.containsKey("archiveIndexStore")) {
+            archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
         }
     }
 
@@ -100,12 +97,12 @@ abstract class BaseActivity : Activity() {
         val emailIntent = Intent(Intent.ACTION_SEND)
         // Set type to "email"
         emailIntent.type = "vnd.android.cursor.dir/email"
-        val to = arrayOf("vishvas.vasuki+STARDICTAPP@gmail.com")
+        val to = arrayOf(getString(R.string.issueEmailId))
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
         // the attachment
         emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outputFile))
         // the mail subject
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Stardict Updater App Failure report.")
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Downloader App Failure report.")
         this.startActivity(Intent.createChooser(emailIntent, "Email failure report to maker?..."))
     }
 

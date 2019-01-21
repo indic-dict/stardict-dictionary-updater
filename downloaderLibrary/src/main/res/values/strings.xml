@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name">Stardict Dictionary Updater</string>
-    <string name="main_top_info">ॐ तत् सत्। Shall we update your Stardict dictionary files? (Details: <a href="http://bit.ly/dict-update-app">dict-update-app</a> ) \n
-        This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
-        (This is only a dictionary updater software. You NEED some Stardict-compatible dictionary utility (Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], ColorDict, GoldenDict, GoldenDict paid …) separately.) \n
-        Please scroll + select the dictionary lists you want to use, then click the button.\n
-    </string>
+    <string name="destination_sdcard_directory">extracted_archives</string>
+    <string name="downloadsDir">/Download/downloaded_archives</string>
+    <string name="app_name">Some downloader</string>
+    <string name="select_indices">Select some archive indices.</string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="proceed_button">Proceed?</string>
-    <string name="added_dictionary_url">"Added dictionary: "</string>
-    <string name="added_n_dictionary_urls" tools:ignore="PluralsCandidate">"Added %d dictionary-urls. Pick the dictionaries to install."</string>
-    <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
+    <string name="added_n_archive_urls" tools:ignore="PluralsCandidate">"Added %d archive-urls. Pick the archives to install."</string>
+    <string name="finalMessage">All downloading done!</string>
     <string name="buttonWorking">Working</string>
     <string name="txtTryAgain">\n Do you want to try again?</string>
-    <string name="title_activity_get_url">Dict updater: Select Dictionaries!</string>
-    <string name="pick_dictionaries">Which dictionaries shall we install?</string>
-    <string name="title_activity_get_dictionaries">Dict updater: Downloading!</string>
-    <string name="title_activity_extract_dictionaries">Dict updater: Extracting!</string>
-    <string name="title_final_activity">Dict updater: Done!</string>
-    <string name="installing_dictionaries">Installing dictionaries. \n </string>
-    <string name="extracting_dictionaries">Extracting dictionaries. \n </string>
+    <string name="title_activity_get_url">Select Archives!</string>
+    <string name="pick_archives">Which archives shall we install?</string>
+    <string name="title_activity_get_archives">Downloading!</string>
+    <string name="title_activity_extract_archives">Extracting!</string>
+    <string name="title_final_activity">Done!</string>
+    <string name="installing_archives">Installing archives. \n </string>
+    <string name="extracting_archives">Extracting archives. \n </string>
     <string name="added_index_url">Added Index: </string>
     <string name="buttonValQuit">Quit?</string>
-    <string name="dict_version_store">sanskritCode.downloaderFlow.dict_version_store</string>
-    <string name="defaultDictVersion">0000</string>
+    <string name="archive_version_store">sanskritCode.downloaderFlow.archive_version_store</string>
+    <string name="defaultArchiveVersion">0000</string>
     <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
     <string name="connected_nowifi">Alert: Connected, but not on Wifi.</string>
     <string name="noConnection">No data connection. Please retry later.</string>
-    <string name="no_dicts_selected">No dictionaries selected!</string>
-    <string name="gettingSomeDict">Getting %s</string>
+    <string name="no_archives_selected">No archives selected!</string>
+    <string name="gettingSomeArchive">Getting %s</string>
     <string name="fromSomeIndex">From %s</string>
-    <string name="get_dicts_button" tools:ignore="PluralsCandidate">Get %d dicts (~ %d MB+)?</string>
+    <string name="get_archives_button" tools:ignore="PluralsCandidate">Get %d files (~ %d MB+)?</string>
     <string name="index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="autoSelectedArchivesMessage"><![CDATA[Based on what we remember installing (%1d archives) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d archives which don\\\\\'t seem to be new or updated. You can reselect.]]></string>
+    <string name="index_indexorum">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
+    <string name="issueEmailId">vishvas.vasuki+ARCHIVE_DOWNLOADER@gmail.com</string>
 
 </resources>

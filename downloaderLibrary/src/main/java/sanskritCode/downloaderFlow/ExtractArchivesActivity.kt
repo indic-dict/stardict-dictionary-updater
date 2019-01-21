@@ -16,46 +16,46 @@ import com.google.common.io.Files
 
 import java.io.File
 
-class ExtractDictionariesActivity : BaseActivity() {
-    private var dictVersionEditor: SharedPreferences.Editor? = null
+class ExtractArchivesActivity : BaseActivity() {
+    private var archiveVersionEditor: SharedPreferences.Editor? = null
     internal val LOGGER_TAG = javaClass.getSimpleName()
 
     private var topText: TextView? = null
     private var progressBar: ProgressBar? = null
 
     private var downloadsDir: File? = null
-    private var dictDir: File? = null
+    private var destDir: File? = null
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        val sharedDictVersionStore = getSharedPreferences(
-                getString(R.string.dict_version_store), Context.MODE_PRIVATE)
-        if (dictIndexStore == null) {
-            dictIndexStore = intent.getSerializableExtra("dictIndexStore") as DictIndexStore
+        val sharedArchiveVersionStore = getSharedPreferences(
+                getString(R.string.archive_version_store), Context.MODE_PRIVATE)
+        if (archiveIndexStore == null) {
+            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
-        // Suppressed intellij warning about missing commit. storeDictVersion() has it.
-        dictVersionEditor = sharedDictVersionStore.edit()
-        setContentView(R.layout.activity_extract_dictionaries)
-        topText = findViewById(R.id.extract_dict_textView)
-        progressBar = findViewById(R.id.extract_dict_progressBar)
+        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
+        archiveVersionEditor = sharedArchiveVersionStore.edit()
+        setContentView(R.layout.activity_extract_archives)
+        topText = findViewById(R.id.extract_archive_textView)
+        progressBar = findViewById(R.id.extract_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
         val sdcard = Environment.getExternalStorageDirectory()
-        downloadsDir = File(sdcard.absolutePath + "/Download/dicttars")
+        downloadsDir = File(sdcard.absolutePath, getString(R.string.downloadsDir))
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
             }
         }
-        dictDir = File(sdcard.absolutePath + "/dictdata")
-        if (!dictDir!!.exists()) {
-            if (!dictDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $dictDir")
+        destDir = File(sdcard.absolutePath, getString(R.string.destination_sdcard_directory))
+        if (!destDir!!.exists()) {
+            if (!destDir!!.mkdirs()) {
+                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
             }
         }
 
-        DictExtractor(this, dictDir!!, dictIndexStore!!, downloadsDir!!)
+        ArchiveExtractor(this, destDir!!, archiveIndexStore!!, downloadsDir!!)
                 .execute()
     }
 
@@ -71,17 +71,17 @@ class ExtractDictionariesActivity : BaseActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    internal fun storeDictVersion(fileName: String) {
-        val filenameParts = DictNameHelper.getDictNameAndVersion(fileName)
-        val dictName = filenameParts[0]
+    internal fun storeArchiveVersion(fileName: String) {
+        val filenameParts = ArchiveNameHelper.getArchiveNameAndVersion(fileName)
+        val archiveName = filenameParts[0]
         if (filenameParts.size > 1) {
-            val dictVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
-            dictVersionEditor!!.putString(dictName, dictVersion)
-            dictVersionEditor!!.commit()
+            val archiveVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
+            archiveVersionEditor!!.putString(archiveName, archiveVersion)
+            archiveVersionEditor!!.commit()
         } else {
-            Log.w(LOGGER_TAG, ":storeDictVersion:Storing default dictionary version for $fileName")
-            dictVersionEditor!!.putString(dictName, getString(R.string.defaultDictVersion))
-            dictVersionEditor!!.commit()
+            Log.w(LOGGER_TAG, ":storeArchiveVersion:Storing default archive version for $fileName")
+            archiveVersionEditor!!.putString(archiveName, getString(R.string.defaultArchiveVersion))
+            archiveVersionEditor!!.commit()
         }
     }
 
@@ -90,7 +90,7 @@ class ExtractDictionariesActivity : BaseActivity() {
         super.onBackPressed()
         Log.i(LOGGER_TAG, "Back pressed.")
         val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
@@ -102,14 +102,14 @@ class ExtractDictionariesActivity : BaseActivity() {
         topText!!.text = message1
         topText!!.append("\n" + getString(R.string.dont_navigate_away))
         topText!!.append("\nCurrent file: $contentFileExtracted")
-        this.showNetworkInfo(findViewById<View>(R.id.extract_dict_textView2) as TextView)
+        this.showNetworkInfo(findViewById<View>(R.id.extract_archive_textView2) as TextView)
     }
 
 
     /* Should only be called from the UI thread! */
-    internal fun whenAllDictsExtracted() {
+    internal fun whenAllExtracted() {
         val intent = Intent(this, FinalActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         startActivity(intent)
     }
 }

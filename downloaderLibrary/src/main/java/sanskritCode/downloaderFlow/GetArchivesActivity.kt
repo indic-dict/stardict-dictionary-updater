@@ -17,9 +17,9 @@ import android.widget.TextView
 import java.io.File
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
-class GetDictionariesActivity : BaseActivity() {
+class GetArchivesActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
-    private var dictVersionEditor: SharedPreferences.Editor? = null
+    private var archiveVersionEditor: SharedPreferences.Editor? = null
 
     private var topText: TextView? = null
     private var button: Button? = null
@@ -27,70 +27,70 @@ class GetDictionariesActivity : BaseActivity() {
     private var progressBar: ProgressBar? = null
 
     private var downloadsDir: File? = null
-    private var dictDir: File? = null
+    private var destDir: File? = null
 
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        val sharedDictVersionStore = getSharedPreferences(
-                getString(R.string.dict_version_store), Context.MODE_PRIVATE)
-        if (dictIndexStore == null) {
-            dictIndexStore = intent.getSerializableExtra("dictIndexStore") as DictIndexStore
+        val sharedArchiveVersionStore = getSharedPreferences(
+                getString(R.string.archive_version_store), Context.MODE_PRIVATE)
+        if (archiveIndexStore == null) {
+            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
-        // Suppressed intellij warning about missing commit. storeDictVersion() has it.
-        dictVersionEditor = sharedDictVersionStore.edit()
-        setContentView(R.layout.activity_get_dictionaries)
-        topText = findViewById(R.id.get_dict_textView)
+        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
+        archiveVersionEditor = sharedArchiveVersionStore.edit()
+        setContentView(R.layout.activity_get_archives)
+        topText = findViewById(R.id.get_archive_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText!!.movementMethod = LinkMovementMethod.getInstance()
-        button = findViewById(R.id.get_dict_button)
+        button = findViewById(R.id.get_archive_button)
         button!!.text = getString(R.string.buttonWorking)
         button!!.isEnabled = false
-        button_2 = findViewById(R.id.get_dict_button_2)
+        button_2 = findViewById(R.id.get_archive_button_2)
         button_2!!.visibility = View.INVISIBLE
         button_2!!.isEnabled = false
-        progressBar = findViewById(R.id.get_dict_progressBar)
+        progressBar = findViewById(R.id.get_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
         val sdcard = Environment.getExternalStorageDirectory()
-        downloadsDir = File(sdcard.absolutePath + "/Download/dicttars")
+        downloadsDir = File(sdcard.absolutePath, getString(R.string.downloadsDir))
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
             }
         }
-        dictDir = File(sdcard.absolutePath + "/dictdata")
-        if (!dictDir!!.exists()) {
-            if (!dictDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $dictDir")
+        destDir = File(sdcard.absolutePath, getString(R.string.destination_sdcard_directory))
+        if (!destDir!!.exists()) {
+            if (!destDir!!.mkdirs()) {
+                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
             }
         }
 
-        if (dictIndexStore!!.dictionariesSelectedMap.size == 0) {
-            topText!!.setText(R.string.no_dicts_selected)
+        if (archiveIndexStore!!.archivesSelectedMap.size == 0) {
+            topText!!.setText(R.string.no_archives_selected)
             topText!!.append(getString(R.string.txtTryAgain))
             button!!.setText(R.string.proceed_button)
             button!!.isEnabled = true
         }
 
-        val dictDownloader = DictDownloader(this,
-                dictIndexStore!!,
+        val archiveDownloader = ArchiveDownloader(this,
+                archiveIndexStore!!,
                 downloadsDir!!, progressBar!!, topText!!)
-        dictDownloader.downloadDict(0)
+        archiveDownloader.downloadArchive(0)
     }
 
     // Called when another activity comes inbetween and is dismissed.
     override fun onResume() {
         super.onResume()
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
-        this.showNetworkInfo(findViewById<View>(R.id.get_dict_textView2) as TextView)
+        this.showNetworkInfo(findViewById<View>(R.id.get_archive_textView2) as TextView)
     }
 
-    internal fun whenAllDictsDownloaded() {
-        val intent = Intent(this, ExtractDictionariesActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+    internal fun whenAllDownloaded() {
+        val intent = Intent(this, ExtractArchivesActivity::class.java)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         startActivity(intent)
     }
 

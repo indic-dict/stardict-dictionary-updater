@@ -18,7 +18,7 @@ import java.util.ArrayList
 /**
  * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
  * GetUrlActivity::DictUrlGetter -> (user chooses dictionaries)
- * GetDictionariesActivity -> (getDictionaries <-> downloadDict) -> (extractDict <-> DictExtracter)
+ * GetArchivesActivity -> (getDictionaries <-> downloadArchive) -> (extractDict <-> DictExtracter)
  *
  *
  * IntraActivity lifecycle looks like this: http://stackoverflow.com/questions/6509791/onrestart-vs-onresume-android-lifecycle-question
@@ -31,11 +31,11 @@ class MainActivity : BaseActivity() {
     private val checkboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         if (isChecked) {
 
-            dictIndexStore!!.indexesSelected[buttonView.text.toString()] = buttonView.hint.toString()
+            archiveIndexStore!!.indexesSelected[buttonView.text.toString()] = buttonView.hint.toString()
         } else {
-            dictIndexStore!!.indexesSelected.remove(buttonView.text.toString())
+            archiveIndexStore!!.indexesSelected.remove(buttonView.text.toString())
         }
-        button!!.isEnabled = !dictIndexStore!!.indexesSelected.isEmpty()
+        button!!.isEnabled = !archiveIndexStore!!.indexesSelected.isEmpty()
     }
 
     // Add checkboxes from indexUrls
@@ -66,11 +66,11 @@ class MainActivity : BaseActivity() {
     // Called everytime at activity load time, even when back button is pressed - as startActivity(intent) is called.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (dictIndexStore == null) {
-            dictIndexStore = DictIndexStore()
+        if (archiveIndexStore == null) {
+            archiveIndexStore = ArchiveIndexStore(getString(R.string.index_indexorum))
         }
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        largeLog(LOGGER_TAG, "onCreate: " + dictIndexStore!!.toString())
+        largeLog(LOGGER_TAG, "onCreate: " + archiveIndexStore!!.toString())
         setContentView(R.layout.activity_main)
 
         val topText = findViewById<TextView>(R.id.main_textView)
@@ -84,7 +84,7 @@ class MainActivity : BaseActivity() {
         getPermission(Manifest.permission.INTERNET, this)
         getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
-        dictIndexStore!!.getIndicesAddCheckboxes(this)
+        archiveIndexStore!!.getIndicesAddCheckboxes(this)
     }
 
     // Called when another activity comes inbetween and is dismissed.
@@ -94,16 +94,16 @@ class MainActivity : BaseActivity() {
         this.showNetworkInfo(findViewById<View>(R.id.main_textView2) as TextView)
         button!!.setText(R.string.proceed_button)
         button!!.isClickable = true
-        //        Log.d(ACTIVITY_NAME, "onResume Indices selected " + dictIndexStore.indexesSelected.toString());
+        //        Log.d(ACTIVITY_NAME, "onResume Indices selected " + archiveIndexStore.indexesSelected.toString());
     }
 
     // Event handler for: When the proceed button is pressed.
     @Suppress("UNUSED_PARAMETER")
     fun buttonPressed1(v: View) {
         val LOGGER_TAG = "MainActivity:buttonPressed1".substring(0, 26)
-        Log.d(LOGGER_TAG, "buttonPressed1: " + "Indices selected " + dictIndexStore!!.indexesSelected.toString())
+        Log.d(LOGGER_TAG, "buttonPressed1: " + "Indices selected " + archiveIndexStore!!.indexesSelected.toString())
         val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }

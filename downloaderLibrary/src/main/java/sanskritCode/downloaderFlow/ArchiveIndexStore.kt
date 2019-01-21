@@ -6,22 +6,18 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.TextHttpResponseHandler
-import sanskritCode.downloaderFlow.DictNameHelper
-import sanskritCode.downloaderFlow.GetUrlActivity
-import sanskritCode.downloaderFlow.MainActivity
-import sanskritCode.downloaderFlow.R
 
 import java.io.Serializable
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.LinkedHashMap
 
-enum class DictStatus {
+enum class ArchiveStatus {
     NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE
 }
 
-class DictInfo(var url: String) : Serializable {
-    var status = DictStatus.NOT_TRIED
+class ArchiveInfo(var url: String) : Serializable {
+    var status = ArchiveStatus.NOT_TRIED
     var downloadedArchiveBasename: String? = null
 
     override fun toString(): String {
@@ -31,30 +27,29 @@ class DictInfo(var url: String) : Serializable {
     }
 }
 
-class DictIndexStore : Serializable {
+class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
     private val LOGGER_TAG = javaClass.getSimpleName()
-    private val index_indexorum = "https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md"
-    // DictIndexStore must be serializable, hence we use specific class names below.
+    // ArchiveIndexStore must be serializable, hence we use specific class names below.
     private val indexUrls = LinkedHashMap<String, String>()
     val indexesSelected: BiMap<String, String> = HashBiMap.create(100)
-    var indexedDicts: MutableMap<String, List<String>> = LinkedHashMap()
-    var dictionariesSelectedMap: MutableMap<String, DictInfo> = HashMap()
-    var autoUnselectedDicts = 0
+    var indexedArchives: MutableMap<String, List<String>> = LinkedHashMap()
+    var archivesSelectedMap: MutableMap<String, ArchiveInfo> = HashMap()
+    var autoUnselectedArchives = 0
 
     override fun toString(): String {
-        return ("\nindex_indexorum: " + index_indexorum
+        return ("\nindexIndexorum: " + indexIndexorum
                 + "\nindexUrls: " + indexUrls
                 + "\nindexesSelected: " + indexesSelected
-                + "\nindexedDicts: " + indexedDicts
-                + "\nautoUnselectedDicts: " + autoUnselectedDicts
-                + "\ndictionariesSelectedMap: " + dictionariesSelectedMap)
+                + "\nindexedArchives: " + indexedArchives
+                + "\nautoUnselectedArchives: " + autoUnselectedArchives
+                + "\narchivesSelectedMap: " + archivesSelectedMap)
     }
 
 
-    fun estimateDictionariesSelectedMBs(): Int {
+    fun estimateArchivesSelectedMBs(): Int {
         var size = 0
-        for (dictUrl in dictionariesSelectedMap.keys) {
-            size += DictNameHelper.getSize(dictUrl)
+        for (url in archivesSelectedMap.keys) {
+            size += ArchiveNameHelper.getSize(url)
         }
         return size
     }
@@ -63,7 +58,7 @@ class DictIndexStore : Serializable {
         if (indexUrls.isEmpty()) {
             val asyncHttpClient = AsyncHttpClient()
             asyncHttpClient.setEnableRedirects(true, true, true)
-            asyncHttpClient.get(index_indexorum, object : TextHttpResponseHandler() {
+            asyncHttpClient.get(indexIndexorum, object : TextHttpResponseHandler() {
                 override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String, throwable: Throwable) {
                     Log.e(LOGGER_TAG, ":getIndicesAddCheckboxes:" + "getIndices", throwable)
                 }
@@ -85,22 +80,22 @@ class DictIndexStore : Serializable {
         }
     }
 
-    // Populates indexedDicts
-    fun getIndexedDictsSetCheckboxes(getUrlActivity: GetUrlActivity) {
-        if (indexedDicts.isEmpty()) {
+    // Populates indexedArchives
+    fun getIndexedArchivesSetCheckboxes(getUrlActivity: GetUrlActivity) {
+        if (indexedArchives.isEmpty()) {
             val asyncHttpClient = AsyncHttpClient()
-            indexedDicts = LinkedHashMap()
-            Log.i(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" + "Will get dictionaries from " + indexesSelected.size)
+            indexedArchives = LinkedHashMap()
+            Log.i(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Will get archives from " + indexesSelected.size)
             asyncHttpClient.setEnableRedirects(true, true, true)
             for (name in indexesSelected.keys) {
                 val url = indexesSelected[name]
-                val dictIndexStore = this
+                val archiveIndexStore = this
 
                 try {
                     asyncHttpClient.get(url, object : TextHttpResponseHandler() {
                         override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String, throwable: Throwable) {
-                            Log.e(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" + "Failed ", throwable)
-                            BaseActivity.largeLog(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" + dictIndexStore.toString())
+                            Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Failed ", throwable)
+                            BaseActivity.largeLog(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + archiveIndexStore.toString())
                             val message = String.format(getUrlActivity.getString(R.string.index_download_failed), url)
                             getUrlActivity.topText?.setText(message)
                             // The below would result in
@@ -109,29 +104,29 @@ class DictIndexStore : Serializable {
                             // getUrlActivity.sendLoagcatMail();
 
                             // Just proceed with the next dict.
-                            indexedDicts[name] = listOf<String>(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed")
-                            if (indexesSelected.size == indexedDicts.size) {
-                                getUrlActivity.addCheckboxes(indexedDicts, null)
+                            indexedArchives[name] = listOf<String>(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed")
+                            if (indexesSelected.size == indexedArchives.size) {
+                                getUrlActivity.addCheckboxes(indexedArchives, null)
                             }
                         }
 
                         override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
                             val urls = ArrayList<String>()
                             for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
-                                val dictUrl = line.replace("<", "").replace(">", "")
-                                urls.add(dictUrl)
-                                Log.d(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:" + getUrlActivity.applicationContext.getString(R.string.added_dictionary_url) + dictUrl)
+                                val url1 = line.replace("<", "").replace(">", "")
+                                urls.add(url1)
+                                Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes: Added archive: " + url1)
                             }
-                            Log.d(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:Index handled: $url")
-                            indexedDicts[indexesSelected.inverse()[url]!!] = urls
+                            Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:Index handled: $url")
+                            indexedArchives[indexesSelected.inverse()[url]!!] = urls
 
-                            if (indexesSelected.size == indexedDicts.size) {
-                                getUrlActivity.addCheckboxes(indexedDicts, null)
+                            if (indexesSelected.size == indexedArchives.size) {
+                                getUrlActivity.addCheckboxes(indexedArchives, null)
                             }
                         }
                     })
                 } catch (throwable: Throwable) {
-                    Log.e(LOGGER_TAG, ":getIndexedDictsSetCheckboxes:error with $url", throwable)
+                    Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:error with $url", throwable)
                     val message = String.format(getUrlActivity.getString(R.string.index_download_failed), url)
                     getUrlActivity.topText?.setText(message)
                     getUrlActivity.sendLoagcatMail()
@@ -139,7 +134,7 @@ class DictIndexStore : Serializable {
 
             }
         } else {
-            getUrlActivity.addCheckboxes(indexedDicts, dictionariesSelectedMap.keys)
+            getUrlActivity.addCheckboxes(indexedArchives, archivesSelectedMap.keys)
         }
     }
 }

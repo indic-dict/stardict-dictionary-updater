@@ -72,7 +72,7 @@ ADDED from AndroidManifest.xml:28:13
 		ADDED from AndroidManifest.xml:30:17
 	android:name
 		ADDED from AndroidManifest.xml:29:17
-activity#sanskritCode.downloaderFlow.GetDictionariesActivity
+activity#sanskritCode.downloaderFlow.GetArchivesActivity
 ADDED from AndroidManifest.xml:32:9
 	android:label
 		ADDED from AndroidManifest.xml:34:13

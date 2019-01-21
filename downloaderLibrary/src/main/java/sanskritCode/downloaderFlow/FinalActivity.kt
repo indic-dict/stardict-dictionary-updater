@@ -14,20 +14,20 @@ class FinalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        if (dictIndexStore == null) {
-            dictIndexStore = intent.getSerializableExtra("dictIndexStore") as DictIndexStore
+        if (archiveIndexStore == null) {
+            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
         setContentView(R.layout.activity_final)
         val topText = findViewById<TextView>(R.id.final_act_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = getString(R.string.finalMessage)
-        largeLog(LOGGER_TAG, ":onCreate:" + dictIndexStore!!.toString())
+        largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
         val failures = StringBuilder("")
-        for (dictInfo in dictIndexStore!!.dictionariesSelectedMap.values) {
+        for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
-            if (dictInfo.status != DictStatus.EXTRACTION_SUCCESS) {
-                failures.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url))
+            if (archiveInfo.status != ArchiveStatus.EXTRACTION_SUCCESS) {
+                failures.append("\n").append(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
             }
         }
         if (failures.length > 0) {
@@ -35,10 +35,10 @@ class FinalActivity : BaseActivity() {
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
         val successes = StringBuilder("")
-        for (dictInfo in dictIndexStore!!.dictionariesSelectedMap.values) {
+        for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
-            if (dictInfo.status == DictStatus.EXTRACTION_SUCCESS) {
-                successes.append("\n").append(DictNameHelper.getNameWithoutAnyExtension(dictInfo.url))
+            if (archiveInfo.status == ArchiveStatus.EXTRACTION_SUCCESS) {
+                successes.append("\n").append(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
             }
         }
         if (successes.length > 0) {
@@ -76,7 +76,7 @@ class FinalActivity : BaseActivity() {
         super.onBackPressed()
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
