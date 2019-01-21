@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,12 +7,14 @@ import android.util.Log
 
 import com.google.common.io.Files
 
-import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveException
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
+import sanskritCode.downloaderFlow.DictIndexStore
+import sanskritCode.downloaderFlow.DictInfo
+import sanskritCode.downloaderFlow.DictStatus
 
 import java.io.BufferedInputStream
 import java.io.File

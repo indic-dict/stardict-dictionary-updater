@@ -26,7 +26,7 @@
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/build/tmp/kotlin-classes/debug" />
-          <option name="classpath" value="$USER_HOME$/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/5ae8d62c3bb2200b4a5bccfd08e216d4/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/27.0.1-android/b7e1c37f66ef193796ccd7ea6e80c2b05426182d/guava-27.0.1-android.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.9/386a4339ffe52d5d63e80f9bed8d2b1d1a418249/android-async-http-1.4.9.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.14/7b18320d668ab080758bf5383d6d8fcf750babce/commons-compress-1.14.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.3.11/4839661cf6ce3c14b65ed7dcf5b9249b44ecca16/kotlin-stdlib-jdk7-1.3.11.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-fragment-28.0.0.aar/7d999020c896e8637ddb838c1ec83057/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-28.0.0.aar/4cb5d99fea8e6a1c4b541f1e69946480/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-core-ui-28.0.0.aar/46e3c2ee0414bf2f61252d4e5af8040a/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/6e4f39cb78b92fc3e0f7efad631035e8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-28.0.0.aar/f0fbc4b4bbc523609a92830a5cabcf6c/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/37a3ee2f20470bab178999c6fa7c78b2/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/viewpager-28.0.0.aar/455b7031c534459fd66dd98531c47bde/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-28.0.0.aar/b868916cded91795fd22ceb81248eac8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/drawerlayout-28.0.0.aar/e6b2dd8e4af3a8eca8be33c2102631de/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-28.0.0.aar/b8fdd918a4fedd59735f6aab8e8599ea/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/fb3b8fc10bea93a95bacc769bc08a193/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/000ff951d4ff85f0deb8e0f574ee8df8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/82bb084c22ef8cc88393e1490ae8ca4f/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/8c5da0e742f385bbadb32e5ba6af6cf8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/e8a818f2095b348fa09ca9a891c941ee/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.android.support/collections/28.0.0/c1bcdade4d3cc2836130424a3f3e4182c666a745/collections-28.0.0.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/2274dfa34c36b5535dddfe8969dc4138/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/0056aaa4e24d7f80cdf45f8943d2cdff/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/documentfile-28.0.0.aar/8a4785511b93e544afe301ddb2cd3dfa/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-28.0.0.aar/ee50e34303b0b8cd2c740b58eef2a5ba/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/print-28.0.0.aar/ac7902636c85a7b1ba4ec9013ce541fc/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.1.aar/80ae346c8b434c8d5beca7f533a2ea3e/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/c96697128699ad45931629bbe4b09266/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/f69250980671a6bdfae840cb6db5a84f/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.1.1/207a6efae6a3555e326de41f76bdadd9a239cbce/common-1.1.1.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/f87c4c40030fe4e6b1c964190b9b65c4/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.1.1/e55b70d1f5620db124b3e85a7f4bdc7bd48d9f95/common-1.1.1.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/interpolator-28.0.0.aar/2cc81820d7d4a1b1eaa185ab322d8b43/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/28.0.0/ed73f5337a002d1fd24339d5fb08c2c9d9ca60d8/support-annotations-28.0.0.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-compat-qual/2.5.2/dc0b20906c9e4b9724af29d11604efa574066892/checker-compat-qual-2.5.2.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.2.0/88e3c593e9b3586e1c6177f89267da6fc6986f0c/error_prone_annotations-2.2.0.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.1/976d8d30bebc251db406f2bdb3eb01962b5685b3/j2objc-annotations-1.1.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.17/f97ce6decaea32b36101e37979f8b647f00681fb/animal-sniffer-annotations-1.17.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/cz.msebera.android/httpclient/4.3.6/526a9f794eab830eae4f23a62c572878b3f491ab/httpclient-4.3.6.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.11/4cbc5922a54376018307a731162ccaf3ef851a39/kotlin-stdlib-1.3.11.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.11/d8b8e746e279f1c4f5e08bc14a96b82e6bb1de02/kotlin-stdlib-common-1.3.11.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/opt/android-sdk/platforms/android-28/android.jar" />
+          <option name="classpath" value="$USER_HOME$/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/5ae8d62c3bb2200b4a5bccfd08e216d4/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.3.11/4839661cf6ce3c14b65ed7dcf5b9249b44ecca16/kotlin-stdlib-jdk7-1.3.11.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-fragment-28.0.0.aar/7d999020c896e8637ddb838c1ec83057/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/animated-vector-drawable-28.0.0.aar/4cb5d99fea8e6a1c4b541f1e69946480/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-core-ui-28.0.0.aar/46e3c2ee0414bf2f61252d4e5af8040a/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/6e4f39cb78b92fc3e0f7efad631035e8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-vector-drawable-28.0.0.aar/f0fbc4b4bbc523609a92830a5cabcf6c/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/37a3ee2f20470bab178999c6fa7c78b2/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/viewpager-28.0.0.aar/455b7031c534459fd66dd98531c47bde/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-28.0.0.aar/b868916cded91795fd22ceb81248eac8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/drawerlayout-28.0.0.aar/e6b2dd8e4af3a8eca8be33c2102631de/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-28.0.0.aar/b8fdd918a4fedd59735f6aab8e8599ea/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/fb3b8fc10bea93a95bacc769bc08a193/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/000ff951d4ff85f0deb8e0f574ee8df8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/82bb084c22ef8cc88393e1490ae8ca4f/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/8c5da0e742f385bbadb32e5ba6af6cf8/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/e8a818f2095b348fa09ca9a891c941ee/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.android.support/collections/28.0.0/c1bcdade4d3cc2836130424a3f3e4182c666a745/collections-28.0.0.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/2274dfa34c36b5535dddfe8969dc4138/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/0056aaa4e24d7f80cdf45f8943d2cdff/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/documentfile-28.0.0.aar/8a4785511b93e544afe301ddb2cd3dfa/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-28.0.0.aar/ee50e34303b0b8cd2c740b58eef2a5ba/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/print-28.0.0.aar/ac7902636c85a7b1ba4ec9013ce541fc/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.1.aar/80ae346c8b434c8d5beca7f533a2ea3e/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/c96697128699ad45931629bbe4b09266/jars/classes.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/f69250980671a6bdfae840cb6db5a84f/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.1.1/207a6efae6a3555e326de41f76bdadd9a239cbce/common-1.1.1.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/f87c4c40030fe4e6b1c964190b9b65c4/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.1.1/e55b70d1f5620db124b3e85a7f4bdc7bd48d9f95/common-1.1.1.jar:/home/vvasuki/.gradle/caches/transforms-1/files-1.1/interpolator-28.0.0.aar/2cc81820d7d4a1b1eaa185ab322d8b43/jars/classes.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/28.0.0/ed73f5337a002d1fd24339d5fb08c2c9d9ca60d8/support-annotations-28.0.0.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.11/4cbc5922a54376018307a731162ccaf3ef851a39/kotlin-stdlib-1.3.11.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.11/d8b8e746e279f1c4f5e08bc14a96b82e6bb1de02/kotlin-stdlib-common-1.3.11.jar:/home/vvasuki/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/opt/android-sdk/platforms/android-28/android.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="app_debug" />
@@ -118,13 +118,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/build-info" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundle_manifest" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-libraries" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check-manifest" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/checkDebugClasspath" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/check_manifest_result" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/compatible_screen_manifest" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-runtime-classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-verifier" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-apk" />
@@ -135,10 +131,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant_run_split_apk_resources" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javac" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint_jar" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifest-checker" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/merged_assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/merged_manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/metadata_feature_manifest" />
@@ -152,11 +145,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/signing_config" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/split-apk" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/split_list" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/splits-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
-      <excludeFolder url="file://$MODULE_DIR$/build/kotlin" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
@@ -164,60 +154,50 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.android.support:support-fragment:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:localbroadcastmanager:28.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:documentfile:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable:28.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:slidingpanelayout:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:viewmodel:1.1.1@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: javax.annotation:javax.annotation-api:1.2@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:loader:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:runtime:1.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata-core:1.1.1@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-core:2.2.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.11@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:collections:28.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.11@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test.espresso:espresso-idling-resource:2.2.2@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.squareup:javawriter:2.1.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:cursoradapter:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime:1.1.1@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:support-compat:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: cz.msebera.android:httpclient:4.3.6@jar" level="project" />
-    <orderEntry type="library" name="Gradle: org.checkerframework:checker-compat-qual:2.5.2@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.2.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0@jar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.14@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:support-core-utils:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:support-annotations:28.0.0@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:interpolator:28.0.0@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:exposed-instrumentation-api-publish:0.5@aar" level="project" />
-    <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata:1.1.1@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:drawerlayout:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:guava:27.0.1-android@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.loopj.android:android-async-http:1.4.9@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:documentfile:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:slidingpanelayout:28.0.0@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: javax.annotation:javax.annotation-api:1.2@jar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:appcompat-v7:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:collections:28.0.0@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:rules:0.5@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-compat:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-ui:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:asynclayoutinflater:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:print:28.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0@jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: javax.inject:javax.inject:1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:runner:0.5@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.core:common:1.1.1@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:versionedparcelable:28.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:viewpager:28.0.0@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-core-utils:28.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable:28.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-library:1.3@jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-annotations:28.0.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:common:1.1.1@jar" level="project" />
-    <orderEntry type="library" name="Gradle: org.codehaus.mojo:animal-sniffer-annotations:1.17@jar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:interpolator:28.0.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: android.arch.lifecycle:livedata:1.1.1@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: com.android.support.test:exposed-instrumentation-api-publish:0.5@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:drawerlayout:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:coordinatorlayout:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:customview:28.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:swiperefreshlayout:28.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava@jar" level="project" />
+    <orderEntry type="module" module-name="downloaderLibrary" />
   </component>
 </module>

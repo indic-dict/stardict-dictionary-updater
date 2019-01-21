@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import com.google.common.io.Files
 
@@ -20,7 +20,7 @@ internal object DictNameHelper {
     }
 
     fun getSize(fileName: String): Int {
-        val dictnameParts = DictNameHelper.getDictNameAndVersion(fileName)
+        val dictnameParts = getDictNameAndVersion(fileName)
         return if (dictnameParts.size > 2) {
             Integer.parseInt(dictnameParts[2].replace("MB".toRegex(), "")) + 1
         } else {

@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -7,24 +7,29 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 
-import com.google.common.io.Files
-
 import java.io.File
 
-class ExtractDictionariesActivity : BaseActivity() {
-    private var dictVersionEditor: SharedPreferences.Editor? = null
+// See comment in MainActivity.java for a rough overall understanding of the code.
+class GetDictionariesActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
+    private var dictVersionEditor: SharedPreferences.Editor? = null
 
     private var topText: TextView? = null
+    private var button: Button? = null
+    private var button_2: Button? = null
     private var progressBar: ProgressBar? = null
 
     private var downloadsDir: File? = null
     private var dictDir: File? = null
+
+
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +41,17 @@ class ExtractDictionariesActivity : BaseActivity() {
         }
         // Suppressed intellij warning about missing commit. storeDictVersion() has it.
         dictVersionEditor = sharedDictVersionStore.edit()
-        setContentView(R.layout.activity_extract_dictionaries)
-        topText = findViewById(R.id.extract_dict_textView)
-        progressBar = findViewById(R.id.extract_dict_progressBar)
+        setContentView(R.layout.activity_get_dictionaries)
+        topText = findViewById(R.id.get_dict_textView)
+        // For clickable links. See https://stackoverflow.com/a/20647011/444644
+        topText!!.movementMethod = LinkMovementMethod.getInstance()
+        button = findViewById(R.id.get_dict_button)
+        button!!.text = getString(R.string.buttonWorking)
+        button!!.isEnabled = false
+        button_2 = findViewById(R.id.get_dict_button_2)
+        button_2!!.visibility = View.INVISIBLE
+        button_2!!.isEnabled = false
+        progressBar = findViewById(R.id.get_dict_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
         val sdcard = Environment.getExternalStorageDirectory()
@@ -55,13 +68,30 @@ class ExtractDictionariesActivity : BaseActivity() {
             }
         }
 
-        DictExtractor(this, dictDir!!, dictIndexStore!!, downloadsDir!!)
-                .execute()
+        if (dictIndexStore!!.dictionariesSelectedMap.size == 0) {
+            topText!!.setText(R.string.no_dicts_selected)
+            topText!!.append(getString(R.string.txtTryAgain))
+            button!!.setText(R.string.proceed_button)
+            button!!.isEnabled = true
+        }
+
+        val dictDownloader = DictDownloader(this,
+                dictIndexStore!!,
+                downloadsDir!!, progressBar!!, topText!!)
+        dictDownloader.downloadDict(0)
     }
 
+    // Called when another activity comes inbetween and is dismissed.
     override fun onResume() {
         super.onResume()
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
+        this.showNetworkInfo(findViewById<View>(R.id.get_dict_textView2) as TextView)
+    }
+
+    internal fun whenAllDictsDownloaded() {
+        val intent = Intent(this, ExtractDictionariesActivity::class.java)
+        intent.putExtra("dictIndexStore", dictIndexStore)
+        startActivity(intent)
     }
 
     /* Should only be called from the UI thread! */
@@ -71,45 +101,11 @@ class ExtractDictionariesActivity : BaseActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    internal fun storeDictVersion(fileName: String) {
-        val filenameParts = DictNameHelper.getDictNameAndVersion(fileName)
-        val dictName = filenameParts[0]
-        if (filenameParts.size > 1) {
-            val dictVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
-            dictVersionEditor!!.putString(dictName, dictVersion)
-            dictVersionEditor!!.commit()
-        } else {
-            Log.w(LOGGER_TAG, ":storeDictVersion:Storing default dictionary version for $fileName")
-            dictVersionEditor!!.putString(dictName, getString(R.string.defaultDictVersion))
-            dictVersionEditor!!.commit()
+    override fun onBackPressed() {
+        // Don't navigate away in the midst of downloading dictionaries!
+        if (button_2!!.visibility == View.VISIBLE) {
+            finish()
         }
     }
 
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        Log.i(LOGGER_TAG, "Back pressed.")
-        val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
-        // intent.putStringArrayListExtra();
-        startActivity(intent)
-    }
-
-    /* Should only be called from the UI thread! */
-    internal fun setTopTextWhileExtracting(archiveName: String, contentFileExtracted: String) {
-        val message1 = "Extracting $archiveName"
-        Log.d(LOGGER_TAG, ":setTopTextWhileExtracting:$message1")
-        topText!!.text = message1
-        topText!!.append("\n" + getString(R.string.dont_navigate_away))
-        topText!!.append("\nCurrent file: $contentFileExtracted")
-        this.showNetworkInfo(findViewById<View>(R.id.extract_dict_textView2) as TextView)
-    }
-
-
-    /* Should only be called from the UI thread! */
-    internal fun whenAllDictsExtracted() {
-        val intent = Intent(this, FinalActivity::class.java)
-        intent.putExtra("dictIndexStore", dictIndexStore)
-        startActivity(intent)
-    }
 }

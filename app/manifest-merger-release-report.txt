@@ -42,7 +42,7 @@ MERGED from com.android.support:support-v4:21.0.0:16:5
 		ADDED from AndroidManifest.xml:12:9
 	android:theme
 		ADDED from AndroidManifest.xml:14:9
-activity#sanskritcode.sanskritdictionaryupdater.MainActivity
+activity#sanskritCode.downloaderFlow.MainActivity
 ADDED from AndroidManifest.xml:15:9
 	android:label
 		ADDED from AndroidManifest.xml:17:13
@@ -58,7 +58,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:21:17
 	android:name
 		ADDED from AndroidManifest.xml:21:27
-activity#sanskritcode.sanskritdictionaryupdater.GetUrlActivity
+activity#sanskritCode.downloaderFlow.GetUrlActivity
 ADDED from AndroidManifest.xml:24:9
 	android:label
 		ADDED from AndroidManifest.xml:26:13
@@ -72,7 +72,7 @@ ADDED from AndroidManifest.xml:28:13
 		ADDED from AndroidManifest.xml:30:17
 	android:name
 		ADDED from AndroidManifest.xml:29:17
-activity#sanskritcode.sanskritdictionaryupdater.GetDictionariesActivity
+activity#sanskritCode.downloaderFlow.GetDictionariesActivity
 ADDED from AndroidManifest.xml:32:9
 	android:label
 		ADDED from AndroidManifest.xml:34:13

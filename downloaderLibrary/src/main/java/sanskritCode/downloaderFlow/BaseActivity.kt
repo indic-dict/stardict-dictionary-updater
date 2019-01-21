@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.Manifest
 import android.app.Activity

@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.Manifest
 import android.util.Log
@@ -8,6 +8,8 @@ import android.widget.TextView
 
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.FileAsyncHttpResponseHandler
+import sanskritCode.downloaderFlow.DictIndexStore
+import sanskritCode.downloaderFlow.DictStatus
 
 import java.io.File
 

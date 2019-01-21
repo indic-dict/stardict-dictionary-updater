@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.util.Log
 
@@ -6,13 +6,14 @@ import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.TextHttpResponseHandler
+import sanskritCode.downloaderFlow.DictNameHelper
+import sanskritCode.downloaderFlow.GetUrlActivity
+import sanskritCode.downloaderFlow.MainActivity
+import sanskritCode.downloaderFlow.R
 
 import java.io.Serializable
 import java.util.ArrayList
-import java.util.Arrays
-import java.util.Collections
 import java.util.HashMap
-import java.util.HashSet
 import java.util.LinkedHashMap
 
 enum class DictStatus {

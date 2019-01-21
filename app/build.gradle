@@ -41,13 +41,7 @@ android {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.android.support:appcompat-v7:28.+'
-
-    // For some collection functions, file utilities.
-    implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-android'
-
-    implementation ('com.loopj.android:android-async-http:1.4.9')
-
-    implementation ('org.apache.commons:commons-compress:1.14')
+    implementation project(":downloaderLibrary")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

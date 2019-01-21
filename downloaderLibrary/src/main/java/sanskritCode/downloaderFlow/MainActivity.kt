@@ -1,13 +1,9 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
@@ -74,7 +70,7 @@ class MainActivity : BaseActivity() {
             dictIndexStore = DictIndexStore()
         }
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        BaseActivity.largeLog(LOGGER_TAG, "onCreate: " + dictIndexStore!!.toString())
+        largeLog(LOGGER_TAG, "onCreate: " + dictIndexStore!!.toString())
         setContentView(R.layout.activity_main)
 
         val topText = findViewById<TextView>(R.id.main_textView)

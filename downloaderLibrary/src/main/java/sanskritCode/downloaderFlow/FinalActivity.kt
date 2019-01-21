@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-
-import com.google.common.base.Function
-import com.google.common.collect.Lists
-import com.google.common.io.Files
 
 class FinalActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
@@ -26,7 +22,7 @@ class FinalActivity : BaseActivity() {
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = getString(R.string.finalMessage)
-        BaseActivity.largeLog(LOGGER_TAG, ":onCreate:" + dictIndexStore!!.toString())
+        largeLog(LOGGER_TAG, ":onCreate:" + dictIndexStore!!.toString())
         val failures = StringBuilder("")
         for (dictInfo in dictIndexStore!!.dictionariesSelectedMap.values) {
 

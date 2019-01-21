@@ -1,4 +1,4 @@
-package sanskritcode.sanskritdictionaryupdater
+package sanskritCode.downloaderFlow
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,13 +9,8 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.CompoundButton
-import android.widget.LinearLayout
-import android.widget.TextView
-
-import java.util.HashMap
+import android.widget.*
+import java.util.*
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 class GetUrlActivity : BaseActivity() {

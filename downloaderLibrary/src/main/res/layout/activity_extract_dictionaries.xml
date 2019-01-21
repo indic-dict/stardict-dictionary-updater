@@ -14,48 +14,35 @@
                   android:paddingLeft="@dimen/activity_horizontal_margin"
                   android:paddingRight="@dimen/activity_horizontal_margin"
                   android:paddingTop="@dimen/activity_vertical_margin"
-                  tools:context="sanskritcode.sanskritdictionaryupdater.FinalActivity">
+                  tools:context="sanskritCode.downloaderFlow.ExtractDictionariesActivity">
 
         <TextView
-            android:id="@+id/final_act_textView"
+            android:id="@+id/extract_dict_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:longClickable="false"
             android:scrollbars="vertical"
             android:text="@string/extracting_dictionaries"/>
 
-
-        <TextView
-            android:id="@+id/final_act_textView2"
+        <ProgressBar
+            android:id="@+id/extract_dict_progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:visibility="invisible"/>
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            style="?android:attr/buttonBarStyle"
             >
 
-            <Button
-                android:id="@+id/final_act_button"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/extract_dict_textView2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:onClick="buttonPressed1"
-                android:text="@string/buttonValQuit"
-                android:visibility="visible" />
+                android:text=""
+                android:visibility="invisible"/>
 
-            <Button
-                android:id="@+id/final_act_button_2"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/PROBLEM_SEND_LOG"
-                android:visibility="visible" />
         </LinearLayout>
 
 

@@ -23,7 +23,7 @@
     <string name="extracting_dictionaries">Extracting dictionaries. \n </string>
     <string name="added_index_url">Added Index: </string>
     <string name="buttonValQuit">Quit?</string>
-    <string name="dict_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
+    <string name="dict_version_store">sanskritCode.downloaderFlow.dict_version_store</string>
     <string name="defaultDictVersion">0000</string>
     <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
     <string name="connected_nowifi">Alert: Connected, but not on Wifi.</string>
@@ -33,5 +33,6 @@
     <string name="fromSomeIndex">From %s</string>
     <string name="get_dicts_button" tools:ignore="PluralsCandidate">Get %d dicts (~ %d MB+)?</string>
     <string name="index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 </resources>
