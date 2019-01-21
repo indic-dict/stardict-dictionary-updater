@@ -122,7 +122,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                 }
                 filesRead = filesRead + 1
                 val destFileName = String.format("%s.%s", Files.getNameWithoutExtension(currentEntry.name), Files.getFileExtension(currentEntry.name))
-                val destFileDirFile = File(initialDestDir, File(currentEntry.name).parent)
+                val destFileDirFile = File(initialDestDir, File(currentEntry.name).parent?:"")
                 val destFile = File(destFileDirFile, destFileName).absolutePath
                 if (!destFileDirFile.exists()) {
                     Log.i(LOGGER_TAG, ":extractFile:" + "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs())
