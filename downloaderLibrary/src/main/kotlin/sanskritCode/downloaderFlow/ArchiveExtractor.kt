@@ -118,10 +118,10 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             archiveInputStream = inputStreamFromArchive(sourceFile)
 
             val buffer = ByteArray(50000)
-            var baseNameAccordingToArchiveEntries: String? = null
+            val baseNameAccordingToArchiveEntries: String? = null
             var filesRead = 0
             while (true) {
-                var currentEntry = archiveInputStream.nextEntry
+                val currentEntry = archiveInputStream.nextEntry
                 if (currentEntry == null) {
                     break
                 }

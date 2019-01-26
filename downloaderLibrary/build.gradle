@@ -1,3 +1,41 @@
+// Dependencies in this section were added as suggested in https://medium.com/@yegor_zatsepin/simple-way-to-publish-your-android-library-to-jcenter-d1e145bacf13 .
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+ext {
+    bintrayRepo = 'sanskrit-coders-android-repo'
+    bintrayName = 'downloaderFlow'
+
+    publishedGroupId = 'sanskritCoders'
+    libraryName = 'DownloaderFlow'
+    artifact = 'downloaderFlow'
+
+    libraryDescription = 'A sequence of activities to facilitate download and extraction of archives indexed on the internet to the mobile phone.'
+
+    siteUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater'
+    gitUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'vvasuki'
+    developerName = 'Sanskrit programmers'
+    developerEmail = 'sanskrit-programmers@googlegroups.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+// end section
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
@@ -43,7 +81,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 }
 repositories {
     mavenCentral()
 }
+
+apply from: 'mavenUploader.gradle'

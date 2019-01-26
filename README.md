@@ -1,11 +1,15 @@
-# For end users
-* Play store link: <https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater>
-* Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
-* [Ratings Certificate](https://iarcweb.azurewebsites.net/Dashboard/Certificate/74e40614-671c-421e-9969-1c80da21a267)
-* Signed apk is also [released](https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/app/release/app-release.apk) in this repository.
+## For app users
+- Play store link: <https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater>
+- Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
+- [Ratings Certificate](https://iarcweb.azurewebsites.net/Dashboard/Certificate/74e40614-671c-421e-9969-1c80da21a267)
+- Signed apk is also [released](https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/app/release/app-release.apk) in this repository.
 
-# For code contributors
-- See comment in MainActivity.java for a rough understanding of the code.
+## For library users
+- We publish to a [downloaderFlow bintray package](https://bintray.com/vvasuki/sanskrit-coders-android-repo/downloaderFlow).
+- Relevant gradle tasks: `bintrayUpload`.
+
+## For code contributors
+- See comment in MainActivity.kt for a rough understanding of the code.
 - Review notifications setup: https://support.google.com/googleplay/android-developer/answer/138230?hl=en
 - Debugging
   - Parsing adb logcat:
@@ -15,7 +19,11 @@
   - `gradle app:dependencies > dep_tree_android.txt`
   - `gradle -q dependencies app:dependencies --configuration compile > dep_tree.txt`
 
-## Current problems
+### Publishing to maven
+- Publication location described above.
+- Android library publication tips [here](https://medium.com/@yegor_zatsepin/simple-way-to-publish-your-android-library-to-jcenter-d1e145bacf13)
+
+### Current problems
 - Layout preview reports an error:
   - `The following classes could not be instantiated:
      - android.support.v7.widget.AppCompatTextView`
@@ -26,10 +34,10 @@
     - Refresh layout
   - Details [here])(https://stackoverflow.com/questions/29887722/error-rendering-problems-the-following-classes-could-not-be-found-android-suppo/30011016#30011016).
 
-# For dictionary contributors
+## For dictionary contributors
 * Just open an issue in the most appropriate project (stardict-sanskrit, stardict-hindI, stardict-kannada, stardict-pAlI, stardict-tamiL, stardict-telugu), or if there is no match, in this project.
 
-## To contribute new dictionary repositories
+### To contribute new dictionary repositories
 * We will just need to list your dictionary repository in <dictioanryIndices.md>. Open an issue in this project.
 * Creating your dictionary repository:
   * Just follow the pattern you observe in, say [this repo](<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/tars/tars.MD>).

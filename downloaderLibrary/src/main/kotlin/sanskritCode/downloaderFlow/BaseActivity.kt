@@ -109,7 +109,7 @@ abstract class BaseActivity : Activity() {
     fun showNetworkInfo(warningText: TextView) {
         val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
 
-        var activeNetwork = cm?.activeNetworkInfo
+        val activeNetwork = cm?.activeNetworkInfo
         val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
         val isWiFi = activeNetwork != null && activeNetwork.type == ConnectivityManager.TYPE_WIFI
 
