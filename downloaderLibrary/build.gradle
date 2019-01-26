@@ -15,7 +15,7 @@ ext {
     bintrayRepo = 'sanskrit-coders-android-repo'
     bintrayName = 'downloaderFlow'
 
-    publishedGroupId = 'sanskritCoders'
+    publishedGroupId = 'com.github.sanskrit-coders'
     libraryName = 'DownloaderFlow'
     artifact = 'downloaderFlow'
 
@@ -24,7 +24,7 @@ ext {
     siteUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater'
     gitUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.0.2'
 
     developerId = 'vvasuki'
     developerName = 'Sanskrit programmers'
