@@ -5,8 +5,24 @@
 - Signed apk is also [released](https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/app/release/app-release.apk) in this repository.
 
 ## For library users
-- We publish to a [downloaderFlow bintray package](https://bintray.com/vvasuki/sanskrit-coders-android-repo/downloaderFlow).
-- Relevant gradle tasks: `bintrayUpload`.
+- We publish to a [downloaderFlow bintray package](https://bintray.com/sanskrit-coders/android-repo/downloaderFlow).
+
+### Usage
+```
+dependencies {
+    implementation 'com.github.sanskrit-coders:downloaderFlow:0.0.2@aar'
+    // Somehow, dependencies from the above are not automatically deduces (despite downloaderFlow-0.0.2.pom containing them). Hence reincluding them below.
+    implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-android'
+    implementation('com.loopj.android:android-async-http:1.4.9')
+    implementation('org.apache.commons:commons-compress:1.14')
+}
+repositories {
+    ...
+    maven {
+        url 'https://dl.bintray.com/sanskrit-coders/android-repo'
+    }
+}
+```
 
 ## For code contributors
 - See comment in MainActivity.kt for a rough understanding of the code.
@@ -22,6 +38,7 @@
 ### Publishing to maven
 - Publication location described above.
 - Android library publication tips [here](https://medium.com/@yegor_zatsepin/simple-way-to-publish-your-android-library-to-jcenter-d1e145bacf13)
+- Relevant gradle tasks: `bintrayUpload`.
 
 ### Current problems
 - Layout preview reports an error:
