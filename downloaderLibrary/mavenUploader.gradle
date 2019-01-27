@@ -30,6 +30,7 @@ install {
                 developerConnection gitUrl
                 url siteUrl
             }
+
         }
     }
 }
@@ -43,6 +44,7 @@ artifacts {
     archives sourcesJar
 }
 
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
@@ -54,6 +56,7 @@ bintray {
     pkg {
         repo = bintrayRepo
         name = bintrayName
+        userOrg = bintrayOrg
         desc = libraryDescription
         websiteUrl = siteUrl
         vcsUrl = gitUrl
