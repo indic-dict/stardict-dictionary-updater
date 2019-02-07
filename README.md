@@ -36,6 +36,7 @@ repositories {
   - `gradle -q dependencies app:dependencies --configuration compile > dep_tree.txt`
 
 ### Publishing to maven
+- Build a new version of the aar package by updating libraryVersion in build.gradle and using gradle tasks- assemble.
 - Publication location described above.
 - Android library publication tips [here](https://medium.com/@yegor_zatsepin/simple-way-to-publish-your-android-library-to-jcenter-d1e145bacf13)
 - Relevant gradle tasks: `bintrayUpload`.
