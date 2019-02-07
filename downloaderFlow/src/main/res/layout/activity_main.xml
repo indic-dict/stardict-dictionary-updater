@@ -16,11 +16,11 @@
                   tools:context="sanskritCode.downloaderFlow.MainActivity">
 
         <TextView
-            android:id="@+id/main_textView"
+            android:id="@+id/df_main_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:text="@string/select_indices"
+            android:text="@string/df_select_indices"
             android:textSize="18sp"/>
 
         <Button
@@ -32,17 +32,17 @@
             />
 
         <TextView
-            android:id="@+id/main_textView2"
+            android:id="@+id/df_main_textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
             android:visibility="invisible"/>
 
         <CheckBox
-                android:id="@+id/main_toggle_selection_checkbox"
+                android:id="@+id/df_main_toggle_selection_checkbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/main_toggle_selection_text"
+                android:text="@string/df_main_toggle_selection_text"
                 android:visibility="invisible"/>
 
 

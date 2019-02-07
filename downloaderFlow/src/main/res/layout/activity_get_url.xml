@@ -18,14 +18,14 @@ android:fadeScrollbars="false"
                   tools:context="sanskritCode.downloaderFlow.GetUrlActivity">
 
         <TextView
-            android:id="@+id/get_url_textView"
+            android:id="@+id/df_get_url_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:text="@string/pick_archives"/>
+            android:text="@string/df_pick_archives"/>
 
         <Button
-            android:id="@+id/get_url_button"
+            android:id="@+id/df_get_url_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="buttonPressed1"
@@ -33,7 +33,7 @@ android:fadeScrollbars="false"
             />
 
         <TextView
-            android:id="@+id/get_url_textView2"
+            android:id="@+id/df_get_url_textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="destination_sdcard_directory">dictdata</string>
-    <string name="downloadsDir">/Download/dicttars</string>
-    <string name="index_indexorum">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
+    <string name="df_destination_sdcard_directory">dictdata</string>
+    <string name="df_downloadsDir">/Download/dicttars</string>
+    <string name="df_index_indexorum">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
     <string name="issueEmailId">vishvas.vasuki+STARDICTAPP@gmail.com</string>
     <string name="app_name">Stardict Dictionary Updater</string>
-    <string name="select_indices">ॐ तत् सत्॥ Shall we update your Stardict dictionary files? (Details: <a href="http://bit.ly/dict-update-app">dict-update-app</a> ) \n
+    <string name="df_select_indices">ॐ तत् सत्॥ Shall we update your Stardict dictionary files? (Details: <a href="http://bit.ly/dict-update-app">dict-update-app</a> ) \n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
         (This is only a dictionary updater software. You NEED some Stardict-compatible dictionary utility (Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], ColorDict, GoldenDict, GoldenDict paid …) separately.) \n
         Please scroll + select the dictionary lists you want to use, then click the button.\n
     </string>
-    <string name="finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
-    <string name="archive_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
-    <string name="pick_archives">Which dictionaries shall we install?</string>
+    <string name="df_finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
+    <string name="df_archive_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
+    <string name="df_pick_archives">Which dictionaries shall we install?</string>
 
 </resources>

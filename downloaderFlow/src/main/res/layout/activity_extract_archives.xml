@@ -17,15 +17,15 @@
                   tools:context="sanskritCode.downloaderFlow.ExtractArchivesActivity">
 
         <TextView
-            android:id="@+id/extract_archive_textView"
+            android:id="@+id/df_extract_archive_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:longClickable="false"
             android:scrollbars="vertical"
-            android:text="@string/extracting_archives"/>
+            android:text="@string/df_extracting_archives"/>
 
         <ProgressBar
-            android:id="@+id/extract_archive_progressBar"
+            android:id="@+id/df_extract_archive_progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -37,7 +37,7 @@
             >
 
             <TextView
-                android:id="@+id/extract_archive_textView2"
+                android:id="@+id/df_extract_archive_textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""

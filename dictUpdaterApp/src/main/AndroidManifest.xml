@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name="sanskritCode.downloaderFlow.GetUrlActivity"
-            android:label="@string/title_activity_get_url"
+            android:label="@string/df_title_activity_get_url"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -32,7 +32,7 @@
         </activity>
         <activity
             android:name="sanskritCode.downloaderFlow.GetArchivesActivity"
-            android:label="@string/title_activity_get_archives"
+            android:label="@string/df_title_activity_get_archives"
             android:configChanges="orientation"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data
@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name="sanskritCode.downloaderFlow.ExtractArchivesActivity"
-            android:label="@string/title_activity_extract_archives"
+            android:label="@string/df_title_activity_extract_archives"
             android:configChanges="orientation"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data
@@ -50,7 +50,7 @@
         </activity>
         <activity
             android:name="sanskritCode.downloaderFlow.FinalActivity"
-            android:label="@string/title_final_activity"
+            android:label="@string/df_title_final_activity"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

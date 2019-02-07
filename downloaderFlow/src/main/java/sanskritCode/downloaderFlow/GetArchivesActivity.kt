@@ -35,33 +35,33 @@ class GetArchivesActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         val sharedArchiveVersionStore = getSharedPreferences(
-                getString(R.string.archive_version_store), Context.MODE_PRIVATE)
+                getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
         if (archiveIndexStore == null) {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
         // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
         archiveVersionEditor = sharedArchiveVersionStore.edit()
         setContentView(R.layout.activity_get_archives)
-        topText = findViewById(R.id.get_archive_textView)
+        topText = findViewById(R.id.df_get_archive_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText!!.movementMethod = LinkMovementMethod.getInstance()
-        button = findViewById(R.id.get_archive_button)
+        button = findViewById(R.id.df_get_archive_button)
         button!!.text = getString(R.string.buttonWorking)
         button!!.isEnabled = false
-        button_2 = findViewById(R.id.get_archive_button_2)
+        button_2 = findViewById(R.id.df_get_archive_button_2)
         button_2!!.visibility = View.INVISIBLE
         button_2!!.isEnabled = false
-        progressBar = findViewById(R.id.get_archive_progressBar)
+        progressBar = findViewById(R.id.df_get_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
         val sdcard = Environment.getExternalStorageDirectory()
-        downloadsDir = File(sdcard.absolutePath, getString(R.string.downloadsDir))
+        downloadsDir = File(sdcard.absolutePath, getString(R.string.df_downloadsDir))
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
             }
         }
-        destDir = File(sdcard.absolutePath, getString(R.string.destination_sdcard_directory))
+        destDir = File(sdcard.absolutePath, getString(R.string.df_destination_sdcard_directory))
         if (!destDir!!.exists()) {
             if (!destDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
@@ -70,7 +70,7 @@ class GetArchivesActivity : BaseActivity() {
 
         if (archiveIndexStore!!.archivesSelectedMap.size == 0) {
             topText!!.setText(R.string.no_archives_selected)
-            topText!!.append(getString(R.string.txtTryAgain))
+            topText!!.append(getString(R.string.df_txtTryAgain))
             button!!.setText(R.string.proceed_button)
             button!!.isEnabled = true
         }
@@ -85,7 +85,7 @@ class GetArchivesActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
-        this.showNetworkInfo(findViewById<View>(R.id.get_archive_textView2) as TextView)
+        this.showNetworkInfo(findViewById<View>(R.id.df_get_archive_textView2) as TextView)
     }
 
     internal fun whenAllDownloaded() {

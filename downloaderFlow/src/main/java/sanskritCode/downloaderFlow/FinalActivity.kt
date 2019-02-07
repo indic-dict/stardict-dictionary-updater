@@ -18,10 +18,10 @@ class FinalActivity : BaseActivity() {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
         setContentView(R.layout.activity_final)
-        val topText = findViewById<TextView>(R.id.final_act_textView)
+        val topText = findViewById<TextView>(R.id.df_final_act_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
-        topText.text = getString(R.string.finalMessage)
+        topText.text = getString(R.string.df_finalMessage)
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
         val failures = StringBuilder("")
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
@@ -46,8 +46,8 @@ class FinalActivity : BaseActivity() {
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
 
-        val button = findViewById<Button>(R.id.final_act_button)
-        button.setText(R.string.buttonValQuit)
+        val button = findViewById<Button>(R.id.df_final_act_button)
+        button.setText(R.string.df_final_act_proceed_btn)
         if (failures.length == 0) {
             button.isEnabled = true
             button.setOnClickListener { finishAffinity() }
@@ -56,7 +56,7 @@ class FinalActivity : BaseActivity() {
         }
 
         val thisActivity = this
-        val button_2 = findViewById<Button>(R.id.final_act_button_2)
+        val button_2 = findViewById<Button>(R.id.df_final_act_button_2)
         button_2.setText(R.string.PROBLEM_SEND_LOG)
         button_2.visibility = View.VISIBLE
         button_2.isEnabled = true

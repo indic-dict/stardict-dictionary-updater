@@ -17,15 +17,15 @@
                   tools:context="sanskritCode.downloaderFlow.FinalActivity">
 
         <TextView
-            android:id="@+id/final_act_textView"
+            android:id="@+id/df_final_act_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            android:text="@string/extracting_archives"/>
+            android:text="@string/df_extracting_archives"/>
 
 
         <TextView
-            android:id="@+id/final_act_textView2"
+            android:id="@+id/df_final_act_textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
@@ -39,17 +39,17 @@
             >
 
             <Button
-                android:id="@+id/final_act_button"
+                android:id="@+id/df_final_act_button"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="buttonPressed1"
-                android:text="@string/buttonValQuit"
+                android:text="@string/df_final_act_proceed_btn"
                 android:visibility="visible" />
 
             <Button
-                android:id="@+id/final_act_button_2"
+                android:id="@+id/df_final_act_button_2"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -75,7 +75,7 @@ class MainActivity : BaseActivity() {
         button!!.text = getString(R.string.proceed_button)
 
         if (indexUrls.size > 0) {
-            val toggleAllCheckBox = findViewById<android.widget.CheckBox>(R.id.main_toggle_selection_checkbox)
+            val toggleAllCheckBox = findViewById<android.widget.CheckBox>(R.id.df_main_toggle_selection_checkbox)
             toggleAllCheckBox.setVisibility(android.view.View.VISIBLE)
             toggleAllCheckBox.isChecked = true
             toggleAllCheckBox.setBackgroundColor(Color.YELLOW)
@@ -88,13 +88,13 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (archiveIndexStore == null) {
-            archiveIndexStore = ArchiveIndexStore(getString(R.string.index_indexorum))
+            archiveIndexStore = ArchiveIndexStore(getString(R.string.df_index_indexorum))
         }
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         largeLog(LOGGER_TAG, "onCreate: " + archiveIndexStore!!.toString())
         setContentView(R.layout.activity_main)
 
-        val topText = findViewById<TextView>(R.id.main_textView)
+        val topText = findViewById<TextView>(R.id.df_main_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
 
@@ -112,7 +112,7 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
-        this.showNetworkInfo(findViewById<View>(R.id.main_textView2) as TextView)
+        this.showNetworkInfo(findViewById<View>(R.id.df_main_textView2) as TextView)
         button!!.setText(R.string.proceed_button)
         button!!.isClickable = true
         //        Log.d(ACTIVITY_NAME, "onResume Indices selected " + archiveIndexStore.indexesSelected.toString());

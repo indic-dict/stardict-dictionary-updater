@@ -45,18 +45,18 @@ class GetUrlActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         layout = findViewById(R.id.get_url_layout)
         sharedArchiveVersionStore = getSharedPreferences(
-                getString(R.string.archive_version_store), Context.MODE_PRIVATE)
+                getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
         if (archiveIndexStore == null) {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
         Log.d(LOGGER_TAG, ":onCreate:" + "whenActivityLoaded archiveIndexStore.indexedArchives " + archiveIndexStore!!.indexedArchives)
         Log.d(LOGGER_TAG, ":onCreate:" + "indexesSelected " + archiveIndexStore!!.indexesSelected.toString())
         setContentView(R.layout.activity_get_url)
-        topText = findViewById(R.id.get_url_textView)
+        topText = findViewById(R.id.df_get_url_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText?.movementMethod = LinkMovementMethod.getInstance()
 
-        button = findViewById(R.id.get_url_button)
+        button = findViewById(R.id.df_get_url_button)
         button!!.text = getString(R.string.buttonWorking)
         button!!.isEnabled = false
 
@@ -68,15 +68,15 @@ class GetUrlActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
-        this.showNetworkInfo(findViewById<View>(R.id.get_url_textView2) as TextView)
+        this.showNetworkInfo(findViewById<View>(R.id.df_get_url_textView2) as TextView)
     }
 
 
     private fun enableButtonIfArchivesSelected() {
-        button = findViewById(R.id.get_url_button)
+        button = findViewById(R.id.df_get_url_button)
         button!!.isEnabled = !archiveIndexStore!!.archivesSelectedMap.isEmpty()
         val estimatedSize = archiveIndexStore!!.estimateArchivesSelectedMBs()
-        val message = String.format(getString(R.string.get_archives_button), archiveIndexStore!!.archivesSelectedMap.size, estimatedSize)
+        val message = String.format(getString(R.string.df_get_archives_button), archiveIndexStore!!.archivesSelectedMap.size, estimatedSize)
         button!!.setText(message)
         Log.d(LOGGER_TAG, ":enableButtonIfArchivesSelected:" + "button enablement " + button!!.isEnabled)
     }
@@ -99,8 +99,8 @@ class GetUrlActivity : BaseActivity() {
                 val archiveNameParts = ArchiveNameHelper.getArchiveNameAndVersion(filename)
                 val archiveName = archiveNameParts[0]
                 if (sharedArchiveVersionStore!!.contains(archiveName)) {
-                    val currentVersion = sharedArchiveVersionStore!!.getString(archiveName, getString(R.string.defaultArchiveVersion))
-                    var proposedVersion = getString(R.string.defaultArchiveVersion)
+                    val currentVersion = sharedArchiveVersionStore!!.getString(archiveName, getString(R.string.df_defaultArchiveVersion))
+                    var proposedVersion = getString(R.string.df_defaultArchiveVersion)
                     if (archiveNameParts.size > 1) {
                         proposedVersion = archiveNameParts[1]
                     }
@@ -129,7 +129,7 @@ class GetUrlActivity : BaseActivity() {
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
         enableButtonIfArchivesSelected()
 
-        val message = String.format(getString(R.string.autoSelectedArchivesMessage), sharedArchiveVersionStore!!.all.size, archiveIndexStore!!.autoUnselectedArchives)
+        val message = String.format(getString(R.string.df_autoSelectedArchivesMessage), sharedArchiveVersionStore!!.all.size, archiveIndexStore!!.autoUnselectedArchives)
         topText?.append(message)
         Log.d(LOGGER_TAG, ":selectCheckboxes:$message")
     }
@@ -144,7 +144,7 @@ class GetUrlActivity : BaseActivity() {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT)
             indexBox.visibility = View.VISIBLE
-            indexBox.setText(String.format(getString(R.string.fromSomeIndex), indexName))
+            indexBox.setText(String.format(getString(R.string.df_fromSomeIndex), indexName))
             indexBox.hint = indexName
             indexBox.setOnCheckedChangeListener(indexCheckboxListener)
             indexCheckBoxes[indexName] = indexBox
@@ -161,9 +161,9 @@ class GetUrlActivity : BaseActivity() {
             }
         }
 
-        val message = String.format(getString(R.string.added_n_archive_urls), archiveCheckBoxes.size)
+        val message = String.format(getString(R.string.df_added_n_archive_urls), archiveCheckBoxes.size)
         Log.i(LOGGER_TAG, ":addCheckboxes:$message")
-        topText = findViewById(R.id.get_url_textView)
+        topText = findViewById(R.id.df_get_url_textView)
         topText?.setText(message)
         selectCheckboxes(archivesSelectedSet)
     }

@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="destination_sdcard_directory" translatable="false">extracted_archives</string>
-    <string name="downloadsDir" translatable="false">/Download/downloaded_archives</string>
+    <string name="df_destination_sdcard_directory" translatable="false">extracted_archives</string>
+    <string name="df_downloadsDir" translatable="false">/Download/downloaded_archives</string>
     <string name="app_name">Some downloader</string>
-    <string name="select_indices">Select some archive indices.</string>
+    <string name="df_select_indices">Select some archive indices.</string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="proceed_button">Proceed?</string>
-    <string name="added_n_archive_urls" tools:ignore="PluralsCandidate">"Added %d archive-urls. Pick the archives to install."</string>
-    <string name="finalMessage">All downloading done!</string>
+    <string name="df_added_n_archive_urls" tools:ignore="PluralsCandidate">"Added %d archive-urls. Pick the archives to install."</string>
+    <string name="df_finalMessage">All downloading done!</string>
     <string name="buttonWorking">Working</string>
-    <string name="txtTryAgain">\n Do you want to try again?</string>
-    <string name="title_activity_get_url">Select Archives!</string>
-    <string name="pick_archives">Which archives shall we install?</string>
-    <string name="title_activity_get_archives">Downloading!</string>
-    <string name="title_activity_extract_archives">Extracting!</string>
-    <string name="title_final_activity">Done!</string>
-    <string name="installing_archives">Installing archives. \n </string>
-    <string name="extracting_archives">Extracting archives. \n </string>
-    <string name="added_index_url">Added Index: </string>
-    <string name="buttonValQuit">Quit?</string>
-    <string name="archive_version_store" translatable="false">sanskritCode.downloaderFlow.archive_version_store</string>
-    <string name="defaultArchiveVersion" translatable="false">0000</string>
+    <string name="df_txtTryAgain">\n Do you want to try again?</string>
+    <string name="df_title_activity_get_url">Select Archives!</string>
+    <string name="df_pick_archives">Which archives shall we install?</string>
+    <string name="df_title_activity_get_archives">Downloading!</string>
+    <string name="df_title_activity_extract_archives">Extracting!</string>
+    <string name="df_title_final_activity">Done!</string>
+    <string name="df_installing_archives">Installing archives. \n </string>
+    <string name="df_extracting_archives">Extracting archives. \n </string>
+    <string name="df_added_index_url">Added Index: </string>
+    <string name="df_final_act_proceed_btn">Quit?</string>
+    <string name="df_archive_version_store" translatable="false">sanskritCode.downloaderFlow.archive_version_store</string>
+    <string name="df_defaultArchiveVersion" translatable="false">0000</string>
     <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
     <string name="connected_nowifi">Alert: Connected, but not on Wifi.</string>
     <string name="noConnection">No data connection. Please retry later.</string>
     <string name="no_archives_selected">No archives selected!</string>
-    <string name="gettingSomeArchive">Getting %s</string>
-    <string name="fromSomeIndex">From %s</string>
-    <string name="get_archives_button" tools:ignore="PluralsCandidate">Get %d files (~ %d MB+)?</string>
-    <string name="index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>
-    <string name="autoSelectedArchivesMessage"><![CDATA[Based on what we remember installing (%1d archives) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d archives which don\\\\\'t seem to be new or updated. You can reselect.]]></string>
-    <string name="index_indexorum" translatable="false">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
+    <string name="df_gettingSomeArchive">Getting %s</string>
+    <string name="df_fromSomeIndex">From %s</string>
+    <string name="df_get_archives_button" tools:ignore="PluralsCandidate">Get %d files (~ %d MB+)?</string>
+    <string name="df_index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>
+    <string name="df_autoSelectedArchivesMessage"><![CDATA[Based on what we remember installing (%1d archives) from earlier runs of this app (>=  2.9) on this device, we have auto-unselected ~ %2d archives which don\\\\\'t seem to be new or updated. You can reselect.]]></string>
+    <string name="df_index_indexorum" translatable="false">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
     <string name="issueEmailId" translatable="false">vishvas.vasuki+ARCHIVE_DOWNLOADER@gmail.com</string>
-    <string name="main_toggle_selection_text">Toggle selection</string>
+    <string name="df_main_toggle_selection_text">Toggle selection</string>
 
 </resources>

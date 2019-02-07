@@ -70,7 +70,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                         indexUrls[name] = url
 
                         indexesSelected[name] = url
-                        Log.d(LOGGER_TAG, ":getIndicesAddCheckboxes:" + activity.getString(R.string.added_index_url) + url)
+                        Log.d(LOGGER_TAG, ":getIndicesAddCheckboxes:" + activity.getString(R.string.df_added_index_url) + url)
                     }
                     activity.addCheckboxes(indexUrls, indexesSelected)
                 }
@@ -96,7 +96,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                         override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String, throwable: Throwable) {
                             Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Failed ", throwable)
                             BaseActivity.largeLog(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + archiveIndexStore.toString())
-                            val message = String.format(getUrlActivity.getString(R.string.index_download_failed), url)
+                            val message = String.format(getUrlActivity.getString(R.string.df_index_download_failed), url)
                             getUrlActivity.topText?.setText(message)
                             // The below would result in
                             // java.lang.RuntimeException: android.os.FileUriExposedException: file:///storage/emulated/0/logcat.txt exposed beyond app through ClipData.Item.getUri()
@@ -127,7 +127,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                     })
                 } catch (throwable: Throwable) {
                     Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:error with $url", throwable)
-                    val message = String.format(getUrlActivity.getString(R.string.index_download_failed), url)
+                    val message = String.format(getUrlActivity.getString(R.string.df_index_download_failed), url)
                     getUrlActivity.topText?.setText(message)
                     getUrlActivity.sendLoagcatMail()
                 }
