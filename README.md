@@ -26,6 +26,7 @@ repositories {
 
 ## For code contributors
 - See comment in MainActivity.kt for a rough understanding of the code.
+  - Why do we use java rather than kotlin as source directory? Intellij and android studio don't work optimally otherwise - no autocomplete.
 - Review notifications setup: https://support.google.com/googleplay/android-developer/answer/138230?hl=en
 - Debugging
   - Parsing adb logcat:
