@@ -41,7 +41,7 @@ android {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.android.support:appcompat-v7:28.+'
-    implementation project(":downloaderLibrary")
+    implementation project(":downloaderFlow")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 

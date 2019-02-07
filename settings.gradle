@@ -1,1 +1,1 @@
-include ':dictUpdaterApp', ':downloaderLibrary'
+include ':dictUpdaterApp', ':downloaderFlow'
