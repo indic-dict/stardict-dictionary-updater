@@ -80,8 +80,12 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
         }
     }
 
-    // Populates indexedArchives
+    /**
+     * Populates indexedArchives
+     * getUrlActivity gets archive urls and displays them for the user to choose.
+     */
     fun getIndexedArchivesSetCheckboxes(getUrlActivity: GetUrlActivity) {
+        // In some contexts, indexedArchives may already be populated.
         if (indexedArchives.isEmpty()) {
             val asyncHttpClient = AsyncHttpClient()
             indexedArchives = LinkedHashMap()
@@ -103,7 +107,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             // A known issue: https://github.com/loopj/android-async-http/issues/891
                             // getUrlActivity.sendLoagcatMail();
 
-                            // Just proceed with the next dict.
+                            // Just proceed with the next dict index.
                             indexedArchives[name] = listOf<String>(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed")
                             if (indexesSelected.size == indexedArchives.size) {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
