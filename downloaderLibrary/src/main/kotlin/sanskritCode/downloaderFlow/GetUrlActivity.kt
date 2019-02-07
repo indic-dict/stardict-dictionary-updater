@@ -12,6 +12,7 @@ import android.widget.*
 import java.util.*
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
+// This activity gets archive urls and displays them for the user to choose.
 class GetUrlActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
 

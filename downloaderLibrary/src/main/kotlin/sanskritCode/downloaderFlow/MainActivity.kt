@@ -16,7 +16,7 @@ import android.widget.TextView
 import java.util.ArrayList
 
 /**
- * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, checkboxListener) -> buttonPressed1 ->
+ * Flow: MainActivity::OnCreate ->  IndexGetter -> (user chooses indices, indexCheckboxListener) -> buttonPressed1 ->
  * GetUrlActivity::DictUrlGetter -> (user chooses dictionaries)
  * GetArchivesActivity -> (getDictionaries <-> downloadArchive) -> (extractDict <-> DictExtracter)
  *
@@ -26,11 +26,11 @@ import java.util.ArrayList
 class MainActivity : BaseActivity() {
     private var button: Button? = null
     internal val LOGGER_TAG = javaClass.getSimpleName()
+    private var indexCheckboxes = ArrayList<CheckBox>()
 
     // Event handler for: When an index is (un) selected.
-    private val checkboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+    private val indexCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         if (isChecked) {
-
             archiveIndexStore!!.indexesSelected[buttonView.text.toString()] = buttonView.hint.toString()
         } else {
             archiveIndexStore!!.indexesSelected.remove(buttonView.text.toString())
@@ -38,21 +38,34 @@ class MainActivity : BaseActivity() {
         button!!.isEnabled = !archiveIndexStore!!.indexesSelected.isEmpty()
     }
 
+    val toggleAllCheckboxListener = android.widget.CompoundButton.OnCheckedChangeListener{
+        _, isChecked ->
+        if (isChecked) {
+            for (cb in indexCheckboxes) {
+                cb.isChecked = true
+            }
+        } else {
+            for (cb in indexCheckboxes) {
+                cb.isChecked = false
+            }
+        }
+    }
+
     // Add checkboxes from indexUrls
     internal fun addCheckboxes(indexUrls: Map<String, String>, indexesSelected: Map<String, String>) {
         // retainOnlyOneDictForDebugging();
-        val checkBoxes = ArrayList<CheckBox>()
+        indexCheckboxes = ArrayList<CheckBox>()
         val layout = findViewById<LinearLayout>(R.id.main_layout)
         for (name in indexUrls.keys) {
             val cb = CheckBox(applicationContext)
             cb.text = name
             cb.hint = indexUrls[name]
             cb.setTextColor(Color.BLACK)
-            cb.setOnCheckedChangeListener(checkboxListener)
+            cb.setOnCheckedChangeListener(indexCheckboxListener)
             layout.addView(cb, layout.childCount)
-            checkBoxes.add(cb)
+            indexCheckboxes.add(cb)
         }
-        for (checkBox in checkBoxes) {
+        for (checkBox in indexCheckboxes) {
             if (indexesSelected.keys.contains(checkBox.text.toString())) {
                 checkBox.isChecked = true
             } else {
@@ -60,6 +73,14 @@ class MainActivity : BaseActivity() {
             }
         }
         button!!.text = getString(R.string.proceed_button)
+
+        if (indexUrls.size > 0) {
+            val toggleAllCheckBox = findViewById<android.widget.CheckBox>(R.id.main_toggle_selection_checkbox)
+            toggleAllCheckBox.setVisibility(android.view.View.VISIBLE)
+            toggleAllCheckBox.isChecked = true
+            toggleAllCheckBox.setBackgroundColor(Color.YELLOW)
+            toggleAllCheckBox.setOnCheckedChangeListener(toggleAllCheckboxListener)
+        }
         // getDictionaries(0);
     }
 
