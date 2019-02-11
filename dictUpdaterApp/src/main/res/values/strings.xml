@@ -7,10 +7,10 @@
     <string name="app_name">Stardict Dictionary Updater</string>
     <string name="df_select_indices">ॐ तत् सत्॥ Shall we update your Stardict dictionary files? (Details: <a href="http://bit.ly/dict-update-app">dict-update-app</a> ) \n
         This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. \n
-        (This is only a dictionary updater software. You NEED some Stardict-compatible dictionary utility (Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], ColorDict, GoldenDict, GoldenDict paid …) separately.) \n
+        (This is only a dictionary updater software. You NEED some Stardict-compatible dictionary utility (Eg: <a href="https://apkpure.com/ebdic/com.twn.ebdic">ebdic</a> [Rated high], ColorDict, GoldenDict, GoldenDict paid …) separately.) \n
         Please scroll + select the dictionary lists you want to use, then click the button.\n
     </string>
-    <string name="df_finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://play.google.com/store/apps/details?id=com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
+    <string name="df_finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://apkpure.com/ebdic/com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
     <string name="df_archive_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
     <string name="df_pick_archives">Which dictionaries shall we install?</string>
 
