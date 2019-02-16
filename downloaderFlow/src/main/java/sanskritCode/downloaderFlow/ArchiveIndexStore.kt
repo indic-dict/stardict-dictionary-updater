@@ -11,6 +11,15 @@ import java.io.Serializable
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.LinkedHashMap
+import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.JsonArray
+
+
+
+
+
+
 
 enum class ArchiveStatus {
     NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE
@@ -114,7 +123,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             }
                         }
 
-                        override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
+                        fun processMdFileContents(responseString: String) {
                             val urls = ArrayList<String>()
                             for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                                 val url1 = line.replace("<", "").replace(">", "")
@@ -126,6 +135,22 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
 
                             if (indexesSelected.size == indexedArchives.size) {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
+                            }
+
+                        }
+
+                        fun processJsonFileContents(responseString: String) {
+                            val parser = JsonParser()
+                            val array = parser.parse(responseString).getAsJsonArray()
+                            val gson = Gson()
+                            // TODO: Finish this.
+                        }
+
+                        override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
+                            if(url.toString().toLowerCase().endsWith(".md")) {
+                                processMdFileContents(responseString = responseString)
+                            } else if(url.toString().toLowerCase().endsWith(".json")) {
+                                processJsonFileContents(responseString = responseString)
                             }
                         }
                     })
