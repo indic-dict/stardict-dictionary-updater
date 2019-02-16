@@ -13,12 +13,6 @@ import java.util.HashMap
 import java.util.LinkedHashMap
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import com.google.gson.JsonArray
-
-
-
-
-
 
 
 enum class ArchiveStatus {
@@ -40,7 +34,9 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
     private val LOGGER_TAG = javaClass.getSimpleName()
     // ArchiveIndexStore must be serializable, hence we use specific class names below.
     private val indexUrls = LinkedHashMap<String, String>()
+    // the indexes which were selected by the user.
     val indexesSelected: BiMap<String, String> = HashBiMap.create(100)
+    // maps each archive index to the list of archives listed in that index.
     var indexedArchives: MutableMap<String, List<String>> = LinkedHashMap()
     var archivesSelectedMap: MutableMap<String, ArchiveInfo> = HashMap()
     var autoUnselectedArchives = 0
@@ -141,9 +137,20 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
 
                         fun processJsonFileContents(responseString: String) {
                             val parser = JsonParser()
-                            val array = parser.parse(responseString).getAsJsonArray()
-                            val gson = Gson()
+                            val archiveArray = parser.parse(responseString).getAsJsonArray()
+                            archiveArray.forEach({
+                                val archiveInfoJson = it.asJsonObject
+                                archiveInfoJson.get("url").asString
+                            })
                             // TODO: Finish this.
+                            /*
+                            The way forward:
+                            Change indexedArchives to hold ArchiveInfo objects.
+                            Change ArchiveInfo objects to hold archiveInfoJson field.
+                            Change getUrlActivity.addCheckboxes as needed.
+                            Change how archiveSelectedMap are filled.
+                            add each archiveArray element into indexedArchives.
+                             */
                         }
 
                         override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
