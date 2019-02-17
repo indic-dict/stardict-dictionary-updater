@@ -25,17 +25,18 @@ class GetUrlActivity : BaseActivity() {
     private var sharedArchiveVersionStore: SharedPreferences? = null
 
     private val archiveCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        val archiveInfo = ArchiveInfo(buttonView.hint.toString())
         if (isChecked) {
-            archiveIndexStore!!.archivesSelectedMap[buttonView.hint.toString()] = ArchiveInfo(buttonView.hint.toString())
+            archiveIndexStore!!.archivesSelectedMap[archiveInfo.url] = archiveInfo
         } else {
-            archiveIndexStore!!.archivesSelectedMap.remove(buttonView.hint.toString())
+            archiveIndexStore!!.archivesSelectedMap.remove(archiveInfo.url)
         }
         enableButtonIfArchivesSelected()
     }
 
     private val indexCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-        for (url in archiveIndexStore!!.indexedArchives[buttonView.hint.toString()]!!) {
-            archiveCheckBoxes[url]!!.isChecked = isChecked
+        for (archiveInfo in archiveIndexStore!!.indexedArchives[buttonView.hint.toString()]!!) {
+            archiveCheckBoxes[archiveInfo.url]?.isChecked = isChecked
         }
     }
 
@@ -93,7 +94,8 @@ class GetUrlActivity : BaseActivity() {
         if (archivesSelectedSet == null) {
             for (cb in archiveCheckBoxes.values) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
-                val filename = cb.hint.toString()
+                val archiveInfo = ArchiveInfo(cb.hint.toString())
+                val filename = archiveInfo.url
                 var proposedVersionNewer = true
 
                 val archiveNameParts = ArchiveNameHelper.getArchiveNameAndVersion(filename)
@@ -117,7 +119,8 @@ class GetUrlActivity : BaseActivity() {
             }
         } else {
             for (cb in archiveCheckBoxes.values) {
-                val filename = cb.hint.toString()
+                val archiveInfo = ArchiveInfo(cb.hint.toString())
+                val filename = archiveInfo.url
                 if (archivesSelectedSet.contains(filename)) {
                     cb.isChecked = true
                 } else {
@@ -134,7 +137,7 @@ class GetUrlActivity : BaseActivity() {
         Log.d(LOGGER_TAG, ":selectCheckboxes:$message")
     }
 
-    internal fun addCheckboxes(indexedArchives: Map<String, List<String>>, archivesSelectedSet: Set<String>?) {
+    internal fun addCheckboxes(indexedArchives: Map<String, List<ArchiveInfo>>, archivesSelectedSet: Set<String>?) {
         layout = findViewById(R.id.get_url_layout)
         for (indexName in indexedArchives.keys) {
             val indexBox = CheckBox(applicationContext)
@@ -150,10 +153,11 @@ class GetUrlActivity : BaseActivity() {
             indexCheckBoxes[indexName] = indexBox
             layout!!.addView(indexBox)
 
-            for (url in indexedArchives[indexName]!!) {
+            for (archiveInfo in indexedArchives[indexName]!!) {
                 val cb = CheckBox(applicationContext)
+                val url = archiveInfo.url
                 cb.setText(url.replace(".*/".toRegex(), ""))
-                cb.hint = url
+                cb.hint = archiveInfo.archiveInfoJsonStr
                 cb.setTextColor(Color.BLACK)
                 layout!!.addView(cb, layout!!.childCount)
                 cb.setOnCheckedChangeListener(archiveCheckboxListener)

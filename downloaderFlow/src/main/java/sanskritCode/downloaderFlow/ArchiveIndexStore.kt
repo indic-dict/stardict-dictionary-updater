@@ -12,6 +12,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.LinkedHashMap
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
 
@@ -19,14 +20,20 @@ enum class ArchiveStatus {
     NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE
 }
 
-class ArchiveInfo(var url: String) : Serializable {
+class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
     var status = ArchiveStatus.NOT_TRIED
+    var url: String = JsonParser().parse(archiveInfoJsonStr).asJsonObject.get("url").asString
     var downloadedArchiveBasename: String? = null
 
     override fun toString(): String {
         return ("\n status: " + status
                 + "\n downloadedArchiveBasename: " + downloadedArchiveBasename
-                + "\n url: " + url)
+                + "\n url: " + url
+                + "\n archiveInfoJson: " + archiveInfoJsonStr)
+    }
+
+    companion object {
+        fun fromUrl(url: String) : ArchiveInfo = ArchiveInfo("{\"url\": \"$url\"}")
     }
 }
 
@@ -37,7 +44,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
     // the indexes which were selected by the user.
     val indexesSelected: BiMap<String, String> = HashBiMap.create(100)
     // maps each archive index to the list of archives listed in that index.
-    var indexedArchives: MutableMap<String, List<String>> = LinkedHashMap()
+    var indexedArchives: MutableMap<String, List<ArchiveInfo>> = LinkedHashMap()
     var archivesSelectedMap: MutableMap<String, ArchiveInfo> = HashMap()
     var autoUnselectedArchives = 0
 
@@ -113,21 +120,21 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             // getUrlActivity.sendLoagcatMail();
 
                             // Just proceed with the next dict index.
-                            indexedArchives[name] = listOf<String>(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed")
+                            indexedArchives[name] = listOf<ArchiveInfo>(ArchiveInfo.fromUrl(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed"))
                             if (indexesSelected.size == indexedArchives.size) {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
                             }
                         }
 
                         fun processMdFileContents(responseString: String) {
-                            val urls = ArrayList<String>()
+                            val archiveInfos = ArrayList<ArchiveInfo>()
                             for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                                 val url1 = line.replace("<", "").replace(">", "")
-                                urls.add(url1)
+                                archiveInfos.add(ArchiveInfo.fromUrl(url1))
                                 Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes: Added archive: " + url1)
                             }
                             Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:Index handled: $url")
-                            indexedArchives[indexesSelected.inverse()[url]!!] = urls
+                            indexedArchives[indexesSelected.inverse()[url]!!] = archiveInfos
 
                             if (indexesSelected.size == indexedArchives.size) {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
@@ -145,10 +152,6 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             // TODO: Finish this.
                             /*
                             The way forward:
-                            Change indexedArchives to hold ArchiveInfo objects.
-                            Change ArchiveInfo objects to hold archiveInfoJson field.
-                            Change getUrlActivity.addCheckboxes as needed.
-                            Change how archiveSelectedMap are filled.
                             add each archiveArray element into indexedArchives.
                              */
                         }
