@@ -55,7 +55,7 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
         topText.append("\n" + getArchivesActivity.getString(R.string.dont_navigate_away))
         Log.d(LOGGER_TAG, "downloadArchive: " + topText.text.toString())
         try {
-            val fileName = url.substring(url.lastIndexOf("/")).replace("/", "")
+            val fileName = archiveInfo.getDownloadedArchiveBasename()
             if (fileName.isEmpty()) {
                 throw IllegalArgumentException("fileName is empty for url $url")
             }
@@ -64,7 +64,6 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             // URL could be bad, hence the below.
             asyncHttpClient.get(url, object : FileAsyncHttpResponseHandler(File(downloadsDir, fileName)) {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, file: File) {
-                    archiveIndexStore.archivesSelectedMap[url]!!.downloadedArchiveBasename = fileName
                     Log.i(LOGGER_TAG, ":downloadArchive:Got archive: $fileName")
                     archiveIndexStore.archivesSelectedMap[url]!!.status = ArchiveStatus.DOWNLOAD_SUCCESS
                     downloadArchive(index + 1)

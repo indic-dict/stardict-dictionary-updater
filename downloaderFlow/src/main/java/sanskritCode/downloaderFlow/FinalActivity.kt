@@ -23,7 +23,7 @@ class FinalActivity : BaseActivity() {
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = getString(R.string.df_finalMessage)
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
-        val failures = StringBuilder("")
+        val failures = StringBuilder("_")
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status != ArchiveStatus.EXTRACTION_SUCCESS) {

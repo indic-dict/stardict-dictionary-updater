@@ -1,9 +1,12 @@
+@file:Suppress("UnstableApiUsage")
+
 package sanskritCode.downloaderFlow
 
 import android.util.Log
 
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import com.google.common.io.Files
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.TextHttpResponseHandler
 
@@ -14,6 +17,7 @@ import java.util.LinkedHashMap
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import java.io.File
 
 
 enum class ArchiveStatus {
@@ -23,11 +27,21 @@ enum class ArchiveStatus {
 class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
     var status = ArchiveStatus.NOT_TRIED
     var url: String = JsonParser().parse(archiveInfoJsonStr).asJsonObject.get("url").asString
-    var downloadedArchiveBasename: String? = null
+
+    fun getDownloadedArchiveBasename() : String {
+        return url.substring(url.lastIndexOf("/")).replace("/", "")
+    }
+
+    // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
+    fun getUnversionedArchiveBaseName() =
+            Files.getNameWithoutExtension(
+                    Files.getNameWithoutExtension(
+                            getDownloadedArchiveBasename())).split("__".toRegex())
+                    .dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
 
     override fun toString(): String {
         return ("\n status: " + status
-                + "\n downloadedArchiveBasename: " + downloadedArchiveBasename
+                + "\n downloadedArchiveBasename: " + getDownloadedArchiveBasename()
                 + "\n url: " + url
                 + "\n archiveInfoJson: " + archiveInfoJsonStr)
     }

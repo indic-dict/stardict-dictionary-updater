@@ -5,8 +5,6 @@ import android.annotation.SuppressLint
 import android.os.AsyncTask
 import android.util.Log
 
-import com.google.common.io.Files
-
 import org.apache.commons.compress.archivers.ArchiveException
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
@@ -44,10 +42,6 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         val files = directory.listFiles()
         Log.d(LOGGER_TAG, ":cleanDirectory:" + "Deleting " + files!!.size)
 
-        if (files == null) {  // null if security restricted
-            Log.e(LOGGER_TAG, ":cleanDirectory:" + "Could not list files - got null")
-        }
-
         for (file in files) {
             if (file.isDirectory) {
                 cleanDirectory(file)
@@ -78,7 +72,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
     }
 
     private fun extractFile(archiveInfo: ArchiveInfo) {
-        val archiveFileName = archiveInfo.downloadedArchiveBasename
+        val archiveFileName = archiveInfo.getDownloadedArchiveBasename()
         if (archiveInfo.status != ArchiveStatus.DOWNLOAD_SUCCESS) {
             Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status " + archiveInfo.status)
             return
@@ -88,8 +82,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
-        // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
-        val baseName = Files.getNameWithoutExtension(Files.getNameWithoutExtension(archiveFileName!!)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
+        val baseName = archiveInfo.getUnversionedArchiveBaseName()
         val destDirFile = File(archiveDir.toString(), baseName)
         val initialDestDir = destDirFile.absolutePath
 
