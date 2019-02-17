@@ -2,6 +2,7 @@ package sanskritCode.downloaderFlow
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -75,7 +76,7 @@ class ExtractArchivesActivity : BaseActivity() {
         val filenameParts = ArchiveNameHelper.getArchiveNameAndVersion(fileName)
         val archiveName = filenameParts[0]
         if (filenameParts.size > 1) {
-            val archiveVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
+            @Suppress("UnstableApiUsage") val archiveVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
             archiveVersionEditor!!.putString(archiveName, archiveVersion)
             archiveVersionEditor!!.commit()
         } else {
@@ -108,7 +109,8 @@ class ExtractArchivesActivity : BaseActivity() {
 
     /* Should only be called from the UI thread! */
     internal fun whenAllExtracted() {
-        val intent = Intent(this, FinalActivity::class.java)
+        val intent = Intent()
+        intent.setComponent(ComponentName(this, getString(R.string.df_post_exrtaction_activity)))
         intent.putExtra("archiveIndexStore", archiveIndexStore)
         startActivity(intent)
     }
