@@ -23,32 +23,36 @@ class FinalActivity : BaseActivity() {
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = getString(R.string.df_finalMessage)
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
-        val failures = StringBuilder("_")
+        val failures = mutableListOf<String>()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status != ArchiveStatus.EXTRACTION_SUCCESS) {
-                failures.append("\n").append(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
+                failures.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
             }
         }
-        if (failures.length > 0) {
-            topText.append("\nFailed on:$failures")
+        if (failures.size > 0) {
+            topText.append(failures.joinToString(prefix = "\n" +
+                    "----------------\nFailed on:\n",
+                    separator = "\n", postfix = "\n----------------\n"))
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
-        val successes = StringBuilder("")
+        val successes = mutableListOf<String>()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status == ArchiveStatus.EXTRACTION_SUCCESS) {
-                successes.append("\n").append(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
+                successes.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
             }
         }
-        if (successes.length > 0) {
-            topText.append("\nSucceeded on:$successes")
+        if (successes.size > 0) {
+            topText.append(successes.joinToString(prefix = "\n" +
+                    "----------------\nSucceeded on:\n",
+                    separator = "\n", postfix = "\n----------------\n"))
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
 
         val button = findViewById<Button>(R.id.df_final_act_button)
         button.setText(R.string.df_final_act_proceed_btn)
-        if (failures.length == 0) {
+        if (failures.size == 0) {
             button.isEnabled = true
             button.setOnClickListener { finishAffinity() }
         } else {

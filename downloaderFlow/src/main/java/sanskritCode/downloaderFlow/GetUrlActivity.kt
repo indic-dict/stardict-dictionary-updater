@@ -172,6 +172,16 @@ class GetUrlActivity : BaseActivity() {
         selectCheckboxes(archivesSelectedSet)
     }
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.i(LOGGER_TAG, "Back pressed")
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
+        // intent.putStringArrayListExtra();
+        startActivity(intent)
+    }
+
     companion object {
         private val ACTIVITY_NAME = "GetUrlActivity"
     }
