@@ -7,6 +7,7 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-sanskrit-kAvya/master/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-sanskrit-vyAkaraNa/master/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-sanskrit/master/en-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-ayurveda/master/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-hindi/master/hi-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-hindi/master/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-kannada/master/kn-head/tars/tars.MD>
