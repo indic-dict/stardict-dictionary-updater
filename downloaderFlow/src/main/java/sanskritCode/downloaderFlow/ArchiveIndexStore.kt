@@ -26,14 +26,15 @@ enum class ArchiveStatus {
 
 class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
     var status = ArchiveStatus.NOT_TRIED
-    var url: String = JsonParser().parse(archiveInfoJsonStr).asJsonObject.get("url").asString
+    val archiveInfoJsonObject = JsonParser().parse(archiveInfoJsonStr).asJsonObject
+    var url: String = archiveInfoJsonObject.get("url").asString
 
     fun getDownloadedArchiveBasename() : String {
         return url.substring(url.lastIndexOf("/")).replace("/", "")
     }
 
     // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
-    fun getUnversionedArchiveBaseName() =
+    internal fun getUnversionedArchiveBaseName() =
             Files.getNameWithoutExtension(
                     Files.getNameWithoutExtension(
                             getDownloadedArchiveBasename())).split("__".toRegex())
@@ -44,6 +45,14 @@ class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
                 + "\n downloadedArchiveBasename: " + getDownloadedArchiveBasename()
                 + "\n url: " + url
                 + "\n archiveInfoJson: " + archiveInfoJsonStr)
+    }
+
+    fun getDestinationPathSuffix() : String {
+        if (archiveInfoJsonObject.has("destinationPathSuffix")) {
+            return archiveInfoJsonObject.get("destinationPathSuffix").asString
+        } else {
+            return getUnversionedArchiveBaseName()
+        }
     }
 
     companion object {
@@ -92,7 +101,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
                     for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                         val url = line.replace("<", "").replace(">", "")
-                        val name = url.replace("https://raw.githubusercontent.com/|/tars/tars.MD|master/".toRegex(), "")
+                        val name = url.replace(activity.getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
                         indexUrls[name] = url
 
                         indexesSelected[name] = url

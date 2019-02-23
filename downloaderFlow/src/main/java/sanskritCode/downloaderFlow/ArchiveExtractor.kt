@@ -82,8 +82,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
-        val baseName = archiveInfo.getUnversionedArchiveBaseName()
-        val destDirFile = File(archiveDir.toString(), baseName)
+        val destDirFile = File(archiveDir, archiveInfo.getDestinationPathSuffix())
         val initialDestDir = destDirFile.absolutePath
 
         Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory)
@@ -111,7 +110,6 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             archiveInputStream = inputStreamFromArchive(sourceFile)
 
             val buffer = ByteArray(50000)
-            val baseNameAccordingToArchiveEntries: String? = null
             var filesRead = 0
             while (true) {
                 val currentEntry = archiveInputStream.nextEntry
@@ -140,20 +138,6 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                 publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile)
             }
             archiveInputStream.close()
-            if (baseNameAccordingToArchiveEntries != null && baseNameAccordingToArchiveEntries != baseName) {
-                Log.d(LOGGER_TAG, ":extractFile:baseName: $baseName, baseNameAccordingToArchiveEntries: $baseNameAccordingToArchiveEntries")
-                val finalDestDir = File(archiveDir.toString(), baseNameAccordingToArchiveEntries).absolutePath
-                Log.d(LOGGER_TAG, ":extractFile:" + "destDirFile: " + destDirFile.toString() + ", finalDestDir: " + finalDestDir)
-                val finalDestDirFile = File(finalDestDir)
-                if (finalDestDirFile.exists()) {
-                    cleanDirectory(finalDestDirFile)
-                    Log.w(LOGGER_TAG, ":extractFile:" + "Deleting preexisting destination directory with result: " + finalDestDirFile.delete())
-                }
-                val result = destDirFile.renameTo(finalDestDirFile)
-                Log.w(LOGGER_TAG, ":extractFile:Renaming the destination directory with result: $result")
-            }
-
-
             archiveInfo.status = ArchiveStatus.EXTRACTION_SUCCESS
             Log.d(LOGGER_TAG, ":extractFile:" + "success!")
             activity.storeArchiveVersion(archiveFileName)
