@@ -14,20 +14,18 @@ import java.io.Serializable
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.LinkedHashMap
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import java.io.File
 
 
 enum class ArchiveStatus {
     NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE
 }
 
-class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
+class ArchiveInfo(var jsonStr: String) : Serializable {
     var status = ArchiveStatus.NOT_TRIED
-    val archiveInfoJsonObject = JsonParser().parse(archiveInfoJsonStr).asJsonObject
-    var url: String = archiveInfoJsonObject.get("url").asString
+    // JsonObject is not serializable. So we wrap the below in a method.
+    fun getJsonObject() = JsonParser().parse(jsonStr).asJsonObject
+    var url: String = getJsonObject().get("url").asString
 
     fun getDownloadedArchiveBasename() : String {
         return url.substring(url.lastIndexOf("/")).replace("/", "")
@@ -44,12 +42,12 @@ class ArchiveInfo(var archiveInfoJsonStr: String) : Serializable {
         return ("\n status: " + status
                 + "\n downloadedArchiveBasename: " + getDownloadedArchiveBasename()
                 + "\n url: " + url
-                + "\n archiveInfoJson: " + archiveInfoJsonStr)
+                + "\n archiveInfoJson: " + jsonStr)
     }
 
     fun getDestinationPathSuffix() : String {
-        if (archiveInfoJsonObject.has("destinationPathSuffix")) {
-            return archiveInfoJsonObject.get("destinationPathSuffix").asString
+        if (getJsonObject().has("destinationPathSuffix")) {
+            return getJsonObject().get("destinationPathSuffix").asString
         } else {
             return getUnversionedArchiveBaseName()
         }
@@ -101,7 +99,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
                     for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                         val url = line.replace("<", "").replace(">", "")
-                        val name = url.replace(activity.getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
+                        val name = url.replace(activity.getString(R.string.df_index_url_redundant_string_regex).toRegex(), "")
                         indexUrls[name] = url
 
                         indexesSelected[name] = url

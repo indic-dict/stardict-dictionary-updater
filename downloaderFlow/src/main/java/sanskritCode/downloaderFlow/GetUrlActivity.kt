@@ -156,8 +156,8 @@ class GetUrlActivity : BaseActivity() {
             for (archiveInfo in indexedArchives[indexName]!!) {
                 val cb = CheckBox(applicationContext)
                 val url = archiveInfo.url
-                cb.setText(url.replace(".*/".toRegex(), ""))
-                cb.hint = archiveInfo.archiveInfoJsonStr
+                cb.setText(url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), ""))
+                cb.hint = archiveInfo.jsonStr
                 cb.setTextColor(Color.BLACK)
                 layout!!.addView(cb, layout!!.childCount)
                 cb.setOnCheckedChangeListener(archiveCheckboxListener)
