@@ -140,12 +140,36 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             }
                         }
 
-                        fun processMdFileContents(responseString: String) {
+                        fun processMdFileContents(responseString: String): ArrayList<ArchiveInfo> {
                             val archiveInfos = ArrayList<ArchiveInfo>()
                             for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                                 val url1 = line.replace("<", "").replace(">", "")
                                 archiveInfos.add(ArchiveInfo.fromUrl(url1))
                                 Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes: Added archive: " + url1)
+                            }
+                            return archiveInfos
+
+                        }
+
+                        fun processJsonFileContents(responseString: String): ArrayList<ArchiveInfo> {
+                            val archiveInfos = ArrayList<ArchiveInfo>()
+                            val parser = JsonParser()
+                            val archiveArray = parser.parse(responseString).getAsJsonArray()
+                            archiveArray.forEach({
+                                val archiveInfoString = it.asJsonObject.toString()
+                                Log.d(LOGGER_TAG, archiveInfoString)
+                                val archiveInfo = ArchiveInfo(archiveInfoString)
+                                archiveInfos.add(archiveInfo)
+                            })
+                            return archiveInfos
+                        }
+
+                        override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
+                            var archiveInfos : List<ArchiveInfo> = listOf()
+                            if(url.toString().toLowerCase().endsWith(".md")) {
+                                archiveInfos = processMdFileContents(responseString = responseString)
+                            } else if(url.toString().toLowerCase().endsWith(".json")) {
+                                archiveInfos = processJsonFileContents(responseString = responseString)
                             }
                             Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:Index handled: $url")
                             indexedArchives[indexesSelected.inverse()[url]!!] = archiveInfos
@@ -154,28 +178,6 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
                             }
 
-                        }
-
-                        fun processJsonFileContents(responseString: String) {
-                            val parser = JsonParser()
-                            val archiveArray = parser.parse(responseString).getAsJsonArray()
-                            archiveArray.forEach({
-                                val archiveInfoJson = it.asJsonObject
-                                archiveInfoJson.get("url").asString
-                            })
-                            // TODO: Finish this.
-                            /*
-                            The way forward:
-                            add each archiveArray element into indexedArchives.
-                             */
-                        }
-
-                        override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
-                            if(url.toString().toLowerCase().endsWith(".md")) {
-                                processMdFileContents(responseString = responseString)
-                            } else if(url.toString().toLowerCase().endsWith(".json")) {
-                                processJsonFileContents(responseString = responseString)
-                            }
                         }
                     })
                 } catch (throwable: Throwable) {

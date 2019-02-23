@@ -55,7 +55,7 @@ class MainActivity : BaseActivity() {
     internal fun addCheckboxes(indexUrls: Map<String, String>, indexesSelected: Map<String, String>) {
         // retainOnlyOneDictForDebugging();
         indexCheckboxes = ArrayList<CheckBox>()
-        val layout = findViewById<LinearLayout>(R.id.main_layout)
+        val layout = findViewById<LinearLayout>(R.id.df_main_layout)
         for (name in indexUrls.keys) {
             val cb = CheckBox(applicationContext)
             cb.text = name
@@ -98,7 +98,7 @@ class MainActivity : BaseActivity() {
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
 
-        button = findViewById(R.id.main_button)
+        button = findViewById(R.id.df_main_button)
         button!!.text = getString(R.string.buttonWorking)
         button!!.isClickable = false
 

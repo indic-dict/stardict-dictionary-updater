@@ -5,7 +5,7 @@
     android:fadeScrollbars="false"
     android:scrollbarStyle="outsideInset">
 
-    <LinearLayout android:id="@+id/main_layout"
+    <LinearLayout android:id="@+id/df_main_layout"
         android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
@@ -24,7 +24,7 @@
             android:textSize="18sp"/>
 
         <Button
-            android:id="@+id/main_button"
+            android:id="@+id/df_main_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="buttonPressed1"
