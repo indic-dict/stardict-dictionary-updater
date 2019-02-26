@@ -20,6 +20,7 @@
     <string name="df_extracting_archives">Extracting archives. \n </string>
     <string name="df_added_index_url">Added Index: </string>
     <string name="df_final_act_proceed_btn">Quit?</string>
+    <string name="df_archive_info_store" translatable="false">sanskritCode.downloaderFlow.archive_info_store</string>
     <string name="df_archive_version_store" translatable="false">sanskritCode.downloaderFlow.archive_version_store</string>
     <string name="df_defaultArchiveVersion" translatable="false">0000</string>
     <string name="PROBLEM_SEND_LOG">Problem? Send log</string>
@@ -36,6 +37,6 @@
     <string name="issueEmailId" translatable="false">vishvas.vasuki+ARCHIVE_DOWNLOADER@gmail.com</string>
     <string name="df_main_toggle_selection_text">Toggle selection</string>
     <string name="df_index_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|/tars/tars.MD|master/</string>
-    <string name="df_archive_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|/tars/</string>
+    <string name="df_archive_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|https://github.com/|/tars|/raw/master</string>
 
 </resources>

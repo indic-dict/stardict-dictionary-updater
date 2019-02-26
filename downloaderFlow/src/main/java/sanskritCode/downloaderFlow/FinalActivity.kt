@@ -1,5 +1,6 @@
 package sanskritCode.downloaderFlow
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -18,11 +19,18 @@ class FinalActivity : BaseActivity() {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
         setContentView(R.layout.activity_final)
+
         val topText = findViewById<TextView>(R.id.df_final_act_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = getString(R.string.df_finalMessage)
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
+
+        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
+        val sharedArchiveInfoStore = getSharedPreferences(
+                getString(R.string.df_archive_info_store), Context.MODE_PRIVATE)
+
+
         val failures = mutableListOf<String>()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
@@ -37,10 +45,12 @@ class FinalActivity : BaseActivity() {
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
         val successes = mutableListOf<String>()
+        val editor = sharedArchiveInfoStore.edit()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status == ArchiveStatus.EXTRACTION_SUCCESS) {
                 successes.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
+                archiveInfo.storeToSharedPreferences(editor)
             }
         }
         if (successes.size > 0) {
@@ -70,6 +80,7 @@ class FinalActivity : BaseActivity() {
         }
         Log.i(LOGGER_TAG, "onCreate: version: $version")
     }
+
 
     override fun onResume() {
         super.onResume()

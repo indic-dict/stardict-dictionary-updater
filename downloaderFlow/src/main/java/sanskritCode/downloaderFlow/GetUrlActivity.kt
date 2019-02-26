@@ -22,8 +22,6 @@ class GetUrlActivity : BaseActivity() {
     private val archiveCheckBoxes = HashMap<String, CheckBox>()
     private val indexCheckBoxes = HashMap<String, CheckBox>()
 
-    private var sharedArchiveVersionStore: SharedPreferences? = null
-
     private val archiveCheckboxListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
         val archiveInfo = ArchiveInfo(buttonView.hint.toString())
         if (isChecked) {
@@ -45,8 +43,6 @@ class GetUrlActivity : BaseActivity() {
 
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         layout = findViewById(R.id.get_url_layout)
-        sharedArchiveVersionStore = getSharedPreferences(
-                getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
         if (archiveIndexStore == null) {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
@@ -91,6 +87,12 @@ class GetUrlActivity : BaseActivity() {
 
     // TODO: In certain cases, it could be that the destination directory is cleared (eg. by some antivirus). In this case, all dictionaries should be selected.
     private fun selectCheckboxes(archivesSelectedSet: Set<String>?) {
+        val sharedArchiveVersionStore = getSharedPreferences(
+                getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
+        val sharedArchiveInfoStore = getSharedPreferences(
+                getString(R.string.df_archive_info_store), Context.MODE_PRIVATE)
+        val sharedArchiveInfoStoreEditor = sharedArchiveInfoStore.edit()
+        val sharedArchiveVersionStoreEditor = sharedArchiveVersionStore.edit()
         if (archivesSelectedSet == null) {
             for (cb in archiveCheckBoxes.values) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
@@ -98,16 +100,21 @@ class GetUrlActivity : BaseActivity() {
                 val filename = archiveInfo.url
                 var proposedVersionNewer = true
 
-                val archiveNameParts = ArchiveNameHelper.getArchiveNameAndVersion(filename)
-                val archiveName = archiveNameParts[0]
-                if (sharedArchiveVersionStore!!.contains(archiveName)) {
-                    val currentVersion = sharedArchiveVersionStore!!.getString(archiveName, getString(R.string.df_defaultArchiveVersion))
-                    var proposedVersion = getString(R.string.df_defaultArchiveVersion)
-                    if (archiveNameParts.size > 1) {
-                        proposedVersion = archiveNameParts[1]
+                if (sharedArchiveInfoStore.contains(archiveInfo.url)) {
+                    val archiveInfoOlder = ArchiveInfo(sharedArchiveInfoStore.getString(archiveInfo.url, null))!!
+                    proposedVersionNewer = archiveInfo.isVersionNewerThan(archiveInfoOlder)
+                } else{
+                    val archiveName = ArchiveNameHelper.getArchiveNameAndVersion(filename)[0]
+                    // Handle transition from old style records.
+                    if (sharedArchiveVersionStore.contains(archiveName)){
+                        val currentVersion = sharedArchiveVersionStore.getString(archiveName, getString(R.string.df_defaultArchiveVersion))!!
+                        val archiveInfoOlder = ArchiveInfo.fromUrl(archiveInfo.url, currentVersion)
+                        archiveInfoOlder.setVersion(currentVersion!!)
+                        archiveInfoOlder.storeToSharedPreferences(sharedArchiveInfoStoreEditor)
+                        sharedArchiveVersionStoreEditor.remove(archiveName)
+                        sharedArchiveVersionStoreEditor.apply()
+                        proposedVersionNewer = archiveInfo.isVersionNewerThan(archiveInfoOlder)
                     }
-
-                    proposedVersionNewer = proposedVersion.compareTo(currentVersion!!) > 1
                 }
 
                 if (proposedVersionNewer) {
@@ -156,7 +163,10 @@ class GetUrlActivity : BaseActivity() {
             for (archiveInfo in indexedArchives[indexName]!!) {
                 val cb = CheckBox(applicationContext)
                 val url = archiveInfo.url
-                cb.setText(url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), ""))
+                val cbText = url
+                        .replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
+                        .replace(indexName, "")
+                cb.setText(cbText)
                 cb.hint = archiveInfo.jsonStr
                 cb.setTextColor(Color.BLACK)
                 layout!!.addView(cb, layout!!.childCount)

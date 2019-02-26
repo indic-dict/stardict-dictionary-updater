@@ -11,6 +11,7 @@
         Please scroll + select the dictionary lists you want to use, then click the button.\n
     </string>
     <string name="df_finalMessage">We\'re done!! Get a stardict-compatible dictionary app (eg: Eg: <a href="https://apkpure.com/ebdic/com.twn.ebdic">ebdic</a> [Rated high], Goldendict paid, ColorDict), if you don\'t already have one. Then reindex all your dictionaries.</string>
+    <string name="df_archive_info_store">sanskritcode.sanskritdictionaryupdater.dict_info_store</string>
     <string name="df_archive_version_store">sanskritcode.sanskritdictionaryupdater.dict_version_store</string>
     <string name="df_pick_archives">Which dictionaries shall we install?</string>
 

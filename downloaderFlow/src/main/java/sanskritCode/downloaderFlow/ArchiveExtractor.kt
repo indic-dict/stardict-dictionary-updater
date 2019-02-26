@@ -140,7 +140,6 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             archiveInputStream.close()
             archiveInfo.status = ArchiveStatus.EXTRACTION_SUCCESS
             Log.d(LOGGER_TAG, ":extractFile:" + "success!")
-            activity.storeArchiveVersion(archiveFileName)
         } catch (e: Exception) {
             Log.e(LOGGER_TAG, ":extractFile:" + "IOEx:", e)
             archiveInfo.status = ArchiveStatus.EXTRACTION_FAILURE

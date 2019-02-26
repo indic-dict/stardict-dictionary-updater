@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package sanskritCode.downloaderFlow
 
 import com.google.common.io.Files
@@ -17,6 +19,18 @@ internal object ArchiveNameHelper {
 
     fun getArchiveNameAndVersion(fileName: String): Array<String> {
         return getNameWithoutAnyExtension(fileName).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+    }
+
+    // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
+    fun getUnversionedArchiveBaseName(somePath: String) = getArchiveNameAndVersion(somePath)[0]
+
+    fun getVersion(somePath: String, defaultVersion: String = "0000"): String {
+        val archiveNameParts = getArchiveNameAndVersion(somePath)
+        return if (archiveNameParts.size > 1) {
+            getArchiveNameAndVersion(somePath)[1]
+        } else {
+            defaultVersion
+        }
     }
 
     fun getSize(fileName: String): Int {

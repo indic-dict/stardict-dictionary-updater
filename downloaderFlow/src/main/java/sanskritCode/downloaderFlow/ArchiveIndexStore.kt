@@ -2,6 +2,7 @@
 
 package sanskritCode.downloaderFlow
 
+import android.content.SharedPreferences
 import android.util.Log
 
 import com.google.common.collect.BiMap
@@ -31,13 +32,6 @@ class ArchiveInfo(var jsonStr: String) : Serializable {
         return url.substring(url.lastIndexOf("/")).replace("/", "")
     }
 
-    // handle filenames of the type: kRdanta-rUpa-mAlA__2016-02-20_23-22-27
-    internal fun getUnversionedArchiveBaseName() =
-            Files.getNameWithoutExtension(
-                    Files.getNameWithoutExtension(
-                            getDownloadedArchiveBasename())).split("__".toRegex())
-                    .dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
-
     override fun toString(): String {
         return ("\n status: " + status
                 + "\n downloadedArchiveBasename: " + getDownloadedArchiveBasename()
@@ -46,16 +40,54 @@ class ArchiveInfo(var jsonStr: String) : Serializable {
     }
 
     fun getDestinationPathSuffix() : String {
-        if (getJsonObject().has("destinationPathSuffix")) {
-            return getJsonObject().get("destinationPathSuffix").asString
+        val jsonObject = getJsonObject()
+        if (jsonObject.has("destinationPathSuffix")) {
+            return jsonObject.get("destinationPathSuffix").asString
         } else {
-            return getUnversionedArchiveBaseName()
+            return ArchiveNameHelper.getUnversionedArchiveBaseName(url)
         }
     }
 
-    companion object {
-        fun fromUrl(url: String) : ArchiveInfo = ArchiveInfo("{\"url\": \"$url\"}")
+    internal fun getVersion(): String? {
+        val jsonObject = getJsonObject()
+        if (jsonObject.has("version")) {
+            return jsonObject.get("version").asString
+        } else {
+            return null
+        }
     }
+
+    fun setVersion(versionString: String) {
+        val jsonObject = getJsonObject()
+        jsonObject.addProperty("version", versionString)
+        jsonStr = jsonObject.toString()
+    }
+
+    fun isVersionNewerThan(archiveInfo: ArchiveInfo) = isVer1Newer(getVersion(), archiveInfo.getVersion())
+
+    fun storeToSharedPreferences(archiveInfoEditor: SharedPreferences.Editor) {
+        archiveInfoEditor.putString(url, jsonStr)
+        archiveInfoEditor.apply()
+    }
+
+    companion object {
+        fun fromUrl(url: String, defaultVersion: String) : ArchiveInfo = ArchiveInfo(
+            """
+                {
+                "url": "$url",
+                "version": "${ArchiveNameHelper.getVersion(url, defaultVersion)}"
+                }
+            """.trimIndent())
+
+        fun isVer1Newer(ver1: String?, ver2: String?): Boolean {
+            return if (ver1 == null || ver2 == null) {
+                true
+            } else {
+                ver1.compareTo(ver2) > 0
+            }
+        }
+    }
+
 }
 
 class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
@@ -141,7 +173,12 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             // getUrlActivity.sendLoagcatMail();
 
                             // Just proceed with the next dict index.
-                            indexedArchives[name] = listOf<ArchiveInfo>(ArchiveInfo.fromUrl(url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed"))
+                            indexedArchives[name] = listOf<ArchiveInfo>(
+                                    ArchiveInfo.fromUrl(
+                                            url!!.replace("[_/.]+".toRegex(), "_") + "_indexGettingFailed",
+                                            getUrlActivity.getString(R.string.df_defaultArchiveVersion)
+                                    )
+                            )
                             if (indexesSelected.size == indexedArchives.size) {
                                 getUrlActivity.addCheckboxes(indexedArchives, null)
                             }
@@ -151,7 +188,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             val archiveInfos = ArrayList<ArchiveInfo>()
                             for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
                                 val url1 = line.replace("<", "").replace(">", "")
-                                archiveInfos.add(ArchiveInfo.fromUrl(url1))
+                                archiveInfos.add(ArchiveInfo.fromUrl(url1, getUrlActivity.getString(R.string.df_defaultArchiveVersion)))
                                 Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes: Added archive: " + url1)
                             }
                             return archiveInfos

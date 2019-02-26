@@ -3,22 +3,16 @@ package sanskritCode.downloaderFlow
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-
-import com.google.common.io.Files
-
 import java.io.File
 
 class ExtractArchivesActivity : BaseActivity() {
-    private var archiveVersionEditor: SharedPreferences.Editor? = null
     internal val LOGGER_TAG = javaClass.getSimpleName()
 
     private var topText: TextView? = null
@@ -30,13 +24,9 @@ class ExtractArchivesActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        val sharedArchiveVersionStore = getSharedPreferences(
-                getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
         if (archiveIndexStore == null) {
             archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
         }
-        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
-        archiveVersionEditor = sharedArchiveVersionStore.edit()
         setContentView(R.layout.activity_extract_archives)
         topText = findViewById(R.id.df_extract_archive_textView)
         progressBar = findViewById(R.id.df_extract_archive_progressBar)
@@ -70,20 +60,6 @@ class ExtractArchivesActivity : BaseActivity() {
         progressBar!!.max = total
         progressBar!!.progress = progress
         progressBar!!.visibility = View.VISIBLE
-    }
-
-    internal fun storeArchiveVersion(fileName: String) {
-        val filenameParts = ArchiveNameHelper.getArchiveNameAndVersion(fileName)
-        val archiveName = filenameParts[0]
-        if (filenameParts.size > 1) {
-            @Suppress("UnstableApiUsage") val archiveVersion = Files.getNameWithoutExtension(Files.getNameWithoutExtension(fileName)).split("__".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
-            archiveVersionEditor!!.putString(archiveName, archiveVersion)
-            archiveVersionEditor!!.commit()
-        } else {
-            Log.w(LOGGER_TAG, ":storeArchiveVersion:Storing default archive version for $fileName")
-            archiveVersionEditor!!.putString(archiveName, getString(R.string.df_defaultArchiveVersion))
-            archiveVersionEditor!!.commit()
-        }
     }
 
 
