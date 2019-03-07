@@ -19,7 +19,7 @@ ext {
     siteUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater'
     gitUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater.git'
 
-    libraryVersion = '0.1.4'
+    libraryVersion = '0.1.5'
 
     developerId = 'vvasuki'
     developerName = 'Sanskrit programmers'
