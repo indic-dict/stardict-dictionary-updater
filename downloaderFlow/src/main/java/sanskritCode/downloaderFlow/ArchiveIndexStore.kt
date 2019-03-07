@@ -22,7 +22,7 @@ enum class ArchiveStatus {
     NOT_TRIED, DOWNLOAD_SUCCESS, DOWNLOAD_FAILURE, EXTRACTION_SUCCESS, EXTRACTION_FAILURE
 }
 
-class ArchiveInfo(var jsonStr: String) : Serializable {
+open class ArchiveInfo(var jsonStr: String) : Serializable {
     var status = ArchiveStatus.NOT_TRIED
     // JsonObject is not serializable. So we wrap the below in a method.
     fun getJsonObject() = JsonParser().parse(jsonStr).asJsonObject
