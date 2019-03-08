@@ -90,7 +90,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             Log.i(LOGGER_TAG, ":extractFile:Cleaning $initialDestDir")
             cleanDirectory(destDirFile)
         } else {
-            Log.i(LOGGER_TAG, ":extractFile:" + "Creating afresh the directory " + destDirFile.mkdirs())
+            Log.i(LOGGER_TAG, ":extractFile:" + "Creating dir " + destDirFile.mkdirs())
         }
         Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory)
 
@@ -123,7 +123,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                 val destFileDirFile = File(initialDestDir, File(currentEntry.name).parent?:"")
                 val destFile = File(destFileDirFile, File(currentEntry.name).name).absolutePath
                 if (!destFileDirFile.exists()) {
-                    Log.i(LOGGER_TAG, ":extractFile:" + "Creating afresh the directory " + destFileDirFile + ", result:" + destFileDirFile.mkdirs())
+                    Log.d(LOGGER_TAG, ":extractFile:" + "Creating dir " + destFileDirFile + ", result:" + destFileDirFile.mkdirs())
                 }
                 val fos = FileOutputStream(destFile)
                 var n: Int

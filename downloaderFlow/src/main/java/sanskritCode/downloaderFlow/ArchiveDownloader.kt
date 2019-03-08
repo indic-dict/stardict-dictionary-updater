@@ -61,6 +61,8 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             }
             asyncHttpClient.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0")
             asyncHttpClient.setEnableRedirects(true, true, true)
+            asyncHttpClient.setLoggingLevel(Log.INFO)
+
             // URL could be bad, hence the below.
             asyncHttpClient.get(url, object : FileAsyncHttpResponseHandler(File(downloadsDir, fileName)) {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, file: File) {

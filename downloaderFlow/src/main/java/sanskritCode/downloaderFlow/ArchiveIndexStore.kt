@@ -4,18 +4,13 @@ package sanskritCode.downloaderFlow
 
 import android.content.SharedPreferences
 import android.util.Log
-
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
-import com.google.common.io.Files
+import com.google.gson.JsonParser
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.TextHttpResponseHandler
-
 import java.io.Serializable
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.LinkedHashMap
-import com.google.gson.JsonParser
+import java.util.*
 
 
 enum class ArchiveStatus {
@@ -123,6 +118,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
         if (indexUrls.isEmpty()) {
             val asyncHttpClient = AsyncHttpClient()
             asyncHttpClient.setEnableRedirects(true, true, true)
+            asyncHttpClient.setLoggingLevel(Log.INFO)
             asyncHttpClient.get(indexIndexorum, object : TextHttpResponseHandler() {
                 override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String, throwable: Throwable) {
                     Log.e(LOGGER_TAG, ":getIndicesAddCheckboxes:" + "getIndices", throwable)
