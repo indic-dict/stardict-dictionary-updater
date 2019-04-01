@@ -34,9 +34,9 @@ class FinalActivity : BaseActivity() {
 
         val failures = mutableListOf<String>()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
-
             if (archiveInfo.status != ArchiveStatus.EXTRACTION_SUCCESS) {
-                failures.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
+                val archiveShortName = archiveInfo.url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
+                failures.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveShortName))
             }
         }
         if (failures.size > 0) {
@@ -50,7 +50,8 @@ class FinalActivity : BaseActivity() {
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status == ArchiveStatus.EXTRACTION_SUCCESS) {
-                successes.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveInfo.url))
+                val archiveShortName = archiveInfo.url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
+                successes.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveShortName))
                 archiveInfo.storeToSharedPreferences(editor)
             }
         }
