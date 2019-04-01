@@ -86,7 +86,7 @@ class ExtractArchivesActivity : BaseActivity() {
     /* Should only be called from the UI thread! */
     internal fun whenAllExtracted() {
         val intent = Intent()
-        intent.setComponent(ComponentName(this, getString(R.string.df_post_exrtaction_activity)))
+        intent.setComponent(ComponentName(this, getString(R.string.df_post_extraction_activity)))
         intent.putExtra("archiveIndexStore", archiveIndexStore)
         startActivity(intent)
     }

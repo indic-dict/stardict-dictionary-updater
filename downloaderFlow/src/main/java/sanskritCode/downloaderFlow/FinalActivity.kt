@@ -1,5 +1,6 @@
 package sanskritCode.downloaderFlow
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -97,6 +98,15 @@ class FinalActivity : BaseActivity() {
     }
 
     fun buttonPressed1(v: View) {
-        finish()
+
+        val postCompletionActivityName = getString(R.string.df_post_completion_activity)
+        if (postCompletionActivityName == "None") {
+            finish()
+        } else {
+            val intent = Intent()
+            intent.setComponent(ComponentName(this, postCompletionActivityName))
+            intent.putExtra("archiveIndexStore", archiveIndexStore)
+            startActivity(intent)
+        }
     }
 }
