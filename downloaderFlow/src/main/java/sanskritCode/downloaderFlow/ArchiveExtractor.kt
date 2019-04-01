@@ -150,7 +150,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
     }
 
     override fun doInBackground(vararg params: Void): Void? {
-        for (archiveInfo in archiveIndexStore.archivesSelectedMap.values) {
+        for (archiveInfo in archiveIndexStore.archivesSelectedMap.values.distinct()) {
             extractFile(archiveInfo)
         }
         return null
