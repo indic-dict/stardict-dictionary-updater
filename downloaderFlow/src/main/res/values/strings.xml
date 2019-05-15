@@ -36,8 +36,8 @@
     <string name="df_post_extraction_activity" translatable="false">sanskritCode.downloaderFlow.FinalActivity</string>
     <string name="issueEmailId" translatable="false">vishvas.vasuki+ARCHIVE_DOWNLOADER@gmail.com</string>
     <string name="df_main_toggle_selection_text">Toggle selection</string>
-    <string name="df_index_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|/tars/tars.MD|master/</string>
-    <string name="df_archive_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|https://github.com/|/tars|/raw/master</string>
+    <string name="df_index_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|/tars/tars.MD|master/|gh-pages/</string>
+    <string name="df_archive_url_redundant_string_regex" translatable="false">https://raw.githubusercontent.com/|https://github.com/|/tars|/raw/master|/raw/gh-pages</string>
     <string name="df_post_completion_activity" translatable="false">None</string>
 
 </resources>
