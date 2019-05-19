@@ -19,6 +19,18 @@ import android.widget.TextView
 
 import java.io.File
 import java.io.IOException
+import java.net.URI
+import java.nio.file.Paths
+
+fun fileNameFromUrl(url: String): String {
+    // return Paths.get(URI(url).getPath()).getFileName().toString() requires min API 26, so not doing that.
+    if (url.lastIndexOf("/") > -1) {
+        return url.substring(url.lastIndexOf("/") + 1).replace("/", "")
+    } else {
+        Log.e("ArchiveIndexStore", "$url has no /.")
+        return url;
+    }
+}
 
 abstract class BaseActivity : AppCompatActivity() {
     protected var archiveIndexStore: ArchiveIndexStore? = null

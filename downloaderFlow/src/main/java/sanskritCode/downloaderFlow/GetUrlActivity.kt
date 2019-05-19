@@ -96,6 +96,11 @@ class GetUrlActivity : BaseActivity() {
         if (archivesSelectedSet == null) {
             for (cb in archiveCheckBoxes.values) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
+                if (cb.text.endsWith("indexGettingFailed")) {
+                    cb.isChecked = false
+                    cb.isEnabled = false
+                    continue
+                }
                 val archiveInfo = ArchiveInfo(cb.hint.toString())
                 val filename = archiveInfo.url
                 var proposedVersionNewer = true
@@ -163,15 +168,23 @@ class GetUrlActivity : BaseActivity() {
             for (archiveInfo in indexedArchives[indexName]!!) {
                 val cb = CheckBox(applicationContext)
                 val url = archiveInfo.url
-                val cbText = url
-                        .replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
-                        .replace(indexName, "")
-                cb.setText(cbText)
-                cb.hint = archiveInfo.jsonStr
-                cb.setTextColor(Color.BLACK)
-                layout!!.addView(cb, layout!!.childCount)
-                cb.setOnCheckedChangeListener(archiveCheckboxListener)
-                archiveCheckBoxes[url] = cb
+                if (url.endsWith("indexGettingFailed")) {
+                    cb.setText(url)
+                    cb.setBackgroundColor(Color.RED)
+                    archiveCheckBoxes[url] = cb
+                    cb.isEnabled = false
+                    cb.isChecked = false
+                    cb.setTextColor(Color.BLACK)
+                    layout!!.addView(cb, layout!!.childCount)
+                } else {
+                    val cbText = fileNameFromUrl(url=url).replace(".tar.gz", "")
+                    cb.setText(cbText)
+                    cb.hint = archiveInfo.jsonStr
+                    cb.setTextColor(Color.BLACK)
+                    layout!!.addView(cb, layout!!.childCount)
+                    cb.setOnCheckedChangeListener(archiveCheckboxListener)
+                    archiveCheckBoxes[url] = cb
+                }
             }
         }
 

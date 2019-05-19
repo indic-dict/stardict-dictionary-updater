@@ -23,9 +23,7 @@ open class ArchiveInfo(open var jsonStr: String) : Serializable {
     fun getJsonObject() = JsonParser().parse(jsonStr).asJsonObject
     var url: String = getJsonObject().get("url").asString
 
-    fun getDownloadedArchiveBasename() : String {
-        return url.substring(url.lastIndexOf("/")).replace("/", "")
-    }
+    fun getDownloadedArchiveBasename() : String  = fileNameFromUrl(url)
 
     override fun toString(): String {
         return ("\n status: " + status
@@ -159,7 +157,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                 try {
                     asyncHttpClient.get(url, object : TextHttpResponseHandler() {
                         override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String, throwable: Throwable) {
-                            Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Failed ", throwable)
+                            Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Failed for $url with throwable:", throwable)
                             BaseActivity.largeLog(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + archiveIndexStore.toString())
                             val message = String.format(getUrlActivity.getString(R.string.df_index_download_failed), url)
                             getUrlActivity.topText?.setText(message)
