@@ -30,3 +30,6 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-oriya/gh-pages/or-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-assamese/gh-pages/as-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-sinhala/gh-pages/si-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/bn-entries/tars/tars.MD>
+
