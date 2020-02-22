@@ -65,7 +65,7 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: '27.0.1-android'
     implementation('com.loopj.android:android-async-http:1.4.9')
 
-    implementation('org.apache.commons:commons-compress:1.14')
+    implementation('org.apache.commons:commons-compress:1.20')
 
 
     implementation 'com.google.code.gson:gson:2.8.5'
