@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
@@ -16,11 +17,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-
 import java.io.File
 import java.io.IOException
-import java.net.URI
-import java.nio.file.Paths
+
 
 fun fileNameFromUrl(url: String): String {
     // return Paths.get(URI(url).getPath()).getFileName().toString() requires min API 26, so not doing that.
@@ -80,10 +79,6 @@ abstract class BaseActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_LOGS), 103)
             Log.i(this.localClassName, "SendLoagcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS))
         }
-        // save logcat in file
-        val outputFile = File(Environment.getExternalStorageDirectory().absolutePath,
-                "logcat.txt")
-        Log.i(this.localClassName, "SendLoagcatMail: " + "logcat file is " + outputFile.absolutePath)
 
 
         var deviceDetails = "Device details:"
@@ -93,6 +88,24 @@ abstract class BaseActivity : AppCompatActivity() {
         deviceDetails += "\n Model (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")"
         Log.i(this.localClassName, "SendLoagcatMail: deviceDetails: $deviceDetails")
 
+
+        //send log using email
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        // Set type to "email"
+        emailIntent.type = "vnd.android.cursor.dir/email"
+        val to = arrayOf(getString(R.string.issueEmailId))
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
+        // the attachment
+        emailIntent.putExtra(Intent.EXTRA_STREAM, getLogcatFileUri())
+        // the mail subject
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Downloader App Failure report.")
+        this.startActivity(Intent.createChooser(emailIntent, "Email failure report to maker?..."))
+    }
+
+    private fun getLogcatFileUri(): Uri {
+        // save logcat in file
+        val outputFile = File(Environment.getExternalStorageDirectory().absolutePath,
+                "logcat.txt")
         val versionCode = BuildConfig.VERSION_CODE
         val versionName = BuildConfig.VERSION_NAME
         Log.i(this.localClassName, "SendLoagcatMail: App version: $versionName with id $versionCode")
@@ -106,24 +119,23 @@ abstract class BaseActivity : AppCompatActivity() {
             Log.e(this.localClassName, "SendLoagcatMail: " + "Alas error! ", e)
         }
 
-        //send file using email
-        val emailIntent = Intent(Intent.ACTION_SEND)
-        // Set type to "email"
-        emailIntent.type = "vnd.android.cursor.dir/email"
-        val to = arrayOf(getString(R.string.issueEmailId))
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
-        // the attachment
-        emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(outputFile))
-        // the mail subject
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Downloader App Failure report.")
-        this.startActivity(Intent.createChooser(emailIntent, "Email failure report to maker?..."))
+        Log.i(this.localClassName, "SendLoagcatMail: " + "logcat file is " + outputFile.absolutePath)
+        val uri: Uri
+        uri = if (Build.VERSION.SDK_INT < 24) {
+            Uri.fromFile(outputFile)
+        } else {
+            Uri.parse(outputFile.getPath()) // My work-around for new SDKs, doesn't work in Android 10.
+        }
+        return uri
     }
 
     fun showNetworkInfo(warningText: TextView) {
-        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val activeNetwork = cm?.activeNetworkInfo
-        val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
+        val isConnected = activeNetwork != null && activeNetwork.isConnected
+        // Newer way is to use the following, but that requires min api 16.
+        // val networkCapabilities = cm.getNetworkCapabilities(cm?.activeNetwork)
         val isWiFi = activeNetwork != null && activeNetwork.type == ConnectivityManager.TYPE_WIFI
 
         warningText.setBackgroundColor(Color.LTGRAY)

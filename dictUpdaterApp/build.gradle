@@ -9,8 +9,8 @@ android {
         applicationId "sanskritcode.sanskritdictionaryupdater"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 341
-        versionName "3.4.1"
+        versionCode 342
+        versionName "3.4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
