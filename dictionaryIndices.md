@@ -9,6 +9,7 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-sanskrit/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-ayurveda/gh-pages/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-hindi/gh-pages/hi-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-hindi/gh-pages/hi-head/hi-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-hindi/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-kannada/gh-pages/kn-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-telugu/gh-pages/te-head/tars/tars.MD>
