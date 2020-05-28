@@ -33,4 +33,6 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-sinhala/gh-pages/si-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/bn-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-gujarati/gh-pages/gu-head/gu-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-gujarati/gh-pages/gu-head/dev-entries/tars/tars.MD>
 
