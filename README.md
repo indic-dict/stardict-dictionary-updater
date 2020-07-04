@@ -1,3 +1,5 @@
+Android app to download and install [a large set of Sanskrit (and other) dictionaries](https://github.com/indic-dict), which can then be used from any compatible dictionary app.
+
 ## For app users
 - Play store link: <https://play.google.com/store/apps/details?id=sanskritcode.sanskritdictionaryupdater>
 - Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
@@ -59,7 +61,7 @@ repositories {
 ### To contribute new dictionary repositories
 * We will just need to list your dictionary repository in <dictioanryIndices.md>. Open an issue in this project.
 * Creating your dictionary repository:
-  * Just follow the pattern you observe in, say [this repo](<https://raw.githubusercontent.com/sanskrit-coders/stardict-sanskrit/master/sa-head/tars/tars.MD>).
+  * Just follow the pattern you observe in, say [this repo](<https://raw.githubusercontent.com/indic-dict/stardict-sanskrit/master/sa-head/tars/tars.MD>).
   * Note that the filename of your dictionary should have two parts, separated by __, as in `kRdanta-rUpa-mAlA__2016-02-20_23-22-27`.
     * The first part should be the actual dictionary name, the second the timestamp.
   * All stardict and other dictionary files should have names matching the dictionary name specified above.
