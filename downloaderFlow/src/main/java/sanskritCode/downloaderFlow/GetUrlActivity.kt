@@ -106,7 +106,7 @@ class GetUrlActivity : BaseActivity() {
                 var proposedVersionNewer = true
 
                 if (sharedArchiveInfoStore.contains(archiveInfo.url)) {
-                    val archiveInfoOlder = ArchiveInfo(sharedArchiveInfoStore.getString(archiveInfo.url, null))!!
+                    val archiveInfoOlder = ArchiveInfo(sharedArchiveInfoStore.getString(archiveInfo.url, null)!!)
                     proposedVersionNewer = archiveInfo.isVersionNewerThan(archiveInfoOlder)
                 } else{
                     val archiveName = ArchiveNameHelper.getArchiveNameAndVersion(filename)[0]
@@ -114,7 +114,7 @@ class GetUrlActivity : BaseActivity() {
                     if (sharedArchiveVersionStore.contains(archiveName)){
                         val currentVersion = sharedArchiveVersionStore.getString(archiveName, getString(R.string.df_defaultArchiveVersion))!!
                         val archiveInfoOlder = ArchiveInfo.fromUrl(archiveInfo.url, currentVersion)
-                        archiveInfoOlder.setVersion(currentVersion!!)
+                        archiveInfoOlder.setVersion(currentVersion)
                         archiveInfoOlder.storeToSharedPreferences(sharedArchiveInfoStoreEditor)
                         sharedArchiveVersionStoreEditor.remove(archiveName)
                         sharedArchiveVersionStoreEditor.apply()
