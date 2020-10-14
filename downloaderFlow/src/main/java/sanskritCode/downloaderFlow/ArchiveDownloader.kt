@@ -77,8 +77,8 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
                     getArchivesActivity.updateProgressBar(bytesWritten.toInt(), totalSize.toInt())
                 }
 
-                override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, throwable: Throwable, file: File) {
-                    Log.e(LOGGER_TAG, ":onFailure:status $statusCode")
+                override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>?, throwable: Throwable, file: File) {
+                    Log.e(LOGGER_TAG, ":onFailure:status ${statusCode}")
                     handleDownloadFailure(index, url, throwable)
                 }
             })
