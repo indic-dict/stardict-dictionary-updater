@@ -36,7 +36,8 @@ class FinalActivity : BaseActivity() {
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
             if (archiveInfo.status != ArchiveStatus.EXTRACTION_SUCCESS) {
                 val archiveShortName = archiveInfo.url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
-                failures.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveShortName))
+                val archiveResult = ArchiveNameHelper.getNameWithoutAnyExtension(archiveShortName) + " : " + archiveInfo.status.name
+                failures.add(archiveResult)
             }
         }
         if (failures.size > 0) {
@@ -77,7 +78,7 @@ class FinalActivity : BaseActivity() {
         button_2.visibility = View.VISIBLE
         button_2.isEnabled = true
         button_2.setOnClickListener {
-            thisActivity.sendLoagcatMail()
+            thisActivity.sendLogcatMail(failures.joinToString("\n"))
             finishAffinity()
         }
         Log.i(LOGGER_TAG, "onCreate: version: $version")

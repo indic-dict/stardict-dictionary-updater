@@ -118,7 +118,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
             asyncHttpClient.setEnableRedirects(true, true, true)
             asyncHttpClient.setLoggingLevel(Log.INFO)
             asyncHttpClient.get(indexIndexorum, object : TextHttpResponseHandler() {
-                override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>?, responseString: String, throwable: Throwable) {
+                override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>?, responseString: String?, throwable: Throwable) {
                     Log.e(LOGGER_TAG, ":getIndicesAddCheckboxes:" + "getIndices", throwable)
                 }
 
@@ -156,7 +156,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
 
                 try {
                     asyncHttpClient.get(url, object : TextHttpResponseHandler() {
-                        override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>?, responseString: String, throwable: Throwable) {
+                        override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>?, responseString: String?, throwable: Throwable) {
                             Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + "Failed for $url with throwable:", throwable)
                             BaseActivity.largeLog(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:" + archiveIndexStore.toString())
                             val message = String.format(getUrlActivity.getString(R.string.df_index_download_failed), url)
@@ -164,7 +164,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                             // The below would result in
                             // java.lang.RuntimeException: android.os.FileUriExposedException: file:///storage/emulated/0/logcat.txt exposed beyond app through ClipData.Item.getUri()
                             // A known issue: https://github.com/loopj/android-async-http/issues/891
-                            // getUrlActivity.sendLoagcatMail();
+                            // getUrlActivity.sendLogcatMail();
 
                             // Just proceed with the next dict index.
                             indexedArchives[name] = listOf<ArchiveInfo>(
@@ -222,7 +222,7 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
                     Log.e(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:error with $url", throwable)
                     val message = String.format(getUrlActivity.getString(R.string.df_index_download_failed), url)
                     getUrlActivity.topText?.setText(message)
-                    getUrlActivity.sendLoagcatMail()
+                    getUrlActivity.sendLogcatMail(message)
                 }
 
             }

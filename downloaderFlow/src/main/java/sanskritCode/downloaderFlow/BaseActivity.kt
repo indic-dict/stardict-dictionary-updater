@@ -4,21 +4,23 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import org.apache.commons.io.input.ReversedLinesFileReader
 import java.io.File
 import java.io.IOException
+import java.nio.charset.Charset
 
 
 fun fileNameFromUrl(url: String): String {
@@ -71,13 +73,13 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun sendLoagcatMail() {
+    fun sendLogcatMail(mailBody: String) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(this.localClassName, "SendLoagcatMail: " + "Got READ_LOGS permissions")
+            Log.d(this.localClassName, "SendLogcatMail: " + "Got READ_LOGS permissions")
         } else {
-            Log.e(this.localClassName, "SendLoagcatMail: " + "Don't have READ_LOGS permissions")
+            Log.e(this.localClassName, "SendLogcatMail: " + "Don't have READ_LOGS permissions")
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_LOGS), 103)
-            Log.i(this.localClassName, "SendLoagcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS))
+            Log.i(this.localClassName, "SendLogcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS))
         }
 
 
@@ -86,29 +88,36 @@ abstract class BaseActivity : AppCompatActivity() {
         deviceDetails += "\n OS API Level: " + android.os.Build.VERSION.RELEASE + "(" + android.os.Build.VERSION.SDK_INT + ")"
         deviceDetails += "\n Device: " + android.os.Build.DEVICE
         deviceDetails += "\n Model (and Product): " + android.os.Build.MODEL + " (" + android.os.Build.PRODUCT + ")"
-        Log.i(this.localClassName, "SendLoagcatMail: deviceDetails: $deviceDetails")
+        Log.i(this.localClassName, "SendLogcatMail: deviceDetails: $deviceDetails")
 
 
         //send log using email
         val emailIntent = Intent(Intent.ACTION_SEND)
         // Set type to "email"
         emailIntent.type = "vnd.android.cursor.dir/email"
+        intent.setType("application/octet-stream"); /* or use intent.setType("message/rfc822); */
+        val subject = "Downloader App Failure report."
         val to = arrayOf(getString(R.string.issueEmailId))
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
         // the attachment
-        emailIntent.putExtra(Intent.EXTRA_STREAM, getLogcatFileUri())
+        val logcatUri = getLogcatFileUri()
+        emailIntent.putExtra(Intent.EXTRA_STREAM, logcatUri)
+
+//        val truncatedLogs = getLogSummary(uri = logcatUri)
+//        // Email body can't be too large!
+        emailIntent.putExtra(Intent.EXTRA_TEXT, mailBody.takeLast(10000))
         // the mail subject
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Downloader App Failure report.")
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         this.startActivity(Intent.createChooser(emailIntent, "Email failure report to maker?..."))
     }
 
     private fun getLogcatFileUri(): Uri {
         // save logcat in file
-        val outputFile = File(Environment.getExternalStorageDirectory().absolutePath,
+        val outputFile = File(this.externalCacheDir!!.absolutePath,
                 "logcat.txt")
-        val versionCode = BuildConfig.VERSION_CODE
-        val versionName = BuildConfig.VERSION_NAME
-        Log.i(this.localClassName, "SendLoagcatMail: App version: $versionName with id $versionCode")
+        val pInfo: PackageInfo = applicationContext.getPackageManager().getPackageInfo(applicationContext.getPackageName(), 0)
+        val versionName = pInfo.versionName
+        Log.i(this.localClassName, "SendLogcatMail: App version: $versionName")
 
         try {
             Runtime.getRuntime().exec(
@@ -116,15 +125,15 @@ abstract class BaseActivity : AppCompatActivity() {
         } catch (e: IOException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
-            Log.e(this.localClassName, "SendLoagcatMail: " + "Alas error! ", e)
+            Log.e(this.localClassName, "SendLogcatMail: " + "Alas error! ", e)
         }
 
-        Log.i(this.localClassName, "SendLoagcatMail: " + "logcat file is " + outputFile.absolutePath)
+        Log.i(this.localClassName, "SendLogcatMail: " + "logcat file is " + outputFile.absolutePath)
         val uri: Uri
         uri = if (Build.VERSION.SDK_INT < 24) {
             Uri.fromFile(outputFile)
         } else {
-            Uri.parse(outputFile.getPath()) // My work-around for new SDKs, doesn't work in Android 10.
+            Uri.parse("file://" + outputFile.getPath()) // My work-around for new SDKs, doesn't work in Android 10.
         }
         return uri
     }
@@ -156,6 +165,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
 
+        fun getLogSummary(uri: Uri): String {
+            val file = File(uri.getPath())
+            val n_lines = 3000
+            val reversedReader = ReversedLinesFileReader(file, Charset.defaultCharset())
+            var result: String = ""
+            for (i in 0 until n_lines) {
+                val line: String = reversedReader.readLine() ?: break
+                result += line
+            }
+            return result.takeLast(900000)
+        }
 
         fun largeLog(tag: String, content: String) {
             if (content.length > 4000) {
