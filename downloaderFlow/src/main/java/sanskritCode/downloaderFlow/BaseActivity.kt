@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -94,8 +95,9 @@ abstract class BaseActivity : AppCompatActivity() {
         //send log using email
         val emailIntent = Intent(Intent.ACTION_SEND)
         // Set type to "email"
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         emailIntent.type = "vnd.android.cursor.dir/email"
-        intent.setType("application/octet-stream"); /* or use intent.setType("message/rfc822); */
+//        emailIntent.setType("application/octet-stream"); /* or use intent.setType("message/rfc822); */
         val subject = "Downloader App Failure report."
         val to = arrayOf(getString(R.string.issueEmailId))
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to)
@@ -127,14 +129,8 @@ abstract class BaseActivity : AppCompatActivity() {
             e.printStackTrace()
             Log.e(this.localClassName, "SendLogcatMail: " + "Alas error! ", e)
         }
-
         Log.i(this.localClassName, "SendLogcatMail: " + "logcat file is " + outputFile.absolutePath)
-        val uri: Uri
-        uri = if (Build.VERSION.SDK_INT < 24) {
-            Uri.fromFile(outputFile)
-        } else {
-            Uri.parse("file://" + outputFile.getPath()) // My work-around for new SDKs, doesn't work in Android 10.
-        }
+        val uri = FileProvider.getUriForFile(this, getApplication().getPackageName(), outputFile)
         return uri
     }
 
