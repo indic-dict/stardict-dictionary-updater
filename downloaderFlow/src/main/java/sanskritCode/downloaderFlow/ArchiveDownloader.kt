@@ -83,6 +83,7 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
                 }
             })
         } catch (throwable: Throwable) {
+            Log.w(LOGGER_TAG, downloadsDir.absolutePath)
             handleDownloadFailure(index, url, throwable)
         }
 

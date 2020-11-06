@@ -24,7 +24,7 @@ class FinalActivity : BaseActivity() {
         val topText = findViewById<TextView>(R.id.df_final_act_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
-        topText.text = getString(R.string.df_finalMessage)
+        topText.text = String.format(getString(R.string.df_finalMessage), destDir?.absolutePath)
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
 
         // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
@@ -95,6 +95,7 @@ class FinalActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, GetUrlActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
@@ -108,6 +109,7 @@ class FinalActivity : BaseActivity() {
             val intent = Intent()
             intent.setComponent(ComponentName(this, postCompletionActivityName))
             intent.putExtra("archiveIndexStore", archiveIndexStore)
+            intent.putExtra("externalDir", externalDir)
             startActivity(intent)
         }
     }

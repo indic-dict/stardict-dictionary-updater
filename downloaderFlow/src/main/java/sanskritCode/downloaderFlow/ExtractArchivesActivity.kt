@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
@@ -18,8 +17,6 @@ class ExtractArchivesActivity : BaseActivity() {
     private var topText: TextView? = null
     private var progressBar: ProgressBar? = null
 
-    private var downloadsDir: File? = null
-    private var destDir: File? = null
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,14 +29,11 @@ class ExtractArchivesActivity : BaseActivity() {
         progressBar = findViewById(R.id.df_extract_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
-        val sdcard = Environment.getExternalStorageDirectory()
-        downloadsDir = File(sdcard.absolutePath, getString(R.string.df_downloadsDir))
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
             }
         }
-        destDir = File(sdcard.absolutePath, getString(R.string.df_destination_sdcard_directory))
         if (!destDir!!.exists()) {
             if (!destDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
@@ -68,6 +62,7 @@ class ExtractArchivesActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed.")
         val intent = Intent(this, GetUrlActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
@@ -88,6 +83,7 @@ class ExtractArchivesActivity : BaseActivity() {
         val intent = Intent()
         intent.setComponent(ComponentName(this, getString(R.string.df_post_extraction_activity)))
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         startActivity(intent)
     }
 }

@@ -1,6 +1,7 @@
 package sanskritCode.downloaderFlow
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,8 +10,10 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.PersistableBundle
+import android.provider.DocumentsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -36,6 +39,11 @@ fun fileNameFromUrl(url: String): String {
 
 abstract class BaseActivity : AppCompatActivity() {
     protected var archiveIndexStore: ArchiveIndexStore? = null
+    val GET_EXTERNAL_DIR = 1
+    protected var externalDir:File? = null
+    protected var downloadsDir: File? = null
+    protected var destDir: File? = null
+
 
     protected val version: String
         get() {
@@ -67,10 +75,34 @@ abstract class BaseActivity : AppCompatActivity() {
         outState.putSerializable("archiveIndexStore", archiveIndexStore)
     }
 
+    protected fun setDirectories() {
+        val LOGGER_TAG = localClassName
+        if (externalDir == null) {
+            Log.e(LOGGER_TAG, "Could not get access to external directory!")
+        }
+        downloadsDir = File(externalDir?.absolutePath, getString(R.string.df_downloadsDir))
+        destDir = File(externalDir?.absolutePath, getString(R.string.df_extraction_directory))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null && savedInstanceState.containsKey("archiveIndexStore")) {
-            archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
+        if (savedInstanceState != null) {
+            if(savedInstanceState.containsKey("archiveIndexStore")) {
+                archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
+            }
+            if(savedInstanceState.containsKey("externalDir")) {
+                externalDir = savedInstanceState.get("externalDir") as File
+                setDirectories()
+            }
+        } else {
+            if (externalDir == null && intent.hasExtra("externalDir")) {
+                externalDir = intent.getSerializableExtra("externalDir") as File
+                setDirectories()
+            } else {
+//                TODO: Remove this branch once directory selection is fixed.
+                externalDir = Environment.getExternalStorageDirectory()
+                setDirectories()
+            }
         }
     }
 

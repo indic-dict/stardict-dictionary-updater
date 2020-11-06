@@ -26,9 +26,6 @@ class GetArchivesActivity : BaseActivity() {
     private var button_2: Button? = null
     private var progressBar: ProgressBar? = null
 
-    private var downloadsDir: File? = null
-    private var destDir: File? = null
-
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,17 +51,9 @@ class GetArchivesActivity : BaseActivity() {
         progressBar = findViewById(R.id.df_get_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
-        val sdcard = Environment.getExternalStorageDirectory()
-        downloadsDir = File(sdcard.absolutePath, getString(R.string.df_downloadsDir))
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
-            }
-        }
-        destDir = File(sdcard.absolutePath, getString(R.string.df_destination_sdcard_directory))
-        if (!destDir!!.exists()) {
-            if (!destDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
             }
         }
 
@@ -91,6 +80,7 @@ class GetArchivesActivity : BaseActivity() {
     internal fun whenAllDownloaded() {
         val intent = Intent(this, ExtractArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         startActivity(intent)
     }
 

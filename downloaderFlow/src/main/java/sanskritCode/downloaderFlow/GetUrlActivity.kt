@@ -82,6 +82,7 @@ class GetUrlActivity : BaseActivity() {
     fun buttonPressed1(v: View) {
         val intent = Intent(this, GetArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         startActivity(intent)
     }
 
@@ -91,8 +92,12 @@ class GetUrlActivity : BaseActivity() {
                 getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
         val sharedArchiveInfoStore = getSharedPreferences(
                 getString(R.string.df_archive_info_store), Context.MODE_PRIVATE)
+        val sharedGeneralInfoStore = getSharedPreferences(
+                getString(R.string.df_general_store), Context.MODE_PRIVATE)
         val sharedArchiveInfoStoreEditor = sharedArchiveInfoStore.edit()
         val sharedArchiveVersionStoreEditor = sharedArchiveVersionStore.edit()
+        val sharedGeneralInfoStoreEditor = sharedGeneralInfoStore.edit()
+        var destinationMismatchStr = ""
         if (archivesSelectedSet == null) {
             for (cb in archiveCheckBoxes.values) {
                 // handle values: kRdanta-rUpa-mAlA -> 2016-02-20_23-22-27
@@ -105,21 +110,21 @@ class GetUrlActivity : BaseActivity() {
                 val filename = archiveInfo.url
                 var proposedVersionNewer = true
 
+                val priorDestDir = sharedGeneralInfoStore.getString("destDir", "")
+
+//                TODO: Add this branch once directory selection is fixed.
+//                if (priorDestDir != destDir?.absolutePath) {
+//                    destinationMismatchStr = String.format("NOTE: Prior destination '%s' does not match %s", priorDestDir, destDir?.absolutePath)
+//                    Log.w(LOGGER_TAG, destinationMismatchStr)
+//                    sharedArchiveInfoStoreEditor.clear()
+//                    sharedArchiveInfoStoreEditor.commit()
+//                    sharedArchiveVersionStoreEditor.clear()
+//                    sharedArchiveVersionStoreEditor.commit()
+//                    sharedGeneralInfoStoreEditor.putString("destDir", destDir?.absolutePath)
+//                }
                 if (sharedArchiveInfoStore.contains(archiveInfo.url)) {
                     val archiveInfoOlder = ArchiveInfo(sharedArchiveInfoStore.getString(archiveInfo.url, null)!!)
                     proposedVersionNewer = archiveInfo.isVersionNewerThan(archiveInfoOlder)
-                } else{
-                    val archiveName = ArchiveNameHelper.getArchiveNameAndVersion(filename)[0]
-                    // Handle transition from old style records.
-                    if (sharedArchiveVersionStore.contains(archiveName)){
-                        val currentVersion = sharedArchiveVersionStore.getString(archiveName, getString(R.string.df_defaultArchiveVersion))!!
-                        val archiveInfoOlder = ArchiveInfo.fromUrl(archiveInfo.url, currentVersion)
-                        archiveInfoOlder.setVersion(currentVersion)
-                        archiveInfoOlder.storeToSharedPreferences(sharedArchiveInfoStoreEditor)
-                        sharedArchiveVersionStoreEditor.remove(archiveName)
-                        sharedArchiveVersionStoreEditor.apply()
-                        proposedVersionNewer = archiveInfo.isVersionNewerThan(archiveInfoOlder)
-                    }
                 }
 
                 if (proposedVersionNewer) {
@@ -144,7 +149,7 @@ class GetUrlActivity : BaseActivity() {
         // checkbox-change listener is only called if there is a change - not if all checkboxes are unselected to start off.
         enableButtonIfArchivesSelected()
 
-        val message = String.format(getString(R.string.df_autoSelectedArchivesMessage), sharedArchiveVersionStore!!.all.size, archiveIndexStore!!.autoUnselectedArchives)
+        val message = String.format(getString(R.string.df_autoSelectedArchivesMessage) + "\n " + destinationMismatchStr, sharedArchiveVersionStore!!.all.size, archiveIndexStore!!.autoUnselectedArchives)
         topText?.append(message)
         Log.d(LOGGER_TAG, ":selectCheckboxes:$message")
     }
@@ -201,6 +206,7 @@ class GetUrlActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", externalDir)
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
