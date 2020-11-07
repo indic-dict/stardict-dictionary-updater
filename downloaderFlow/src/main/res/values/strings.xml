@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <string name="df_dest_directory" translatable="false">dest_dir</string>
     <string name="df_extraction_directory" translatable="false">extracted_archives</string>
     <string name="df_downloadsDir" translatable="false">downloaded_archives</string>
     <string name="app_name">Some downloader</string>

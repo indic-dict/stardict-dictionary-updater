@@ -95,7 +95,7 @@ class FinalActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, GetUrlActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir)
+        intent.putExtra("externalDir", externalDir?.uri.toString())
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
@@ -109,7 +109,7 @@ class FinalActivity : BaseActivity() {
             val intent = Intent()
             intent.setComponent(ComponentName(this, postCompletionActivityName))
             intent.putExtra("archiveIndexStore", archiveIndexStore)
-            intent.putExtra("externalDir", externalDir)
+            intent.putExtra("externalDir", externalDir?.uri.toString())
             startActivity(intent)
         }
     }

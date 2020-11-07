@@ -17,6 +17,7 @@ import android.provider.DocumentsContract
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
+import android.support.v4.provider.DocumentFile
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -40,8 +41,11 @@ fun fileNameFromUrl(url: String): String {
 abstract class BaseActivity : AppCompatActivity() {
     protected var archiveIndexStore: ArchiveIndexStore? = null
     val GET_EXTERNAL_DIR = 1
-    protected var externalDir:File? = null
+    protected var externalDir: DocumentFile? = null
     protected var downloadsDir: File? = null
+    // TODO: Eventually, extract to the below location and then copy to user selected location (where the app won't have direct access).
+    protected var extractionDir: File? = null
+//    TODO: Eventually, the below should be replaced by a DocumentFile.
     protected var destDir: File? = null
 
 
@@ -80,8 +84,24 @@ abstract class BaseActivity : AppCompatActivity() {
         if (externalDir == null) {
             Log.e(LOGGER_TAG, "Could not get access to external directory!")
         }
-        downloadsDir = File(externalDir?.absolutePath, getString(R.string.df_downloadsDir))
-        destDir = File(externalDir?.absolutePath, getString(R.string.df_extraction_directory))
+        downloadsDir = File(applicationContext.cacheDir, getString(R.string.df_downloadsDir))
+        extractionDir = File(applicationContext.cacheDir, getString(R.string.df_extraction_directory))
+        destDir = File(Environment.getExternalStorageDirectory(), getString(R.string.df_dest_directory))
+
+        if (!downloadsDir!!.exists()) {
+            if (!downloadsDir!!.mkdirs()) {
+                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
+            }
+        }
+
+        if (!extractionDir!!.exists()) {
+            if (!extractionDir!!.mkdirs()) {
+                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $extractionDir")
+            }
+        }
+        Log.i(LOGGER_TAG, String.format("externalDir %s \n downloadsDir %s \n" +
+                "destDir %s", externalDir?.uri, downloadsDir?.absolutePath, destDir?.absolutePath))
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,20 +110,23 @@ abstract class BaseActivity : AppCompatActivity() {
             if(savedInstanceState.containsKey("archiveIndexStore")) {
                 archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
             }
-            if(savedInstanceState.containsKey("externalDir")) {
-                externalDir = savedInstanceState.get("externalDir") as File
-                setDirectories()
-            }
+//            if(savedInstanceState.containsKey("externalDir")) {
+//                val externalDirUriString = savedInstanceState.get("externalDir") as String
+//                externalDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
+//                setDirectories()
+//            }
         } else {
-            if (externalDir == null && intent.hasExtra("externalDir")) {
-                externalDir = intent.getSerializableExtra("externalDir") as File
-                setDirectories()
-            } else {
-//                TODO: Remove this branch once directory selection is fixed.
-                externalDir = Environment.getExternalStorageDirectory()
-                setDirectories()
-            }
+//            if (externalDir == null && intent.hasExtra("externalDir")) {
+//                val externalDirUriString = intent.getSerializableExtra("externalDir") as String
+//                externalDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
+//                setDirectories()
+//            } else {
+////                TODO: Remove this branch once directory selection is fixed.
+//                externalDir = Environment.getExternalStorageDirectory()
+//                setDirectories()
+//            }
         }
+        setDirectories()
     }
 
     fun sendLogcatMail(mailBody: String) {

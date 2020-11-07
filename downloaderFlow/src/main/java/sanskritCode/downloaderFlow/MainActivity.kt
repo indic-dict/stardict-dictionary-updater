@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
+import android.support.v4.provider.DocumentFile
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
@@ -58,9 +59,7 @@ class MainActivity : BaseActivity() {
             // the user selected.
             resultData?.data?.also { uri ->
                 // Perform operations on the document using its URI.
-                externalDir = File(uri.path)
-                Log.i(LOGGER_TAG, String.format("externalDir %s \n downloadsDir %s \n" +
-                        "destDir %s", externalDir?.absolutePath, downloadsDir?.absolutePath, destDir?.absolutePath))
+                externalDir = DocumentFile.fromTreeUri(applicationContext, uri)
                 setDirectories()
                 val contentResolver = applicationContext.contentResolver
 
@@ -72,7 +71,7 @@ class MainActivity : BaseActivity() {
 
                 val intent = Intent(this, GetUrlActivity::class.java)
                 intent.putExtra("archiveIndexStore", archiveIndexStore)
-                intent.putExtra("externalDir", externalDir)
+                intent.putExtra("externalDir", externalDir?.uri.toString())
                 // intent.putStringArrayListExtra();
                 startActivity(intent)
 
@@ -124,7 +123,8 @@ class MainActivity : BaseActivity() {
                 checkBox.isChecked = false
             }
         }
-        button!!.text = getString(R.string.set_destination_folder)
+        // TODO: Replace below by set_destination_folder eventually.
+        button!!.text = getString(R.string.proceed_button)
 
         if (indexUrls.size > 0) {
             val toggleAllCheckBox = findViewById<android.widget.CheckBox>(R.id.df_main_toggle_selection_checkbox)

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="df_extraction_directory">dictdata</string>
-    <string name="df_downloadsDir">dicttars</string>
+    <string name="df_dest_directory" translatable="false">dictdata</string>
     <string name="df_index_indexorum">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
     <string name="issueEmailId">vishvas.vasuki+STARDICTAPP@gmail.com</string>
     <string name="app_name">Stardict Dictionary Updater</string>

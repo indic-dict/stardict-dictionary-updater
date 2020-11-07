@@ -51,12 +51,6 @@ class GetArchivesActivity : BaseActivity() {
         progressBar = findViewById(R.id.df_get_archive_progressBar)
         getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
 
-        if (!downloadsDir!!.exists()) {
-            if (!downloadsDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $downloadsDir")
-            }
-        }
-
         if (archiveIndexStore!!.archivesSelectedMap.size == 0) {
             topText!!.setText(R.string.no_archives_selected)
             topText!!.append(getString(R.string.df_txtTryAgain))
@@ -80,7 +74,7 @@ class GetArchivesActivity : BaseActivity() {
     internal fun whenAllDownloaded() {
         val intent = Intent(this, ExtractArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir)
+        intent.putExtra("externalDir", externalDir?.uri.toString())
         startActivity(intent)
     }
 

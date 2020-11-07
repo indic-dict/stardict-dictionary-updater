@@ -82,7 +82,7 @@ class GetUrlActivity : BaseActivity() {
     fun buttonPressed1(v: View) {
         val intent = Intent(this, GetArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir)
+        intent.putExtra("externalDir", externalDir?.uri.toString())
         startActivity(intent)
     }
 
@@ -206,7 +206,7 @@ class GetUrlActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir)
+        intent.putExtra("externalDir", externalDir?.uri.toString())
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
