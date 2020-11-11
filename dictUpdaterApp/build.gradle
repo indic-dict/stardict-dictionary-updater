@@ -11,12 +11,13 @@ android {
 
 //        Apps that run on Android 11 (API Level 30) but target Android 10 (API level 29) can still request the requestLegacyExternalStorage attribute. This flag allows apps to temporarily opt out of the changes associated with scoped storage, such as granting access to different directories and different types of media files. After you update your app to target Android 11, the system ignores the requestLegacyExternalStorage flag.
         targetSdkVersion 29
-        maxSdkVersion 30
+
+//        maxSdkVersion 30
 //         Reason: https://github.com/sanskrit-coders/stardict-dictionary-updater/issues/29
 //         Documentation for the above https://developer.android.com/guide/topics/manifest/uses-sdk-element#max.
 
-        versionCode 349
-        versionName "3.4.9"
+        versionCode 350
+        versionName "3.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
