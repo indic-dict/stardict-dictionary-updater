@@ -21,7 +21,7 @@ import java.io.FileOutputStream
  * Extracts all selected archives sequentially in ONE Async task (doBackground() being run outside the UI thread).
  */
 internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
-                             private val activity: ExtractArchivesActivity, private val archiveDir: File, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
+                             private val activity: ExtractArchivesActivity, private val destDir: File, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
     private val compressorStreamFactory = CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/)
     private val archiveStreamFactory = ArchiveStreamFactory()
     private val LOGGER_TAG = javaClass.getSimpleName()
@@ -82,7 +82,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
-        val destDirFile = File(archiveDir, archiveInfo.getDestinationPathSuffix())
+        val destDirFile = File(destDir, archiveInfo.getDestinationPathSuffix())
         val initialDestDir = destDirFile.absolutePath
 
         Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory)
