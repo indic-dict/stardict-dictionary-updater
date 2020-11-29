@@ -87,6 +87,7 @@ class GetArchivesActivity : BaseActivity() {
 
     override fun onBackPressed() {
         // Don't navigate away in the midst of downloading dictionaries!
+        // archiveIndexStore.indexedArchives etc.. may need to be reset or handled carefully.
         if (button_2!!.visibility == View.VISIBLE) {
             finish()
         }

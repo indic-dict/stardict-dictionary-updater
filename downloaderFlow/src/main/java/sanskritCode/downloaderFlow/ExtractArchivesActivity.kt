@@ -58,13 +58,15 @@ class ExtractArchivesActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        Log.i(LOGGER_TAG, "Back pressed.")
-        val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
-        // intent.putStringArrayListExtra();
-        startActivity(intent)
+        // Don't navigate away in the midst of extracting dictionaries!
+        // archiveIndexStore.indexedArchives etc.. may need to be reset or handled carefully.
+//        super.onBackPressed()
+//        Log.i(LOGGER_TAG, "Back pressed.")
+//        val intent = Intent(this, GetUrlActivity::class.java)
+//        intent.putExtra("archiveIndexStore", archiveIndexStore)
+//        intent.putExtra("externalDir", externalDir?.uri.toString())
+//        // intent.putStringArrayListExtra();
+//        startActivity(intent)
     }
 
     /* Should only be called from the UI thread! */

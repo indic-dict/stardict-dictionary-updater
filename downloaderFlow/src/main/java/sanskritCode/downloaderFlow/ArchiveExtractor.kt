@@ -78,7 +78,12 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             return
         }
 
-        val sourceFile = File(downloadsDir.toString(), archiveFileName).absolutePath
+        val sourceFile = File(downloadsDir.toString(), archiveFileName)
+        if (!sourceFile.exists()) {
+            archiveInfo.status = ArchiveStatus.ARCHIVE_FILE_MISSING
+            Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status "  + archiveInfo.status)
+            return
+        }
         activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
@@ -97,7 +102,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         val message2 = "Destination directory $initialDestDir"
         Log.d(LOGGER_TAG, ":extractFile:$message2")
         try {
-            var archiveInputStream = inputStreamFromArchive(sourceFile)
+            var archiveInputStream = inputStreamFromArchive(sourceFile.absolutePath)
             var totalFiles = 0
             while (archiveInputStream.nextEntry != null) {
                 totalFiles = totalFiles + 1
@@ -107,7 +112,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             }
 
             // Reopen stream
-            archiveInputStream = inputStreamFromArchive(sourceFile)
+            archiveInputStream = inputStreamFromArchive(sourceFile.absolutePath)
 
             val buffer = ByteArray(50000)
             var filesRead = 0
@@ -145,7 +150,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             archiveInfo.status = ArchiveStatus.EXTRACTION_FAILURE
         }
 
-        deleteTarFile(sourceFile)
+        deleteTarFile(sourceFile.absolutePath)
 
     }
 
