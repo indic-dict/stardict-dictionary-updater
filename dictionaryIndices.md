@@ -13,26 +13,39 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-hindi/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-kannada/gh-pages/kn-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-telugu/gh-pages/te-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-telugu/gh-pages/te-head_dev-script/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-telugu/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-pali/gh-pages/pali-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-pali/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-pali/gh-pages/pali-en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-tamil/gh-pages/ta-head/tars/tars.MD>
-<https://raw.githubusercontent.com/indic-dict/stardict-tamil/gh-pages/en-head/tars/tars.MD>
-<https://raw.githubusercontent.com/indic-dict/stardict-english/gh-pages/en-head/en-entries/tars/tars.MD>
+ <https://raw.githubusercontent.com/indic-dict/stardict-tamil/gh-pages/en-head/tars/tars.MD>
+ <https://raw.githubusercontent.com/indic-dict/stardict-tamil/gh-pages/ta-head_dev-script/tars/tars.MD>
+  <https://raw.githubusercontent.com/indic-dict/stardict-tamil/gh-pages/en-head_en-script/tars/tars.MD>
+  <https://raw.githubusercontent.com/indic-dict/stardict-english/gh-pages/en-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-english/gh-pages/en-head/other-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-english/gh-pages/other-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-marathi/gh-pages/ma-head/ma-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-marathi/gh-pages/ma-head/other-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-nepali/gh-pages/ne-head/en-entries/tars/tars.MD>
-<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/ml-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head_en-script/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/ml-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/ml-head_dev-script/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head_en-script/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-panjabi/gh-pages/pa-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-panjabi/gh-pages/pa-head_en-script/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-oriya/gh-pages/or-head/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-oriya/gh-pages/or-head_dev-script/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-assamese/gh-pages/as-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-assamese/gh-pages/as-head_dev-script/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-sinhala/gh-pages/si-head/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-sinhala/gh-pages/si-head_dev-script/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head/bn-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head_dev-script/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-bengali/gh-pages/bn-head_dev-script/bn-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-gujarati/gh-pages/gu-head/gu-entries/tars/tars.MD>
-<https://raw.githubusercontent.com/indic-dict/stardict-gujarati/gh-pages/gu-head/dev-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-gujarati/gh-pages/gu-head_dev-script/tars/tars.MD>
 
