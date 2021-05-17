@@ -35,7 +35,7 @@
 <https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-malayalam/gh-pages/en-head_en-script/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-panjabi/gh-pages/pa-head/en-entries/tars/tars.MD>
-<https://raw.githubusercontent.com/indic-dict/stardict-panjabi/gh-pages/pa-head_en-script/en-entries/tars/tars.MD>
+<https://raw.githubusercontent.com/indic-dict/stardict-panjabi/gh-pages/pa-head_dev-script/en-entries/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-oriya/gh-pages/or-head/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-oriya/gh-pages/or-head_dev-script/tars/tars.MD>
 <https://raw.githubusercontent.com/indic-dict/stardict-assamese/gh-pages/as-head/en-entries/tars/tars.MD>
