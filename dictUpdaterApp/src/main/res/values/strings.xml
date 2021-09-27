@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="df_dest_directory" translatable="false">dictdata</string>
-    <string name="df_index_indexorum">https://raw.githubusercontent.com/sanskrit-coders/stardict-dictionary-updater/master/dictionaryIndices.md</string>
+    <string name="df_index_indexorum">https://github.com/indic-dict/stardict-index/releases/download/current/dictionaryIndices.md</string>
     <string name="issueEmailId">vishvas.vasuki+STARDICTAPP@gmail.com</string>
     <string name="app_name">Stardict Dictionary Updater</string>
     <string name="df_select_indices">ॐ तत् सत्॥ Shall we update your Stardict dictionary files? (Details: <a href="http://bit.ly/dict-update-app">dict-update-app</a> ) \n
