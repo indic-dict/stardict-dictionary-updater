@@ -16,8 +16,8 @@ ext {
 
     libraryDescription = 'A sequence of activities to facilitate download and extraction of archives indexed on the internet to the mobile phone.'
 
-    siteUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater'
-    gitUrl = 'https://github.com/sanskrit-coders/stardict-dictionary-updater.git'
+    siteUrl = 'https://github.com/indic-dict/stardict-dictionary-updater'
+    gitUrl = 'https://github.com/indic-dict/stardict-dictionary-updater.git'
 
     libraryVersion = '0.1.9'
 
