@@ -16,7 +16,6 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import java.io.File
 
 import java.util.ArrayList
 
@@ -47,14 +46,15 @@ class MainActivity : BaseActivity() {
             putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
         }
 
-        startActivityForResult(intent, GET_EXTERNAL_DIR)
+        startActivityForResult(intent, REQUEST_CODE_GET_EXTERNAL_DIR)
     }
 
 
     override fun onActivityResult(
             requestCode: Int, resultCode: Int, resultData: Intent?) {
-        if (requestCode == GET_EXTERNAL_DIR
-                && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_GET_EXTERNAL_DIR
+            && resultCode == Activity.RESULT_OK
+        ) {
             // The result data contains a URI for the document or directory that
             // the user selected.
             resultData?.data?.also { uri ->
@@ -76,6 +76,10 @@ class MainActivity : BaseActivity() {
                 startActivity(intent)
 
             }
+        } else if (requestCode == REQUEST_CODE_APP_STORAGE_ACCESS
+            && resultCode != Activity.RESULT_OK
+        ) {
+            getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
         }
     }
 
@@ -156,7 +160,8 @@ class MainActivity : BaseActivity() {
 
         getPermission(Manifest.permission.INTERNET, this)
         getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this)
-        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
+        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
+
         archiveIndexStore!!.getIndicesAddCheckboxes(this)
     }
 

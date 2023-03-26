@@ -49,7 +49,7 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             return
         }
         Log.d(LOGGER_TAG, ":downloadArchive:Getting $url")
-        getArchivesActivity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getArchivesActivity)
+        getArchivesActivity.getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, getArchivesActivity)
 
         topText.setText(String.format(getArchivesActivity.getString(R.string.df_gettingSomeArchive), url))
         topText.append("\n" + getArchivesActivity.getString(R.string.dont_navigate_away))
@@ -66,7 +66,8 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             // URL could be bad, hence the below.
             asyncHttpClient.get(url, object : FileAsyncHttpResponseHandler(File(downloadsDir, fileName)) {
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, file: File) {
-                    Log.i(LOGGER_TAG, ":downloadArchive:Got archive: $fileName")
+                    Log.i(LOGGER_TAG, ":downloadArchive:Got archive: ${file.canonicalPath}")
+                    archiveIndexStore.archivesSelectedMap[url]!!.archivePath = file.canonicalPath
                     archiveIndexStore.archivesSelectedMap[url]!!.status = ArchiveStatus.DOWNLOAD_SUCCESS
                     downloadArchive(index + 1)
                     progressBar.visibility = View.GONE

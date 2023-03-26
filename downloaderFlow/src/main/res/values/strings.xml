@@ -5,6 +5,7 @@
     <string name="df_extraction_directory" translatable="false">extracted_archives</string>
     <string name="df_downloadsDir" translatable="false">downloaded_archives</string>
     <string name="app_name">Some downloader</string>
+    <string name="df_externalAccess">For this app to function, we need external storage access. In the next screen, please grant that permission.</string>
     <string name="df_select_indices">Select some archive indices.</string>
     <string name="dont_navigate_away">!!!Don\'t navigate away or we\'ll need to restart!!!</string>
     <string name="proceed_button">Proceed?</string>

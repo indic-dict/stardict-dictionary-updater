@@ -49,7 +49,7 @@ class GetArchivesActivity : BaseActivity() {
         button_2!!.visibility = View.INVISIBLE
         button_2!!.isEnabled = false
         progressBar = findViewById(R.id.df_get_archive_progressBar)
-        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
+        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
 
         if (archiveIndexStore!!.archivesSelectedMap.size == 0) {
             topText!!.setText(R.string.no_archives_selected)

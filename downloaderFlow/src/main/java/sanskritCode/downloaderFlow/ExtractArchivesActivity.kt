@@ -27,7 +27,7 @@ class ExtractArchivesActivity : BaseActivity() {
         setContentView(R.layout.activity_extract_archives)
         topText = findViewById(R.id.df_extract_archive_textView)
         progressBar = findViewById(R.id.df_extract_archive_progressBar)
-        getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, this)
+        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
 
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {

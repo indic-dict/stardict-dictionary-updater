@@ -78,13 +78,13 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             return
         }
 
-        val sourceFile = File(downloadsDir.toString(), archiveFileName)
+        val sourceFile = File(archiveInfo.archivePath)
         if (!sourceFile.exists()) {
             archiveInfo.status = ArchiveStatus.ARCHIVE_FILE_MISSING
             Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status "  + archiveInfo.status)
             return
         }
-        activity.getPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, activity)
+        activity.getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
         val destDirFile = File(destDir, archiveInfo.getDestinationPathSuffix())

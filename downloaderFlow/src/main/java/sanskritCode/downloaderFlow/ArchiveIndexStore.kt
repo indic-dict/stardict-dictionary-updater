@@ -22,6 +22,7 @@ open class ArchiveInfo(open var jsonStr: String) : Serializable {
     // JsonObject is not serializable. So we wrap the below in a method.
     fun getJsonObject() = JsonParser().parse(jsonStr).asJsonObject
     var url: String = getJsonObject().get("url").asString
+    var archivePath: String? = null
 
     fun getDownloadedArchiveBasename() : String  = fileNameFromUrl(url)
 

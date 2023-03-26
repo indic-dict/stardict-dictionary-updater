@@ -1,7 +1,6 @@
 package sanskritCode.downloaderFlow
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -10,10 +9,10 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.PersistableBundle
-import android.provider.DocumentsContract
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -40,12 +39,15 @@ fun fileNameFromUrl(url: String): String {
 
 abstract class BaseActivity : AppCompatActivity() {
     protected var archiveIndexStore: ArchiveIndexStore? = null
-    val GET_EXTERNAL_DIR = 1
+    val REQUEST_CODE_GET_EXTERNAL_DIR = 501
+    val REQUEST_CODE_APP_STORAGE_ACCESS = 502 // Any value
     protected var externalDir: DocumentFile? = null
     protected var downloadsDir: File? = null
+
     // TODO: Eventually, extract to the below location and then copy to user selected location (where the app won't have direct access).
     protected var extractionDir: File? = null
-//    TODO: Eventually, the below should be replaced by a DocumentFile.
+
+    //    TODO: Eventually, the below should be replaced by a DocumentFile.
     protected var destDir: File? = null
 
 
@@ -65,12 +67,49 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun getPermission(permissionString: String, activity: Activity) {
         val LOGGER_TAG = localClassName
-        if (ContextCompat.checkSelfPermission(activity, permissionString) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                permissionString
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             Log.d(LOGGER_TAG, "getPermission: Got permission: $permissionString")
+        } else if (permissionString == Manifest.permission.MANAGE_EXTERNAL_STORAGE) {
+            // Consider: Set top text and guide the user into providing access??
+//            val topText = findViewById<TextView>(R.id.df_main_textView)
+//            topText.setText(R.string.df_externalAccess)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    try {
+                        var intent = Intent(
+                            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:" + packageName)
+                        )
+                        startActivityForResult(intent, REQUEST_CODE_APP_STORAGE_ACCESS)
+                    } catch (e: Exception) {
+                        Log.e(LOGGER_TAG, e.toString())
+                        var intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                        startActivityForResult(intent, REQUEST_CODE_APP_STORAGE_ACCESS)
+                    }
+                }
+            }
+            Log.i(
+                LOGGER_TAG,
+                "getPermission: new permission: " + ContextCompat.checkSelfPermission(
+                    activity,
+                    permissionString
+                )
+            )
         } else {
             Log.w(LOGGER_TAG, "getPermission: Don't have permission: $permissionString")
             ActivityCompat.requestPermissions(activity, arrayOf(permissionString), 101)
-            Log.i(LOGGER_TAG, "getPermission: new permission: " + ContextCompat.checkSelfPermission(activity, permissionString))
+            Log.i(
+                LOGGER_TAG,
+                "getPermission: new permission: " + ContextCompat.checkSelfPermission(
+                    activity,
+                    permissionString
+                )
+            )
         }
     }
 
@@ -85,8 +124,10 @@ abstract class BaseActivity : AppCompatActivity() {
             Log.e(LOGGER_TAG, "Could not get access to external directory!")
         }
         downloadsDir = File(applicationContext.cacheDir, getString(R.string.df_downloadsDir))
-        extractionDir = File(applicationContext.cacheDir, getString(R.string.df_extraction_directory))
-        destDir = File(Environment.getExternalStorageDirectory(), getString(R.string.df_dest_directory))
+        extractionDir =
+            File(applicationContext.cacheDir, getString(R.string.df_extraction_directory))
+        destDir =
+            File(Environment.getExternalStorageDirectory(), getString(R.string.df_dest_directory))
 
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
@@ -99,15 +140,22 @@ abstract class BaseActivity : AppCompatActivity() {
                 Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $extractionDir")
             }
         }
-        Log.i(LOGGER_TAG, String.format("externalDir %s \n downloadsDir %s \n" +
-                "destDir %s", externalDir?.uri, downloadsDir?.absolutePath, destDir?.absolutePath))
+        Log.i(
+            LOGGER_TAG, String.format(
+                "externalDir %s \n downloadsDir %s \n" +
+                        "destDir %s",
+                externalDir?.uri,
+                downloadsDir?.absolutePath,
+                destDir?.absolutePath
+            )
+        )
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            if(savedInstanceState.containsKey("archiveIndexStore")) {
+            if (savedInstanceState.containsKey("archiveIndexStore")) {
                 archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
             }
 //            if(savedInstanceState.containsKey("externalDir")) {
@@ -130,12 +178,22 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun sendLogcatMail(mailBody: String) {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_LOGS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             Log.d(this.localClassName, "SendLogcatMail: " + "Got READ_LOGS permissions")
         } else {
             Log.e(this.localClassName, "SendLogcatMail: " + "Don't have READ_LOGS permissions")
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_LOGS), 103)
-            Log.i(this.localClassName, "SendLogcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_LOGS))
+            Log.i(
+                this.localClassName,
+                "SendLogcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_LOGS
+                )
+            )
         }
 
 
@@ -170,15 +228,19 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun getLogcatFileUri(): Uri {
         // save logcat in file
-        val outputFile = File(this.externalCacheDir!!.absolutePath,
-                "logcat.txt")
-        val pInfo: PackageInfo = applicationContext.getPackageManager().getPackageInfo(applicationContext.getPackageName(), 0)
+        val outputFile = File(
+            this.externalCacheDir!!.absolutePath,
+            "logcat.txt"
+        )
+        val pInfo: PackageInfo = applicationContext.getPackageManager()
+            .getPackageInfo(applicationContext.getPackageName(), 0)
         val versionName = pInfo.versionName
         Log.i(this.localClassName, "SendLogcatMail: App version: $versionName")
 
         try {
             Runtime.getRuntime().exec(
-                    "logcat -f " + outputFile.absolutePath)
+                "logcat -f " + outputFile.absolutePath
+            )
         } catch (e: IOException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
