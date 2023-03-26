@@ -1,6 +1,5 @@
 // Dependencies in this section were added as suggested in https://medium.com/@yegor_zatsepin/simple-way-to-publish-your-android-library-to-jcenter-d1e145bacf13 .
 plugins {
-    id "com.github.dcendents.android-maven" version "2.1"
     id "com.jfrog.bintray" version "1.8.4"
 }
 

@@ -1,39 +1,8 @@
 group = publishedGroupId
 version = libraryVersion
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            packaging 'aar'
-            groupId publishedGroupId
-            artifactId artifact
-
-            name libraryName
-            description libraryDescription
-            url siteUrl
-
-            licenses {
-                license {
-                    name licenseName
-                    url licenseUrl
-                }
-            }
-            developers {
-                developer {
-                    id developerId
-                    name developerName
-                    email developerEmail
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-            }
-
-        }
-    }
-}
+// TODO: set up publishing to maven? Use https://developer.android.com/studio/publish-library/prep-lib-release#kts ??
+// (https://github.com/dcendents/android-maven-gradle-plugin is abandoned.)
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
