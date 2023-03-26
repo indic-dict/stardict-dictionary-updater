@@ -68,6 +68,8 @@ repositories {
 
 
 ## Store listings
+Publish to Google Play [here](https://play.google.com/console/u/0/developers/9181945829356368365/app/4975588785652561253/tracks/4697271960125342543?tab=releases).
+
 ### hi-IN
 ```
 प्राप्यान्तर्जालात् स्टार्डिक्ट-कोशानां सूचिः, स्थापयति तान् कोशान् यन्त्रे SDCARD/dictdata इत्यत्र। एवं स्थापिताः सञ्चिकाः stardict-प्रयोक्तृ-तन्त्रांशैः क्रियतामिति। स्टार्डिक्ट्-प्रयोक्तृ-तान्त्रांशः कश्चित् (उदाहरणार्थम् - ebdic (प्रशस्तम्), ColorDict, GoldenDict, GoldenDict paid ...) युष्माभिः स्थापितो वा स्थाप्यते वेति नः प्रत्ययः।
