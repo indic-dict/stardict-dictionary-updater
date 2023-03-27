@@ -5,6 +5,7 @@ Android app to download and install [a large set of Sanskrit (and other) diction
 - Amazon store link: <https://amazon.com/dp/B07HBPZ7P6>
 - [Ratings Certificate](https://iarcweb.azurewebsites.net/Dashboard/Certificate/74e40614-671c-421e-9969-1c80da21a267)
 - Signed apk is also [released (https://rebrand.ly/dict-updater)](https://github.com/indic-dict/stardict-dictionary-updater/raw/master/dictUpdaterApp/release/dictUpdaterApp-release.aab) in this repository.
+- Signed aab is [here](https://github.com/indic-dict/stardict-dictionary-updater/raw/master/dictUpdaterApp/release/dictUpdaterApp-release.apk).
 
 ## For library users
 - We publish to a [downloaderFlow bintray package](https://bintray.com/sanskrit-coders/android-repo/downloaderFlow).
