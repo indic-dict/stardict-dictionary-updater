@@ -73,7 +73,7 @@ Publish to Google Play [here](https://play.google.com/console/u/0/developers/918
 
 ### hi-IN
 ```
-प्राप्यान्तर्जालात् स्टार्डिक्ट-कोशानां सूचिः, स्थापयति तान् कोशान् यन्त्रे SDCARD/dictdata इत्यत्र। एवं स्थापिताः सञ्चिकाः stardict-प्रयोक्तृ-तन्त्रांशैः क्रियतामिति। स्टार्डिक्ट्-प्रयोक्तृ-तान्त्रांशः कश्चित् (उदाहरणार्थम् - ebdic (प्रशस्तम्), ColorDict, GoldenDict, GoldenDict paid ...) युष्माभिः स्थापितो वा स्थाप्यते वेति नः प्रत्ययः।
+प्राप्यान्तर्जालात् स्टार्डिक्ट-कोशानां सूचिः, स्थापयति तान् कोशान् यन्त्रे SDCARD/dictdata इत्यत्र। एवं स्थापिताः सञ्चिकाः stardict-प्रयोक्तृ-तन्त्रांशैः क्रियतामिति। स्टार्डिक्ट्-प्रयोक्तृ-तान्त्रांशः कश्चित् (उदाहरणार्थम् - ebdic (प्रशस्तम्), ColorDict, GoldenDict, GoldenDict paid ...) युष्माभिः स्थापितो वा स्थाप्यते वेति नः प्रत्ययः। NOTE: For this core functionality, the app needs "All files access (MANAGE_EXTERNAL_STORAGE)" permission.
 
 वयं stardict-sanskrit-गणेन प्रकाशिताः कोशसूचीः प्रयुञ्ज्महे। (ईक्षन्ताम् : https://github.com/indic-dict/stardict-sanskrit , https://sanskrit-coders.github.io/ )।  लघुसङ्केतः  पृष्ठस्यास्य- bit.ly/SanskritStarDictUpdater । संप्रत्य् एतासु भाषासु ११३+ कोषास् सङ्गृहीता अस्माभिः - Sanskrit, pALi, hindI, marathi, punjabi/ panjabi, nepali, oriya/ odiya, assamese/ Asamiya, kannaDa, telugu, tamiL / tamizh, malayalam, sinhala/ sinhalese, greek, latin, english (संस्कृतम्, पाली/ पाळी, हिन्दी, ਪੰਜਾਬੀ/ پنجابی‬, ଓଡ଼ିଆ,  অসমীয়া, ಕನ್ನಡ,  සිංහල, తెలుగు, தமிழ், മലയാളം, ελληνικά, lingua latīna)  येषां स्वलिपिमन्तरा देवनागर्या रोमकलिप्या चाप्य् अन्वेषणं शक्यम्।
 
@@ -88,7 +88,7 @@ Privacy Policy: https://github.com/indic-dict/stardict-dictionary-updater/blob/m
 
 ### English
 ```
-This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. We assume that you already have or will install Stardict-compatible dictionary utilities (Eg: ebdic [Rated high], ColorDict, GoldenDict, GoldenDict paid ...) separately.
+This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. We assume that you already have or will install Stardict-compatible dictionary utilities (Eg: ebdic [Rated high], ColorDict, GoldenDict, GoldenDict paid ...) separately. NOTE: For this core functionality, the app needs "All files access (MANAGE_EXTERNAL_STORAGE)" permission.
 
 We use the indices maintained by the stardict-sanskrit project (See: https://github.com/indic-dict/stardict-sanskrit , https://sanskrit-coders.github.io/ ). [If you want to contribute new dictionaries to the stardict-sanskrit project or code to this app, that is welcome too - visit sites above.] Short-link to this app: bit.ly/SanskritStarDictUpdater
 
