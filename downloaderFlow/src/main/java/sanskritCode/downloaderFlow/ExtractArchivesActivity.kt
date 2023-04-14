@@ -1,6 +1,5 @@
 package sanskritCode.downloaderFlow
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
@@ -9,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import java.io.File
 
 class ExtractArchivesActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
@@ -21,13 +19,9 @@ class ExtractArchivesActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        if (archiveIndexStore == null) {
-            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
-        }
         setContentView(R.layout.activity_extract_archives)
         topText = findViewById(R.id.df_extract_archive_textView)
         progressBar = findViewById(R.id.df_extract_archive_progressBar)
-        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
 
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
@@ -35,9 +29,7 @@ class ExtractArchivesActivity : BaseActivity() {
             }
         }
         if (!destDir!!.exists()) {
-            if (!destDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $destDir")
-            }
+            Log.w(LOGGER_TAG, ":onCreate: Strange - $destDir does not exist.")
         }
 
         ArchiveExtractor(this, destDir!!, archiveIndexStore!!, downloadsDir!!)
@@ -85,7 +77,7 @@ class ExtractArchivesActivity : BaseActivity() {
         val intent = Intent()
         intent.setComponent(ComponentName(this, getString(R.string.df_post_extraction_activity)))
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
+        intent.putExtra("externalDir", destDir?.uri.toString())
         startActivity(intent)
     }
 }

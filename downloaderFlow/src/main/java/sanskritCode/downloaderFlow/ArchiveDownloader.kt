@@ -49,7 +49,6 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             return
         }
         Log.d(LOGGER_TAG, ":downloadArchive:Getting $url")
-        getArchivesActivity.getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, getArchivesActivity)
 
         topText.setText(String.format(getArchivesActivity.getString(R.string.df_gettingSomeArchive), url))
         topText.append("\n" + getArchivesActivity.getString(R.string.dont_navigate_away))

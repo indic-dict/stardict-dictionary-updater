@@ -2,7 +2,6 @@ package sanskritCode.downloaderFlow
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -43,9 +42,6 @@ class GetUrlActivity : BaseActivity() {
 
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         layout = findViewById(R.id.get_url_layout)
-        if (archiveIndexStore == null) {
-            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
-        }
         Log.d(LOGGER_TAG, ":onCreate:" + "whenActivityLoaded archiveIndexStore.indexedArchives " + archiveIndexStore!!.indexedArchives)
         Log.d(LOGGER_TAG, ":onCreate:" + "indexesSelected " + archiveIndexStore!!.indexesSelected.toString())
         setContentView(R.layout.activity_get_url)
@@ -59,6 +55,8 @@ class GetUrlActivity : BaseActivity() {
 
         setContentView(R.layout.activity_get_url)
         archiveIndexStore!!.getIndexedArchivesSetCheckboxes(this)
+
+
     }
 
     // Called when another activity comes inbetween and is dismissed.
@@ -82,7 +80,7 @@ class GetUrlActivity : BaseActivity() {
     fun buttonPressed1(v: View) {
         val intent = Intent(this, GetArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
+        intent.putExtra("externalDir", destDir?.uri.toString())
         startActivity(intent)
     }
 
@@ -201,13 +199,13 @@ class GetUrlActivity : BaseActivity() {
     }
 
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    fun backPressHandler() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
+        intent.putExtra("externalDir", destDir?.uri.toString())
         // intent.putStringArrayListExtra();
+
         startActivity(intent)
     }
 

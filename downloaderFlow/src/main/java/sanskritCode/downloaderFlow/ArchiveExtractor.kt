@@ -1,27 +1,22 @@
 package sanskritCode.downloaderFlow
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.os.AsyncTask
 import android.util.Log
-
+import androidx.documentfile.provider.DocumentFile
+import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveException
 import org.apache.commons.compress.archivers.ArchiveInputStream
 import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
+import java.io.*
 
 /**
  * Extracts all selected archives sequentially in ONE Async task (doBackground() being run outside the UI thread).
  */
 internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
-                             private val activity: ExtractArchivesActivity, private val destDir: File, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
+                             private val activity: ExtractArchivesActivity, private val destDir: DocumentFile, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
     private val compressorStreamFactory = CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/)
     private val archiveStreamFactory = ArchiveStreamFactory()
     private val LOGGER_TAG = javaClass.getSimpleName()
@@ -36,7 +31,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
         activity.whenAllExtracted()
     }
 
-    private fun cleanDirectory(directory: File) {
+    private fun cleanDirectory(directory: DocumentFile) {
         Log.i(LOGGER_TAG, ":cleanDirectory:Cleaning $directory")
 
         val files = directory.listFiles()
@@ -84,22 +79,16 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
             Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status "  + archiveInfo.status)
             return
         }
-        activity.getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, activity)
         publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
 
-        val destDirFile = File(destDir, archiveInfo.getDestinationPathSuffix())
-        val initialDestDir = destDirFile.absolutePath
+        var destDirFile = createDir(destDir, archiveInfo.getDestinationPathSuffix())
 
-        Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory)
-        if (destDirFile.exists()) {
-            Log.i(LOGGER_TAG, ":extractFile:Cleaning $initialDestDir")
-            cleanDirectory(destDirFile)
-        } else {
-            Log.i(LOGGER_TAG, ":extractFile:" + "Creating dir " + destDirFile.mkdirs())
-        }
-        Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile.exists() + " isDir " + destDirFile.isDirectory)
+        Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile?.exists() + " isDir " + destDirFile?.isDirectory)
+        Log.i(LOGGER_TAG, ":extractFile:Cleaning ${destDirFile?.uri}")
+        cleanDirectory(destDirFile!!)
+        Log.d(LOGGER_TAG, ":extractFile:" + "Exists " + destDirFile?.exists() + " isDir " + destDirFile?.isDirectory)
 
-        val message2 = "Destination directory $initialDestDir"
+        val message2 = "Destination directory ${destDirFile?.uri}"
         Log.d(LOGGER_TAG, ":extractFile:$message2")
         try {
             var archiveInputStream = inputStreamFromArchive(sourceFile.absolutePath)
@@ -125,12 +114,9 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                 if(currentEntry.isDirectory) {
                     continue
                 }
-                val destFileDirFile = File(initialDestDir, File(currentEntry.name).parent?:"")
-                val destFile = File(destFileDirFile, File(currentEntry.name).name).absolutePath
-                if (!destFileDirFile.exists()) {
-                    Log.d(LOGGER_TAG, ":extractFile:" + "Creating dir " + destFileDirFile + ", result:" + destFileDirFile.mkdirs())
-                }
-                val fos = FileOutputStream(destFile)
+                destDirFile?.uri
+                val destFile = createFile(destDirFile!!, currentEntry)
+                val fos = activity.getContentResolver().openOutputStream(destFile?.getUri()!!)!!
                 var n: Int
                 while (true) {
                     n = archiveInputStream.read(buffer)
@@ -140,7 +126,7 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                     fos.write(buffer, 0, n)
                 }
                 fos.close()
-                publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile)
+                publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile.uri.toString())
             }
             archiveInputStream.close()
             archiveInfo.status = ArchiveStatus.EXTRACTION_SUCCESS
@@ -152,6 +138,29 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
 
         deleteTarFile(sourceFile.absolutePath)
 
+    }
+
+    private fun createDir(baseDir: DocumentFile, dirPath: String): DocumentFile? {
+        var destDirFile = baseDir.findFile(dirPath)
+        if (destDirFile == null) {
+            destDirFile = baseDir.createDirectory(dirPath)
+        }
+        return destDirFile
+    }
+
+    private fun createFile(baseDir: DocumentFile, entry: ArchiveEntry): DocumentFile? {
+        var baseDirLocal = baseDir
+        if (File(entry.name).parent != null) {
+            val folders: List<String> = File(entry.name).parent.toString().split("/")
+            for (folder in folders) {
+                baseDirLocal = createDir(baseDirLocal, folder)!!
+            }
+        }
+        var destFile = baseDirLocal.findFile(File(entry.name).name)
+        if (destFile == null) {
+            destFile = baseDirLocal.createFile("application/octet-stream", File(entry.name).name)
+        }
+        return destFile
     }
 
     override fun doInBackground(vararg params: Void): Void? {

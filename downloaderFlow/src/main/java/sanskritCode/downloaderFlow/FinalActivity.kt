@@ -16,15 +16,12 @@ class FinalActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
-        if (archiveIndexStore == null) {
-            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
-        }
         setContentView(R.layout.activity_final)
 
         val topText = findViewById<TextView>(R.id.df_final_act_textView)
         // For clickable links. See https://stackoverflow.com/a/20647011/444644
         topText.movementMethod = LinkMovementMethod.getInstance()
-        topText.text = String.format(getString(R.string.df_finalMessage), destDir?.absolutePath)
+        topText.text = String.format(getString(R.string.df_finalMessage), destDir?.uri.toString())
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
 
         // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
@@ -95,7 +92,7 @@ class FinalActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, GetUrlActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
+        intent.putExtra("externalDir", destDir?.uri.toString())
         // intent.putStringArrayListExtra();
         startActivity(intent)
     }
@@ -109,7 +106,7 @@ class FinalActivity : BaseActivity() {
             val intent = Intent()
             intent.setComponent(ComponentName(this, postCompletionActivityName))
             intent.putExtra("archiveIndexStore", archiveIndexStore)
-            intent.putExtra("externalDir", externalDir?.uri.toString())
+            intent.putExtra("externalDir", destDir?.uri.toString())
             startActivity(intent)
         }
     }

@@ -1,20 +1,16 @@
 package sanskritCode.downloaderFlow
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Environment
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-
-import java.io.File
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
 class GetArchivesActivity : BaseActivity() {
@@ -33,9 +29,6 @@ class GetArchivesActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
         val sharedArchiveVersionStore = getSharedPreferences(
                 getString(R.string.df_archive_version_store), Context.MODE_PRIVATE)
-        if (archiveIndexStore == null) {
-            archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
-        }
         // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
         archiveVersionEditor = sharedArchiveVersionStore.edit()
         setContentView(R.layout.activity_get_archives)
@@ -49,7 +42,6 @@ class GetArchivesActivity : BaseActivity() {
         button_2!!.visibility = View.INVISIBLE
         button_2!!.isEnabled = false
         progressBar = findViewById(R.id.df_get_archive_progressBar)
-        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
 
         if (archiveIndexStore!!.archivesSelectedMap.size == 0) {
             topText!!.setText(R.string.no_archives_selected)
@@ -74,7 +66,7 @@ class GetArchivesActivity : BaseActivity() {
     internal fun whenAllDownloaded() {
         val intent = Intent(this, ExtractArchivesActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", externalDir?.uri.toString())
+        intent.putExtra("externalDir", destDir?.uri.toString())
         startActivity(intent)
     }
 

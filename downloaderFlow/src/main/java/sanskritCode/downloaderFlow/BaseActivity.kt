@@ -11,16 +11,12 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.support.v4.provider.DocumentFile
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
+import androidx.documentfile.provider.DocumentFile
 import org.apache.commons.io.input.ReversedLinesFileReader
 import java.io.File
 import java.io.IOException
@@ -37,19 +33,11 @@ fun fileNameFromUrl(url: String): String {
     }
 }
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : Activity() {
     protected var archiveIndexStore: ArchiveIndexStore? = null
     val REQUEST_CODE_GET_EXTERNAL_DIR = 501
-    val REQUEST_CODE_APP_STORAGE_ACCESS = 502 // Any value
-    protected var externalDir: DocumentFile? = null
+    protected var destDir: DocumentFile? = null
     protected var downloadsDir: File? = null
-
-    // TODO: Eventually, extract to the below location and then copy to user selected location (where the app won't have direct access).
-    protected var extractionDir: File? = null
-
-    //    TODO: Eventually, the below should be replaced by a DocumentFile.
-    protected var destDir: File? = null
-
 
     protected val version: String
         get() {
@@ -67,49 +55,15 @@ abstract class BaseActivity : AppCompatActivity() {
 
     fun getPermission(permissionString: String, activity: Activity) {
         val LOGGER_TAG = localClassName
-        if (ContextCompat.checkSelfPermission(
-                activity,
-                permissionString
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.d(LOGGER_TAG, "getPermission: Got permission: $permissionString")
-        } else if (permissionString == Manifest.permission.MANAGE_EXTERNAL_STORAGE) {
-            // Consider: Set top text and guide the user into providing access??
-//            val topText = findViewById<TextView>(R.id.df_main_textView)
-//            topText.setText(R.string.df_externalAccess)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (!Environment.isExternalStorageManager()) {
-                    try {
-                        var intent = Intent(
-                            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                            Uri.parse("package:" + packageName)
-                        )
-                        startActivityForResult(intent, REQUEST_CODE_APP_STORAGE_ACCESS)
-                    } catch (e: Exception) {
-                        Log.e(LOGGER_TAG, e.toString())
-                        var intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                        startActivityForResult(intent, REQUEST_CODE_APP_STORAGE_ACCESS)
-                    }
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(
+                    permissionString
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.d(LOGGER_TAG, "getPermission: Got permission: $permissionString")
             }
-            Log.i(
-                LOGGER_TAG,
-                "getPermission: new permission: " + ContextCompat.checkSelfPermission(
-                    activity,
-                    permissionString
-                )
-            )
-        } else {
-            Log.w(LOGGER_TAG, "getPermission: Don't have permission: $permissionString")
-            ActivityCompat.requestPermissions(activity, arrayOf(permissionString), 101)
-            Log.i(
-                LOGGER_TAG,
-                "getPermission: new permission: " + ContextCompat.checkSelfPermission(
-                    activity,
-                    permissionString
-                )
-            )
+        }else {
+            TODO("VERSION.SDK_INT < M")
         }
     }
 
@@ -120,14 +74,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun setDirectories() {
         val LOGGER_TAG = localClassName
-        if (externalDir == null) {
+        if (destDir == null) {
             Log.e(LOGGER_TAG, "Could not get access to external directory!")
         }
         downloadsDir = File(applicationContext.cacheDir, getString(R.string.df_downloadsDir))
-        extractionDir =
-            File(applicationContext.cacheDir, getString(R.string.df_extraction_directory))
-        destDir =
-            File(Environment.getExternalStorageDirectory(), getString(R.string.df_dest_directory))
 
         if (!downloadsDir!!.exists()) {
             if (!downloadsDir!!.mkdirs()) {
@@ -135,18 +85,11 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         }
 
-        if (!extractionDir!!.exists()) {
-            if (!extractionDir!!.mkdirs()) {
-                Log.w(LOGGER_TAG, ":onCreate:Returned false while mkdirs $extractionDir")
-            }
-        }
         Log.i(
             LOGGER_TAG, String.format(
-                "externalDir %s \n downloadsDir %s \n" +
-                        "destDir %s",
-                externalDir?.uri,
-                downloadsDir?.absolutePath,
-                destDir?.absolutePath
+                "externalDir %s \n downloadsDir %s \n",
+                destDir?.uri,
+                downloadsDir?.absolutePath
             )
         )
 
@@ -155,45 +98,50 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
+            Log.d(this.localClassName, "savedInstanceState = " + savedInstanceState?.keySet().toString())
             if (savedInstanceState.containsKey("archiveIndexStore")) {
                 archiveIndexStore = savedInstanceState.get("archiveIndexStore") as ArchiveIndexStore
+                Log.i(this.localClassName, "Retrieved archiveIndexStore: $archiveIndexStore")
             }
-//            if(savedInstanceState.containsKey("externalDir")) {
-//                val externalDirUriString = savedInstanceState.get("externalDir") as String
-//                externalDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
-//                setDirectories()
-//            }
+            if(savedInstanceState.containsKey("externalDir")) {
+                val externalDirUriString = savedInstanceState.getString("externalDir")
+                destDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
+                Log.i(this.localClassName, "Retrieved destDir: $externalDirUriString")
+                setDirectories()
+            }
         } else {
-//            if (externalDir == null && intent.hasExtra("externalDir")) {
-//                val externalDirUriString = intent.getSerializableExtra("externalDir") as String
-//                externalDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
-//                setDirectories()
-//            } else {
-////                TODO: Remove this branch once directory selection is fixed.
-//                externalDir = Environment.getExternalStorageDirectory()
-//                setDirectories()
-//            }
+            Log.d(this.localClassName, "intent = " + intent?.extras.toString())
+            if (destDir == null && intent.hasExtra("externalDir")) {
+                val externalDirUriString = intent.getSerializableExtra("externalDir") as String
+                destDir = DocumentFile.fromTreeUri(applicationContext, Uri.parse(externalDirUriString))
+                Log.i(this.localClassName, "Retrieved destDir: $externalDirUriString")
+                setDirectories()
+            }
+            if (archiveIndexStore == null && intent.hasExtra("archiveIndexStore")) {
+                archiveIndexStore = intent.getSerializableExtra("archiveIndexStore") as ArchiveIndexStore
+                Log.i(this.localClassName, "Retrieved archiveIndexStore: $archiveIndexStore")
+            }
         }
         setDirectories()
     }
 
     fun sendLogcatMail(mailBody: String) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_LOGS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.d(this.localClassName, "SendLogcatMail: " + "Got READ_LOGS permissions")
-        } else {
-            Log.e(this.localClassName, "SendLogcatMail: " + "Don't have READ_LOGS permissions")
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_LOGS), 103)
-            Log.i(
-                this.localClassName,
-                "SendLogcatMail: " + "new READ_LOGS permission: " + ContextCompat.checkSelfPermission(
-                    this,
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(
                     Manifest.permission.READ_LOGS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                Log.d(this.localClassName, "SendLogcatMail: " + "Got READ_LOGS permissions")
+            } else {
+                Log.e(this.localClassName, "SendLogcatMail: " + "Don't have READ_LOGS permissions")
+                requestPermissions(arrayOf(Manifest.permission.READ_LOGS), 103)
+                Log.i(
+                    this.localClassName,
+                    "SendLogcatMail: " + "new READ_LOGS permission: " + checkSelfPermission(
+                        Manifest.permission.READ_LOGS
+                    )
                 )
-            )
+            }
         }
 
 

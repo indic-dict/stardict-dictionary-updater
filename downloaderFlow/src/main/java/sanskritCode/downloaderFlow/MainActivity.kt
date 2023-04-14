@@ -6,8 +6,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.DocumentsContract
-import android.support.v4.provider.DocumentFile
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
@@ -16,6 +16,8 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.documentfile.provider.DocumentFile
+import java.io.File
 
 import java.util.ArrayList
 
@@ -33,14 +35,12 @@ class MainActivity : BaseActivity() {
     private var indexCheckboxes = ArrayList<CheckBox>()
 
 
-    fun openDirectory(pickerInitialUri: Uri) {
+    fun setDestDirAndProceed(pickerInitialUri: Uri) {
+        if (destDir != null) {
+            startGetUrlActivity()
+        }
         // Choose a directory using the system's file picker.
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-            // Provide read access to files and sub-directories in the user-selected
-            // directory.
-            flags = Intent
-                    .FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-
             // Optionally, specify a URI for the directory that should be opened in
             // the system file picker when it loads.
             putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
@@ -59,7 +59,7 @@ class MainActivity : BaseActivity() {
             // the user selected.
             resultData?.data?.also { uri ->
                 // Perform operations on the document using its URI.
-                externalDir = DocumentFile.fromTreeUri(applicationContext, uri)
+                destDir = DocumentFile.fromTreeUri(applicationContext, uri)
                 setDirectories()
                 val contentResolver = applicationContext.contentResolver
 
@@ -68,18 +68,9 @@ class MainActivity : BaseActivity() {
                 // Check for the freshest data.
                 contentResolver.takePersistableUriPermission(uri, takeFlags)
 
-
-                val intent = Intent(this, GetUrlActivity::class.java)
-                intent.putExtra("archiveIndexStore", archiveIndexStore)
-                intent.putExtra("externalDir", externalDir?.uri.toString())
-                // intent.putStringArrayListExtra();
-                startActivity(intent)
+                startGetUrlActivity()
 
             }
-        } else if (requestCode == REQUEST_CODE_APP_STORAGE_ACCESS
-            && resultCode != Activity.RESULT_OK
-        ) {
-            getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
         }
     }
 
@@ -160,7 +151,6 @@ class MainActivity : BaseActivity() {
 
         getPermission(Manifest.permission.INTERNET, this)
         getPermission(Manifest.permission.ACCESS_NETWORK_STATE, this)
-        getPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, this)
 
         archiveIndexStore!!.getIndicesAddCheckboxes(this)
     }
@@ -175,17 +165,19 @@ class MainActivity : BaseActivity() {
         //        Log.d(ACTIVITY_NAME, "onResume Indices selected " + archiveIndexStore.indexesSelected.toString());
     }
 
+    fun startGetUrlActivity() {
+        val intent = Intent(this, GetUrlActivity::class.java)
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", destDir?.uri.toString())
+        // intent.putStringArrayListExtra();
+        startActivity(intent)
+    }
+
     // Event handler for: When the proceed button is pressed.
     @Suppress("UNUSED_PARAMETER")
     fun buttonPressed1(v: View) {
         val LOGGER_TAG = "MainActivity:buttonPressed1".substring(0, 26)
         Log.d(LOGGER_TAG, "buttonPressed1: " + "Indices selected " + archiveIndexStore!!.indexesSelected.toString())
-//        openDirectory(Uri.EMPTY)
-//                TODO: Remove this branch once directory selection is fixed.
-
-        val intent = Intent(this, GetUrlActivity::class.java)
-        intent.putExtra("archiveIndexStore", archiveIndexStore)
-        // intent.putStringArrayListExtra();
-        startActivity(intent)
+        setDestDirAndProceed(Uri.fromFile(File(Environment.getExternalStorageDirectory(), getString(R.string.df_dest_directory))))
     }
 }

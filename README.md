@@ -92,8 +92,6 @@ Privacy Policy: https://github.com/indic-dict/stardict-dictionary-updater/blob/m
 ```
 This program downloads latest dictionary files from the internet, and stores it in the SDCARD/dictdata folder, for Stardict apps to use. We assume that you already have or will install Stardict-compatible dictionary utilities (Eg: ebdic [Rated high], ColorDict, GoldenDict, GoldenDict paid ...) separately. 
 
-NOTE: Legacy third party dict apps, and users expect such dictionary files in "external storage" (usually the dictdata directory), not belonging to the private space of any of these apps - so "All files access" (MANAGE_EXTERNAL_STORAGE) permission is required. Not having this functionality just causes the app to fail.
-
 We use the indices maintained by the stardict-sanskrit project (See: https://github.com/indic-dict/stardict-sanskrit , https://sanskrit-coders.github.io/ ). [If you want to contribute new dictionaries to the stardict-sanskrit project or code to this app, that is welcome too - visit sites above.] Short-link to this app: bit.ly/SanskritStarDictUpdater
 
 Note: Our indices allow for 113+ dictionaries in the following languages to be installed: Sanskrit, pALi, hindI, marathi, punjabi/ panjabi, nepali, oriya/ odiya, assamese/ Asamiya, kannaDa, telugu, tamiL / tamizh, malayalam, sinhala/ sinhalese, greek, latin, english (संस्कृतम्, पाली/ पाळी, हिन्दी, ਪੰਜਾਬੀ/ پنجابی‬, ଓଡ଼ିଆ,  অসমীয়া, ಕನ್ನಡ,  සිංහල, తెలుగు, தமிழ், മലയാളം, ελληνικά, lingua latīna) which you can search with the native script as well as with intuitive devanAgarI and roman transliterations.
