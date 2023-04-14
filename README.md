@@ -75,8 +75,6 @@ Publish to Google Play [here](https://play.google.com/console/u/0/developers/918
 ```
 प्राप्यान्तर्जालात् स्टार्डिक्ट-कोशानां सूचिः, स्थापयति तान् कोशान् यन्त्रे SDCARD/dictdata इत्यत्र। एवं स्थापिताः सञ्चिकाः stardict-प्रयोक्तृ-तन्त्रांशैः क्रियतामिति। स्टार्डिक्ट्-प्रयोक्तृ-तान्त्रांशः कश्चित् (उदाहरणार्थम् - ebdic (प्रशस्तम्), ColorDict, GoldenDict, GoldenDict paid ...) युष्माभिः स्थापितो वा स्थाप्यते वेति नः प्रत्ययः। 
 
-NOTE: Legacy third party dict apps, and users expect such dictionary files in "external storage" (usually the dictdata directory), not belonging to the private space of any of these apps - so "All files access" (MANAGE_EXTERNAL_STORAGE) permission is required. Not having this functionality just causes the app to fail.
-
 वयं stardict-sanskrit-गणेन प्रकाशिताः कोशसूचीः प्रयुञ्ज्महे। (ईक्षन्ताम् : https://github.com/indic-dict/stardict-sanskrit , https://sanskrit-coders.github.io/ )।  लघुसङ्केतः  पृष्ठस्यास्य- bit.ly/SanskritStarDictUpdater । संप्रत्य् एतासु भाषासु ११३+ कोषास् सङ्गृहीता अस्माभिः - Sanskrit, pALi, hindI, marathi, punjabi/ panjabi, nepali, oriya/ odiya, assamese/ Asamiya, kannaDa, telugu, tamiL / tamizh, malayalam, sinhala/ sinhalese, greek, latin, english (संस्कृतम्, पाली/ पाळी, हिन्दी, ਪੰਜਾਬੀ/ پنجابی‬, ଓଡ଼ିଆ,  অসমীয়া, ಕನ್ನಡ,  සිංහල, తెలుగు, தமிழ், മലയാളം, ελληνικά, lingua latīna)  येषां स्वलिपिमन्तरा देवनागर्या रोमकलिप्या चाप्य् अन्वेषणं शक्यम्।
 
 क्लेशान् अत्र सूचयत, परिहरत, पश्यत च - https://github.com/indic-dict/stardict-dictionary-updater/issues ।

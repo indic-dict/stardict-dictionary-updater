@@ -48,8 +48,8 @@ class ExtractArchivesActivity : BaseActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-
-    override fun onBackPressed() {
+    // TODO: Not being invoked.
+    fun backPressHandler() {
         // Don't navigate away in the midst of extracting dictionaries!
         // archiveIndexStore.indexedArchives etc.. may need to be reset or handled carefully.
 //        super.onBackPressed()

@@ -77,7 +77,8 @@ class GetArchivesActivity : BaseActivity() {
         progressBar!!.visibility = View.VISIBLE
     }
 
-    override fun onBackPressed() {
+    // TODO: Not being invoked.
+    fun backPressHandler() {
         // Don't navigate away in the midst of downloading dictionaries!
         // archiveIndexStore.indexedArchives etc.. may need to be reset or handled carefully.
         if (button_2!!.visibility == View.VISIBLE) {

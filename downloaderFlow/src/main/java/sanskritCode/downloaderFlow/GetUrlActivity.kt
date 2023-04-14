@@ -3,11 +3,13 @@ package sanskritCode.downloaderFlow
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.*
+import android.window.OnBackInvokedCallback
 import java.util.*
 
 // See comment in MainActivity.java for a rough overall understanding of the code.
@@ -56,7 +58,13 @@ class GetUrlActivity : BaseActivity() {
         setContentView(R.layout.activity_get_url)
         archiveIndexStore!!.getIndexedArchivesSetCheckboxes(this)
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(1, object: OnBackInvokedCallback {
+                override fun onBackInvoked() {
+                    backPressHandler()
+                }
+            } )
+        }
     }
 
     // Called when another activity comes inbetween and is dismissed.
@@ -199,6 +207,7 @@ class GetUrlActivity : BaseActivity() {
     }
 
 
+    // TODO: Not being invoked.
     fun backPressHandler() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, MainActivity::class.java)

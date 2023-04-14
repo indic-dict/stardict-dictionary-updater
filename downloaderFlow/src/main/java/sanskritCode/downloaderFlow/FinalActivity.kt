@@ -87,8 +87,8 @@ class FinalActivity : BaseActivity() {
         Log.i(LOGGER_TAG, "onResume:" + "************************STARTS****************************")
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+    // TODO: Not being invoked.
+    fun backPressHandler() {
         Log.i(LOGGER_TAG, "Back pressed")
         val intent = Intent(this, GetUrlActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
