@@ -16,7 +16,7 @@ import java.io.*
  * Extracts all selected archives sequentially in ONE Async task (doBackground() being run outside the UI thread).
  */
 internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
-                             private val activity: ExtractArchivesActivity, private val destDir: DocumentFile, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
+                             private val activity: ExtractArchivesActivity, private val destDir: DocumentFile, private val archiveIndexStore: ArchiveIndexStore, private val criticalFilesPattern: Regex) : AsyncTask<Void, String, Void?> /* params, progress, result */() {
     private val compressorStreamFactory = CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/)
     private val archiveStreamFactory = ArchiveStreamFactory()
     private val LOGGER_TAG = javaClass.getSimpleName()
@@ -112,6 +112,10 @@ internal class ArchiveExtractor(@field:SuppressLint("StaticFieldLeak")
                 }
                 filesRead = filesRead + 1
                 if(currentEntry.isDirectory) {
+                    continue
+                }
+                // TODO: Make this optional. Skipping non-essential files for speed.
+                if(!currentEntry.name.matches(criticalFilesPattern)) {
                     continue
                 }
                 destDirFile?.uri

@@ -32,7 +32,7 @@ class ExtractArchivesActivity : BaseActivity() {
             Log.w(LOGGER_TAG, ":onCreate: Strange - $destDir does not exist.")
         }
 
-        ArchiveExtractor(this, destDir!!, archiveIndexStore!!, downloadsDir!!)
+        ArchiveExtractor(this, destDir!!, archiveIndexStore!!, Regex(getString(R.string.df_critical_files_pattern)))
                 .execute()
     }
 
