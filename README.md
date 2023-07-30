@@ -83,7 +83,7 @@ Report / solve issues, look at known problems here: https://github.com/sanskrit-
 
 Privacy Policy: https://github.com/indic-dict/stardict-dictionary-updater/blob/master/privacy-policy.md
 
-जय हनुमान्। श्रीरामो जयतितमाम्।
+जय हनुमन्। श्रीरामो जयतितमाम्।
 ```
 
 ### English
@@ -119,5 +119,5 @@ Total                                              : 84
 
 Privacy Policy: https://github.com/indic-dict/stardict-dictionary-updater/blob/master/privacy-policy.md
 
-जय हनुमान्। श्रीरामो जयतितमाम्।
+जय हनुमन्। श्रीरामो जयतितमाम्।
 ```
