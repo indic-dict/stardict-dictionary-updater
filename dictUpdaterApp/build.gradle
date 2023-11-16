@@ -39,7 +39,7 @@ android {
         abortOnError false
         checkReleaseBuilds false
     }
-    
+
 }
 
 // Repositories are listed in ../build.gradle.
