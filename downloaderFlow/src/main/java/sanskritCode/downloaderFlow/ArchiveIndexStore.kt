@@ -125,12 +125,16 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
 
                 override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
                     for (line in responseString.split("\n".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()) {
-                        val url = line.replace("<", "").replace(">", "")
-                        val name = url.replace(activity.getString(R.string.df_index_url_redundant_string_regex).toRegex(), "")
-                        indexUrls[name] = url
+                        if (line.startsWith("<")) {
+                            val url = line.replace("<", "").replace(">", "").trim()
+                            val name = url.replace(activity.getString(R.string.df_index_url_redundant_string_regex).toRegex(), "")
+                            indexUrls[name] = url
 
-                        indexesSelected[name] = url
-                        Log.d(LOGGER_TAG, ":getIndicesAddCheckboxes:" + activity.getString(R.string.df_added_index_url) + url)
+                            indexesSelected[name] = url
+                            Log.d(LOGGER_TAG, ":getIndicesAddCheckboxes:" + activity.getString(R.string.df_added_index_url) + url)
+                        } else {
+                            Log.d(LOGGER_TAG, "skipping line:" + line)
+                        }
                     }
                     activity.addCheckboxes(indexUrls, indexesSelected)
                 }
@@ -205,9 +209,9 @@ class ArchiveIndexStore(val indexIndexorum: String) : Serializable {
 
                         override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseString: String) {
                             var archiveInfos : List<ArchiveInfo> = listOf()
-                            if(url.toString().toLowerCase().endsWith(".md")) {
+                            if(url.toString().lowercase(Locale.US).endsWith(".md")) {
                                 archiveInfos = processMdFileContents(responseString = responseString)
-                            } else if(url.toString().toLowerCase().endsWith(".json")) {
+                            } else if(url.toString().lowercase(Locale.US).endsWith(".json")) {
                                 archiveInfos = processJsonFileContents(responseString = responseString)
                             }
                             Log.d(LOGGER_TAG, ":getIndexedArchivesSetCheckboxes:Index handled: $url")

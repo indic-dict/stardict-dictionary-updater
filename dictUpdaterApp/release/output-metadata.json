@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 359,
-      "versionName": "3.5.9",
+      "versionCode": 360,
+      "versionName": "3.6.0",
       "outputFile": "dictUpdaterApp-release.apk"
     }
   ],
