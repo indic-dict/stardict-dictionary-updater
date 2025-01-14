@@ -1,6 +1,6 @@
 package sanskritCode.downloaderFlow
 
-import android.Manifest
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
@@ -30,7 +30,16 @@ import java.io.FileNotFoundException
  * DefaultHttpClient within an async task.
  * - Stack depth is expected to be quite small (in the 100-s).
  */
-internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesActivity, private val archiveIndexStore: ArchiveIndexStore, private val downloadsDir: File, private val progressBar: ProgressBar, private val topText: TextView) {
+internal class ArchiveDownloader(
+    private val getArchivesActivity: GetArchivesActivity,
+    private val archiveIndexStore: ArchiveIndexStore,
+    private val downloadsDir: File,
+    private val destDir: DocumentFile,
+    private val criticalFilesPattern: Regex,
+    private val progressBar: ProgressBar,
+    private val topText: TextView,
+    private val sharedArchiveInfoStore: SharedPreferences
+) {
     private val LOGGER_TAG = javaClass.getSimpleName()
     private val compressorStreamFactory = CompressorStreamFactory(true /*equivalent to setDecompressConcatenated*/)
     private val archiveStreamFactory = ArchiveStreamFactory()
@@ -81,8 +90,7 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
                     val archiveInfo = archiveIndexStore.archivesSelectedMap[url]
                     archiveInfo!!.archivePath = file.canonicalPath
                     archiveInfo!!.status = ArchiveStatus.DOWNLOAD_SUCCESS
-                    // TODO Do this.
-//                    extractFile(archiveInfo, destDir, criticalFilesPattern)
+                    extractFile(archiveInfo, destDir, criticalFilesPattern)
                     downloadArchive(index + 1)
                     progressBar.visibility = View.GONE
                 }
@@ -180,8 +188,8 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
             Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status "  + archiveInfo.status)
             return
         }
-//        TODO Replace below
-//        publishProgress(Integer.toString(0), Integer.toString(1), archiveFileName, "")
+        topText.setText(String.format(getArchivesActivity.getString(R.string.df_extractingSomeArchive), archiveInfo.archivePath))
+        getArchivesActivity.updateProgressBar(0, 1)
 
         var destDirFile = createDir(destDir, archiveInfo.getDestinationPathSuffix())
 
@@ -232,11 +240,12 @@ internal class ArchiveDownloader(private val getArchivesActivity: GetArchivesAct
                     fos.write(buffer, 0, n)
                 }
                 fos.close()
-//        TODO Replace below
-//                publishProgress(Integer.toString(filesRead), Integer.toString(totalFiles), archiveFileName, destFile.uri.toString())
+                getArchivesActivity.updateProgressBar(filesRead, totalFiles)
             }
             archiveInputStream.close()
             archiveInfo.status = ArchiveStatus.EXTRACTION_SUCCESS
+            val editor = sharedArchiveInfoStore.edit()
+            archiveInfo.storeToSharedPreferences(editor)
             Log.d(LOGGER_TAG, ":extractFile:" + "success!")
         } catch (e: Exception) {
             Log.e(LOGGER_TAG, ":extractFile:" + "IOEx:", e)

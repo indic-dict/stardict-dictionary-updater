@@ -1,7 +1,6 @@
 package sanskritCode.downloaderFlow
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -50,10 +49,11 @@ class GetArchivesActivity : BaseActivity() {
             button!!.setText(R.string.proceed_button)
             button!!.isEnabled = true
         }
+        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
+        val sharedArchiveInfoStore = getSharedPreferences(
+            getString(R.string.df_archive_info_store), Context.MODE_PRIVATE)
 
-        val archiveDownloader = ArchiveDownloader(this,
-                archiveIndexStore!!,
-                downloadsDir!!, progressBar!!, topText!!)
+        val archiveDownloader = ArchiveDownloader(this, archiveIndexStore!!, downloadsDir!!, destDir!!, Regex(getString(R.string.df_critical_files_pattern)), progressBar!!, topText!!, sharedArchiveInfoStore)
         archiveDownloader.downloadArchive(0)
     }
 
@@ -65,7 +65,7 @@ class GetArchivesActivity : BaseActivity() {
     }
 
     internal fun whenAllDownloaded() {
-        val intent = Intent(this, ExtractArchivesActivity::class.java)
+        val intent = Intent(this, FinalActivity::class.java)
         intent.putExtra("archiveIndexStore", archiveIndexStore)
         intent.putExtra("externalDir", destDir?.uri.toString())
         startActivity(intent)
@@ -94,17 +94,6 @@ class GetArchivesActivity : BaseActivity() {
         topText!!.append("\n" + getString(R.string.dont_navigate_away))
         topText!!.append("\nCurrent file: $contentFileExtracted")
         Log.d(LOGGER_TAG, ":setTopTextWhileExtracting:$archiveName - $contentFileExtracted")
-        this.showNetworkInfo(findViewById<View>(R.id.df_extract_archive_textView2) as TextView)
-    }
-
-
-    /* Should only be called from the UI thread! */
-    internal fun whenAllExtracted() {
-        val intent = Intent()
-        intent.setComponent(ComponentName(this, getString(R.string.df_post_extraction_activity)))
-        intent.putExtra("archiveIndexStore", archiveIndexStore)
-        intent.putExtra("externalDir", destDir?.uri.toString())
-        startActivity(intent)
     }
 
 }

@@ -1,5 +1,6 @@
 package sanskritCode.downloaderFlow
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,6 +14,7 @@ import android.widget.TextView
 class FinalActivity : BaseActivity() {
     internal val LOGGER_TAG = javaClass.getSimpleName()
 
+    @SuppressLint("StringFormatInvalid")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(LOGGER_TAG, "onCreate:" + "************************STARTS****************************")
@@ -23,10 +25,6 @@ class FinalActivity : BaseActivity() {
         topText.movementMethod = LinkMovementMethod.getInstance()
         topText.text = String.format(getString(R.string.df_finalMessage), destDir?.uri.toString())
         largeLog(LOGGER_TAG, ":onCreate:" + archiveIndexStore!!.toString())
-
-        // Suppressed intellij warning about missing commit. storeArchiveVersion() has it.
-        val sharedArchiveInfoStore = getSharedPreferences(
-                getString(R.string.df_archive_info_store), Context.MODE_PRIVATE)
 
 
         val failures = mutableListOf<String>()
@@ -44,13 +42,11 @@ class FinalActivity : BaseActivity() {
             Log.w(LOGGER_TAG, ":onCreate:" + topText.text.toString())
         }
         val successes = mutableListOf<String>()
-        val editor = sharedArchiveInfoStore.edit()
         for (archiveInfo in archiveIndexStore!!.archivesSelectedMap.values) {
 
             if (archiveInfo.status == ArchiveStatus.EXTRACTION_SUCCESS) {
                 val archiveShortName = archiveInfo.url.replace(getString(R.string.df_archive_url_redundant_string_regex).toRegex(), "")
                 successes.add(ArchiveNameHelper.getNameWithoutAnyExtension(archiveShortName))
-                archiveInfo.storeToSharedPreferences(editor)
             }
         }
         if (successes.size > 0) {
@@ -98,7 +94,6 @@ class FinalActivity : BaseActivity() {
     }
 
     fun buttonPressed1(v: View) {
-
         val postCompletionActivityName = getString(R.string.df_post_completion_activity)
         if (postCompletionActivityName == "None") {
             finish()

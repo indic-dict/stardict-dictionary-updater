@@ -41,15 +41,6 @@
                 android:value="sanskritCode.downloaderFlow.MainActivity" />
         </activity>
         <activity
-            android:name="sanskritCode.downloaderFlow.ExtractArchivesActivity"
-            android:label="@string/df_title_activity_extract_archives"
-            android:configChanges="orientation"
-            android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="sanskritCode.downloaderFlow.MainActivity" />
-        </activity>
-        <activity
             android:name="sanskritCode.downloaderFlow.FinalActivity"
             android:label="@string/df_title_final_activity"
             android:parentActivityName="sanskritCode.downloaderFlow.MainActivity" >

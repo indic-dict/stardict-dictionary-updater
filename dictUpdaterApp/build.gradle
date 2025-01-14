@@ -14,8 +14,8 @@ android {
 //         Reason: https://github.com/sanskrit-coders/stardict-dictionary-updater/issues/29
 //         Documentation for the above https://developer.android.com/guide/topics/manifest/uses-sdk-element#max.
 
-        versionCode 361
-        versionName "3.6.1"
+        versionCode 362
+        versionName "3.6.2"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
