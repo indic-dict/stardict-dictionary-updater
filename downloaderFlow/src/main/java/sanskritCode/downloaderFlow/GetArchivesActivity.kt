@@ -1,6 +1,7 @@
 package sanskritCode.downloaderFlow
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -84,6 +85,26 @@ class GetArchivesActivity : BaseActivity() {
         if (button_2!!.visibility == View.VISIBLE) {
             finish()
         }
+    }
+
+    /* Should only be called from the UI thread! */
+    internal fun setTopTextWhileExtracting(archiveName: String, contentFileExtracted: String) {
+        val message1 = "Extracting $archiveName"
+        topText!!.text = message1
+        topText!!.append("\n" + getString(R.string.dont_navigate_away))
+        topText!!.append("\nCurrent file: $contentFileExtracted")
+        Log.d(LOGGER_TAG, ":setTopTextWhileExtracting:$archiveName - $contentFileExtracted")
+        this.showNetworkInfo(findViewById<View>(R.id.df_extract_archive_textView2) as TextView)
+    }
+
+
+    /* Should only be called from the UI thread! */
+    internal fun whenAllExtracted() {
+        val intent = Intent()
+        intent.setComponent(ComponentName(this, getString(R.string.df_post_extraction_activity)))
+        intent.putExtra("archiveIndexStore", archiveIndexStore)
+        intent.putExtra("externalDir", destDir?.uri.toString())
+        startActivity(intent)
     }
 
 }
