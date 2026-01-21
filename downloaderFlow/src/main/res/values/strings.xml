@@ -33,7 +33,7 @@
     <string name="noConnection">No data connection. Please retry later.</string>
     <string name="no_archives_selected">No archives selected!</string>
     <string name="df_gettingSomeArchive">Getting %s</string>
-    <string name="df_extractingSomeArchive">Getting %s</string>
+    <string name="df_extractingSomeArchive">Extracting %s</string>
     <string name="df_fromSomeIndex">From %s</string>
     <string name="df_get_archives_button" tools:ignore="PluralsCandidate">Get %d files (~ %d MB+)?</string>
     <string name="df_index_download_failed">Failed at downloading %s. Please report the error to the index maintainer.</string>

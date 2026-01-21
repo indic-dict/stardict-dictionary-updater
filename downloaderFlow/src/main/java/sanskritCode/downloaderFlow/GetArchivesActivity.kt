@@ -89,7 +89,7 @@ class GetArchivesActivity : BaseActivity() {
 
     /* Should only be called from the UI thread! */
     internal fun setTopTextWhileExtracting(archiveName: String, contentFileExtracted: String) {
-        val message1 = "Extracting $archiveName"
+        val message1 = String.format(getString(R.string.df_extractingSomeArchive), archiveName)
         topText!!.text = message1
         topText!!.append("\n" + getString(R.string.dont_navigate_away))
         topText!!.append("\nCurrent file: $contentFileExtracted")

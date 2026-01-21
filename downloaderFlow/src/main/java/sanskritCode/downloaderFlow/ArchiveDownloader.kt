@@ -188,7 +188,7 @@ internal class ArchiveDownloader(
             Log.w(LOGGER_TAG, ":extractFile:" + "Skipping " + archiveFileName + " with status "  + archiveInfo.status)
             return
         }
-        topText.setText(String.format(getArchivesActivity.getString(R.string.df_extractingSomeArchive), archiveInfo.archivePath))
+        getArchivesActivity.setTopTextWhileExtracting(archiveFileName, "")
         getArchivesActivity.updateProgressBar(0, 1)
 
         var destDirFile = createDir(destDir, archiveInfo.getDestinationPathSuffix())
@@ -228,6 +228,7 @@ internal class ArchiveDownloader(
                 if(!currentEntry.name.matches(criticalFilesPattern)) {
                     continue
                 }
+                getArchivesActivity.setTopTextWhileExtracting(archiveFileName, currentEntry.name)
                 destDirFile?.uri
                 val destFile = createFile(destDirFile!!, currentEntry)
                 val fos = getArchivesActivity.getContentResolver().openOutputStream(destFile?.getUri()!!)!!
